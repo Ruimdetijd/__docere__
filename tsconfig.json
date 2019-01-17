@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "importHelpers": true,
+    "jsx": "react",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "./build",
+    "removeComments": true,
+    "target": "es6"
+  },
+  "exclude": [ "./node_modules" ],
+  "include": [ "src/entry/index.tsx", "./src/types.d.ts" ]
+}

@@ -1,0 +1,45 @@
+version: "3.6"
+
+services:
+  db:
+    environment:
+      - POSTGRES_PASSWORD=postgis
+    image: mdillon/postgis:10-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - nineveh_db:/var/lib/postgresql/data
+
+  # server:
+  #   image: node:9-alpine
+  #   command: ["npm", "run", "start:dev"]
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     NODE_ENV: development
+  #     PGHOST: db
+  #   ports:
+  #     - "3377:3377"
+  #   user: node
+  #   volumes:
+  #     - ./node_modules/nineveh-server:/app
+  #     - ../xmlio-node:/app/node_modules/xmlio-node
+  #   working_dir: /app
+
+  # client:
+  #   image: node:9-alpine
+  #   command: ["npm", "start"]
+  #   depends_on:
+  #     - server
+  #   environment:
+  #     NODE_ENV: development
+  #   ports:
+  #     - "4000:4000"
+  #   user: node
+  #   volumes:
+  #     - ./:/app
+  #     - ../xmlio:/app/node_modules/xmlio
+  #   working_dir: /app
+
+volumes:
+  nineveh_db:
