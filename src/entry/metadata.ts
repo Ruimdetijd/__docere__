@@ -1,9 +1,4 @@
-import XMLio from 'xmlio';
-
-// function vangogh(xmlio: XMLio) {
-// 	const root = xmlio.export({ type: 'data', deep: false }) as DataNode
-// 	return Object.keys(root.attributes).map(key => [key, root.attributes[key]]) as [string, string][]
-// }
+import XMLio from 'xmlio'
 
 function mondrian(xmlio: XMLio) {
 	const idnos = xmlio
@@ -16,19 +11,40 @@ function blauweschuit(xmlio: XMLio) {
 	const idnos = xmlio
 		.select('msidentifier > *')
 		.export({ type: 'data' }) as DataNode[]
-	return idnos.map(idno => [idno.name, idno.children[0]])
+	return Array.isArray(idnos) ? idnos.map(idno => [idno.name, idno.children[0]]) : []
 }
 
 function annefrank(xmlio: XMLio) {
 	const idnos = xmlio
 		.select('titleStmt > *')
 		.export({ type: 'data' }) as DataNode[]
-	return idnos.map(idno => [idno.name, idno.children[0]])
+	return Array.isArray(idnos) ? idnos.map(idno => [idno.name, idno.children[0]]) : []
+}
+
+function gekaaptebrieven(xmlio: XMLio) {
+	let meta = xmlio
+		.select('meta')
+		.export(({ type: 'data', deep: false }))
+	if (meta == null) return []
+	if (!Array.isArray(meta)) meta = [meta]
+	return meta.map(m => [m.attributes.type, m.attributes.value])
 }
 
 export default {
+	abeltasman: function() { return [] },
 	vangogh: annefrank,
 	mondrian,
 	annefrank,
 	blauweschuit,
+	gekaaptebrieven,
+	serrure: function() { return [] },
+	walewein: function() { return [] },
+	bartholomeus: function() { return [] },
+	clusius: function() { return [] },
+	deystroom: function() { return [] },
+	'menschen-en-bergen': function() { return [] },
+	'correspondenten-1900': function(xmlio: XMLio) {
+		const meta = xmlio.select('interpGrp > interp').export({ type: 'data', deep: false }) as DataNode[]
+		return meta.map(m => [m.attributes.type, m.attributes.value])
+	}
 }

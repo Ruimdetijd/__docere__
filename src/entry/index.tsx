@@ -8,8 +8,9 @@ import styled from '@emotion/styled'
 import { generateId } from '../utils'
 import { RouteComponentProps } from 'react-router'
 import { State as AppState } from '../index'
-import { Entry as EntryModel } from '../models'
 import metadataBySlug from './metadata'
+import Facsimile from './facsimile'
+import facsimilePathExtractors from './facsimile-path-extractor'
 
 export const ID_ATTRIBUTE_NAME = '__id'
 export const COLOR_ATTRIBUTE_NAME = '__color'
@@ -31,20 +32,18 @@ interface MatchParams {
 	projectSlug: string
 	xmlId: string
 }
-interface Props extends AppState, RouteComponentProps<MatchParams> {
-	setEntry: (entry: EntryModel) => void
-}
+export type Props = AppState & RouteComponentProps<MatchParams>
 export default class Entry extends React.Component<Props, ContextState> {
 	state: ContextState = defaultState
 	components = components
 
 	async componentDidMount() {
-		await this.props.setProject(this.props.match.params.projectSlug)
-		await this.props.setXml(this.props.match.params.xmlId)
+		const { projectSlug, xmlId, entryId } = this.props.match.params
+		await this.props.setEntry(projectSlug, xmlId, entryId)
 	}
 
 	shouldComponentUpdate(_nextProps: Props, nextState: ContextState) {
-		return this.state.dataNodeTree == null || this.state.dataNodeTree !== nextState.dataNodeTree
+		return this.state.dataNodeTree == null || this.state !== nextState
 	}
 
 	componentDidUpdate(prevProps: Props, _prevState: ContextState) {
@@ -65,8 +64,8 @@ export default class Entry extends React.Component<Props, ContextState> {
 					<ul>
 						{
 							this.state.metadata
-								.map(([key, value]) => 
-									<MetadataItem key={key}>
+								.map(([key, value], index) => 
+									<MetadataItem key={key + index}>
 										<span>{key}</span>
 										<span>{value}</span>
 									</MetadataItem>
@@ -74,6 +73,13 @@ export default class Entry extends React.Component<Props, ContextState> {
 						}	
 					</ul>
 				</aside>
+				{
+					facsimilePathExtractors.hasOwnProperty(this.props.project.slug) &&
+					<Facsimile
+						{...this.props}
+					/>
+					// <Facsimile path={this.state.metadata.find(m => m[0] === 'facs-filename')[1]} />
+				}
 				<TextWrapper>
 					{ component }
 				</TextWrapper>
@@ -84,7 +90,7 @@ export default class Entry extends React.Component<Props, ContextState> {
 								activeId={this.state.activeId}
 								extractor={extractor}
 								key={extractor.id}
-								onClick={(activeId: string) => this.setState({ activeId })}
+								onClick={this.setActiveId}
 							/>
 						)
 					}
@@ -105,6 +111,7 @@ export default class Entry extends React.Component<Props, ContextState> {
 				// Ideally, extractor.idAttribute would be used, but this is not possible,
 				// because two IDs from different extractors could be the same, for example:
 				// "paris" for a person and a place
+				// TODO just use the ID (extractor.idAttribute) as an id, it is unique
 				const internalId = cache.has(id) ? cache.get(id) : generateId(6)
 				cache.set(id, internalId)
 				el.setAttribute(ID_ATTRIBUTE_NAME, internalId)
@@ -119,7 +126,10 @@ export default class Entry extends React.Component<Props, ContextState> {
 			// Select the nodes from the DOM
 			let nodes = xmlio
 				.select(extractor.selector)
-				.export({ type: 'data', deep: false })
+				// Only export deep if there is not an idAttribute. With an idAttribute,
+				// data is loaded from an external data source. Without the idAttribute,
+				// the node's content is shown
+				.export({ type: 'data', deep: extractor.idAttribute == null })
 
 			if (nodes == null) {
 				extractor.items = []
@@ -133,20 +143,21 @@ export default class Entry extends React.Component<Props, ContextState> {
 			// Reduce the nodes to ExtractedItems
 			const mapValues = (nodes as DataNode[])
 				.reduce((prev, curr) => {
-					const attrName = extractor.idAttribute
-					const idAttrValue = curr.attributes[attrName]
+					const value = extractor.idAttribute == null ?
+						curr.children.map(c => typeof c === 'string' ? c : '').join('') :
+						curr.attributes[extractor.idAttribute]
 
 					// If the ID attr does not exist on the Map, add it
-					if (!prev.has(idAttrValue)) {
-						prev.set(idAttrValue, {
+					if (!prev.has(value)) {
+						prev.set(value, {
 							count: 1,
 							node: curr,
-							id: idAttrValue,
+							id: value,
 						})
 					// If the ID attr does exist, update the count
 					} else {
-						const tmp = prev.get(idAttrValue)
-						prev.set(idAttrValue, {
+						const tmp = prev.get(value)
+						prev.set(value, {
 							...tmp,
 							count: tmp.count + 1,
 						})
@@ -163,14 +174,21 @@ export default class Entry extends React.Component<Props, ContextState> {
 
 
 		const dataNodeTree = xmlio.exclude(['note']).export({ type: 'data' }) as DataNode
-		const metadata: Metadata = metadataBySlug[this.props.project.label](xmlio)
+		const metadata: Metadata = metadataBySlug[this.props.project.slug](xmlio)
 
 		this.setState({ dataNodeTree, extractors, metadata })
 	}
 
+	private setActiveId = (activeId: string) => {
+		if (activeId === this.state.activeId) activeId = null
+		this.setState({ activeId })
+	}
+
 	private handleComponentClick(ev: MouseEvent, data: DataNode) {
 		ev.stopPropagation()
-		if (data.attributes.hasOwnProperty(ID_ATTRIBUTE_NAME)) this.setState({ activeId: data.attributes[ID_ATTRIBUTE_NAME] })
+		if (data.attributes.hasOwnProperty(ID_ATTRIBUTE_NAME)) {
+			this.setActiveId(data.attributes[ID_ATTRIBUTE_NAME])
+		}
 	}
 
 	private dataToComponent(root: DataNode, index?: number): any {
@@ -194,10 +212,20 @@ export default class Entry extends React.Component<Props, ContextState> {
 			onClick: (ev: MouseEvent) => this.handleComponentClick(ev, root)
 		}
 
+		// Prepare attributes. React does not accept all attribute names (ref, class, style)
+		const unacceptedAttributes = ['ref', 'class', 'style']
+		const attributes = { ...root.attributes }
+		unacceptedAttributes.forEach(un => {
+			if (attributes.hasOwnProperty(un)) {
+				attributes[`_${un}`] = attributes[un]
+				delete attributes[un]
+			}
+		})
+
 		// Create the React.Component
 		return React.createElement(
 			this.components[root.name], // Component class
-			{ ...root.attributes, ...defaultAttributes }, // Attributes
+			{ ...attributes, ...defaultAttributes }, // Attributes
 			root.children.map((child, index) => this.dataToComponent(child, index)) // Children
 		)
 	}

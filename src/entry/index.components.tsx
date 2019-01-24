@@ -8,7 +8,7 @@ export const Main = styled('div')`
 	display: grid;
 	grid-column-gap: 2%;
 	grid-template-rows: 10% 87%;
-	grid-template-columns: 20% 56% 20%;
+	grid-template-columns: 15% 33% 33% 15%;
 	height: 100%;
 	padding: 0 2%;
 	transition: all 1s;
@@ -61,10 +61,20 @@ export const ItemInText = styled.li`
 	background-color: ${(props: IITProps) =>
 		props.active ? props.node.attributes[COLOR_ATTRIBUTE_NAME] : 'initial'
 	};
+	border-radius: .2em;
+	color: ${(props: IITProps) =>
+		props.active ? 'white' : 'initial'
+	};
 	cursor: pointer;
+	font-size: 1.2em;
+	margin-left: -.2em;
+	padding: .2em;
 
 	&:after {
 		${small}
+		color: ${(props: IITProps) =>
+			props.active ? '#AAA' : 'initial'
+		};
 		content: ${(props: IITProps) => props.count > 1 ? `"(${props.count})"` : ''};
 	}
 `

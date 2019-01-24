@@ -23,34 +23,37 @@ export default class Project extends React.Component<Props, State> {
 
 	render() {
 		if (this.props.project == null) return null
-		console.log(this.props.project)
 
 		return (
 			<>
-				<h1>{`Project: ${this.props.project.label}`}</h1>
+				<h1>{`Project: ${this.props.project.title}`}</h1>
 				<h2>XML documents</h2>
 				<ul>
 					{
 						this.props.project.files.map(filename =>
 							<li key={filename}>
-								<Link to={`/projects/${this.props.project.label}/xml/${filename}`}>{filename}</Link>
+								<Link to={`/projects/${this.props.project.slug}/xml/${filename}`}>{filename}</Link>
 								{
-									splitters.hasOwnProperty(this.props.project.label) &&
+									splitters.hasOwnProperty(this.props.project.slug) &&
 									<span
 										onClick={() => {
 											this.setState({ filename })
-											this.props.setXml(filename)
+											this.props.setXml(this.props.match.params.slug, filename)
 										}}
 									>
 										split
 									</span>
+								}
+								{
+									this.props.project.xml.hasOwnProperty(filename) &&
+									<span>{this.props.project.xml[filename].size}</span>
 								}
 							</li>
 						)
 					}
 				</ul>
 				{
-					splitters.hasOwnProperty(this.props.project.label) &&
+					splitters.hasOwnProperty(this.props.project.slug) &&
 					this.state.filename != null &&
 					this.props.project.entries.hasOwnProperty(this.state.filename) &&
 					this.props.project.entries[this.state.filename].length &&
@@ -60,7 +63,7 @@ export default class Project extends React.Component<Props, State> {
 							{
 								this.props.project.entries[this.state.filename].map((_xmlio, index) =>
 									<li key={index}>
-										<Link to={`/projects/${this.props.project.label}/xml/${this.state.filename}/entries/${index}`}>{index}</Link>
+										<Link to={`/projects/${this.props.project.slug}/xml/${this.state.filename}/entries/${index}`}>{index}</Link>
 									</li>
 								)
 							}

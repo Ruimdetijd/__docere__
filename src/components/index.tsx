@@ -73,15 +73,13 @@ const hi = styled.span`
 	}}
 `
 
-// const note = styled.span`
-
-// `
-
 export default {
 	add,
 	damage,
 	del,
 	div,
+	geo: rs,
+	head: styled.strong``,
 	lb,
 	p,
 	rs,

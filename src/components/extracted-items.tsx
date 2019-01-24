@@ -62,7 +62,7 @@ export default class ExtractedItems extends React.Component<Props, State> {
 									node={item.node}
 									onClick={() => this.props.onClick(item.node.attributes[ID_ATTRIBUTE_NAME])}
 								>
-									{item.node.attributes[this.props.extractor.idAttribute]}
+									{item.id}
 								</ItemInText>
 							)
 						}

@@ -15,7 +15,7 @@ export default class Projects extends React.Component<AppState> {
 					{
 						this.props.projects.map(project =>
 							<li key={project.id}>
-								<Link to={`/projects/${project.label}`}>{project.label}</Link>
+								<Link to={`/projects/${project.slug}`}>{project.title}</Link>
 							</li>
 						)
 					}

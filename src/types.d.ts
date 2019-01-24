@@ -30,7 +30,7 @@ interface Extractor {
 	color: string
 	id: string
 	items?: ExtractedItem[]
-	idAttribute: string
+	idAttribute?: string
 	selector: string
 	title: string
 }
