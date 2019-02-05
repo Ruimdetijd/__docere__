@@ -11,6 +11,10 @@ module.exports = {
 			'/api': {
 				target: 'http://localhost:3377',
 				pathRewrite: {'^/api': ''}
+			},
+			'/search': {
+				target: 'http://localhost:9200',
+				pathRewrite: {'^/search': ''}
 			}
 		}
 	},
@@ -29,7 +33,7 @@ module.exports = {
 			// All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
 			{
 				test: /\.tsx?$/,
-				loader: "awesome-typescript-loader",
+				loader: "ts-loader",
 			}
 		]
 	},

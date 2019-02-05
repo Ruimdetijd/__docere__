@@ -21,14 +21,14 @@ function annefrank(xmlio: XMLio) {
 	return Array.isArray(idnos) ? idnos.map(idno => [idno.name, idno.children[0]]) : []
 }
 
-function gekaaptebrieven(xmlio: XMLio) {
-	let meta = xmlio
-		.select('meta')
-		.export(({ type: 'data', deep: false }))
-	if (meta == null) return []
-	if (!Array.isArray(meta)) meta = [meta]
-	return meta.map(m => [m.attributes.type, m.attributes.value])
-}
+// function gekaaptebrieven(xmlio: XMLio) {
+// 	let meta = xmlio
+// 		.select('meta')
+// 		.export(({ type: 'data', deep: false }))
+// 	if (meta == null) return []
+// 	if (!Array.isArray(meta)) meta = [meta]
+// 	return meta.map(m => [m.attributes.type, m.attributes.value])
+// }
 
 export default {
 	abeltasman: function() { return [] },
@@ -36,7 +36,6 @@ export default {
 	mondrian,
 	annefrank,
 	blauweschuit,
-	gekaaptebrieven,
 	serrure: function() { return [] },
 	walewein: function() { return [] },
 	bartholomeus: function() { return [] },

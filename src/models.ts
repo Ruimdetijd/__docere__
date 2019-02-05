@@ -6,6 +6,12 @@ export interface XMLData {
 	size: string
 }
 
+interface MetadataField {
+	slug: string
+	sortorder: number
+	title: string
+}
+
 export class Project {
 	// Description of the project for display purposes only
 	description: string
@@ -20,6 +26,8 @@ export class Project {
 	// items from the text (ie persons, locations, etc)
 	extractors: Extractor[]
 	id: string
+
+	metadata_fields: MetadataField[]
 
 	// A machine friendly version of the title, all lowercase and no punctuation marks,
 	// used as identifier in internal maps and the URL
@@ -42,6 +50,9 @@ export class Project {
 	// List of XML file basenames. For example ["file1", "file2"] are
 	// references to /public/xml/<project-slug/file<n>.xml
 	files: string[]
+
+	metadata_extractor: (xmlio: XMLio) => [string, string][]
+	facsimile_extractor: FacsimileExtractor
 }
 
 export class User {

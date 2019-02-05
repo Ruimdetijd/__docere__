@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { ID_ATTRIBUTE_NAME, COLOR_ATTRIBUTE_NAME } from '../entry'
+import { ID_ATTRIBUTE_NAME, COLOR_ATTRIBUTE_NAME } from 'dispilio'
 
 const div = styled.div`
 `
@@ -17,20 +17,25 @@ const del = styled.span`
 	text-decoration: line-through;
 `
 
+type WWProps = Pick<LbProps, 'wordwrap'>
 const lb = styled.span`
-	display: block;
+	display: ${(props: WWProps) => props.wordwrap ? 'block' : 'inline' };
 
-	&:before {
-		box-sizing: border-box;
-		color: #444;
-		content: counter(linenumber);
-		counter-increment: linenumber;
-		font-size: .8em;
-		left: 0;
-		padding-right: .5em;
-		position: absolute;
-		text-align: right;
-		width: 2em;
+	${(props: WWProps) =>
+		(props.wordwrap) ?
+			`&:before {
+				box-sizing: border-box;
+				color: #444;
+				content: counter(linenumber);
+				counter-increment: linenumber;
+				font-size: .8em;
+				position: absolute;
+				text-align: right;
+				width: 42px;
+				margin-left: -42px;
+				padding-right: 8px;
+			}` :
+			''
 	}
 `
 
@@ -43,7 +48,7 @@ const rs = styled.span`
 	border-bottom-style: solid;
 	border-bottom-color: ${(props: RsProps) => props[COLOR_ATTRIBUTE_NAME]};
 	background-color: ${(props: RsProps) =>
-		props.activeId === props[ID_ATTRIBUTE_NAME] ? props[COLOR_ATTRIBUTE_NAME] : 'none'
+		props.activeId === props[ID_ATTRIBUTE_NAME] ? props[COLOR_ATTRIBUTE_NAME] : 'initial'
 	};
 	color: ${(props: RsProps) =>
 		props.activeId === props[ID_ATTRIBUTE_NAME] ? 'white' : 'initial'
@@ -73,15 +78,17 @@ const hi = styled.span`
 	}}
 `
 
-export default {
+const components: DispilioComponents = {
 	add,
 	damage,
 	del,
 	div,
 	geo: rs,
 	head: styled.strong``,
+	hi,
 	lb,
 	p,
 	rs,
-	hi
 }
+
+export default components

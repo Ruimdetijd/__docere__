@@ -1,8 +1,5 @@
-# Nineveh
+# Docere
 
 ## DEV
-Start the DB
-$ ./start-dev.sh
-
 Start server (webpack-dev-server)
-$ npm start
+$ npm run start:dev

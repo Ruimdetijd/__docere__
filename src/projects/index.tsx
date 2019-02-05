@@ -13,11 +13,17 @@ export default class Projects extends React.Component<AppState> {
 				<h1>Projects</h1>
 				<ul>
 					{
-						this.props.projects.map(project =>
-							<li key={project.id}>
-								<Link to={`/projects/${project.slug}`}>{project.title}</Link>
-							</li>
-						)
+						this.props.projects
+							.sort((a, b) => {
+								if (a.slug < b.slug) return -1
+								if (a.slug > b.slug) return 1
+								return 0
+							})
+							.map(project =>
+								<li key={project.id}>
+									<Link to={`/projects/${project.slug}`}>{project.title || project.slug}</Link>
+								</li>
+							)
 					}
 				</ul>
 			</>

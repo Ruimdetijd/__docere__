@@ -16,6 +16,10 @@ interface ExtractedItem {
 // }
 type Metadata = [string, string][]
 	
+declare const enum Orientation {
+	Horizontal,
+	Vertical
+}
 interface ContextState {
 	activeId: string
 	dataNodeTree: DataNode,
@@ -23,6 +27,7 @@ interface ContextState {
 	extractors: Extractor[]
 	input: string
 	metadata: Metadata
+	orientation: Orientation
 	// xmlio: import('xmlio').default
 }
 

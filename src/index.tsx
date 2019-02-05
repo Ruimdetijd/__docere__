@@ -8,6 +8,11 @@ import { Project as ProjectModel, XMLData } from './models'
 import extractors from './entry/extractors'
 import XMLio from 'xmlio';
 import splitters from './project/splitters'
+import { Main, Menu, H1 } from './entry/index.components'
+// import metadataBySlug from './entry/metadata'
+// import facsimilePathExtractor from './entry/facsimile-path-extractor';
+import Admin from './admin'
+import { Switch } from 'react-router';
 
 function formatBytes(a: any) {
 	var c=1024,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));
@@ -46,33 +51,59 @@ export interface State {
 }
 class App extends React.Component<{}, State> {
 	private async ensureProjects(): Promise<Pick<State, 'projects'>> {
-		const response = await fetch(`/api/projects`)
-		const projects = await response.json()
-		return { projects }
-	}
-
-	private async ensureProject(slug: string): Promise<Partial<State>> {
-		const nextState: Partial<State> = {}
+		const nextState = {} as Pick<State, 'projects'>
 
 		if (!this.state.projects.length) {
-			const { projects } = await this.ensureProjects()
+			const response = await fetch(`/api/projects`)
+			const projects = await response.json()
 			nextState.projects = projects
 		}
 
-		const projects = nextState.hasOwnProperty('projects') ? nextState.projects : this.state.projects
-		const project = projects.find(p => p.slug === slug)
-		if (project.xml != null) return project.slug === slug ? {} : { project }
+		return nextState
+	}
 
+	private async fetchProject(slug: string): Promise<ProjectModel> {
 		const response = await fetch(`/api/projects/${slug}`)
 		const nextProject: ProjectModel = await response.json()
-		const partialState = this.updateProject(nextProject, {
+		if (nextProject.facsimile_extractor != null) nextProject.facsimile_extractor = JSON.parse(nextProject.facsimile_extractor as any)
+		return {
+			...nextProject,
 			entries: {},
-			extractors: extractors[project.slug],
-			splitter: splitters[project.slug],
+			extractors: extractors[slug],
+			splitter: splitters[slug],
 			xml: {}
-		})
+		}
+	}
 
-		return partialState
+	private async ensureProject(slug: string): Promise<Partial<State>> {
+		if (this.state.project != null && this.state.project.slug === slug) return {}
+
+		if (!this.state.projects.length) {
+			const nextState: Partial<State> = {}
+
+			// If projects was not downloaded yet, the project to ensure must be new as well
+			nextState.project = await this.fetchProject(slug)
+
+			const { projects } = await this.ensureProjects()
+
+			// Assign projects to nextState and replace the project
+			// in projects with the full, fetched project
+			nextState.projects = projects
+				.filter(p => p.id !== nextState.project.id)
+				.concat(nextState.project)
+
+			return nextState
+		}
+
+		// const projects = nextState.hasOwnProperty('projects') ? nextState.projects : this.state.projects
+		const project = this.state.projects.find(p => p.slug === slug)
+
+		if (project.xml == null) {
+			const nextProject = await this.fetchProject(slug)
+			return this.updateProject(nextProject)	
+		}
+
+		return {}
 	}
 
 	private async ensureXml(slug: string, filename: string): Promise<Partial<State>> {
@@ -93,7 +124,7 @@ class App extends React.Component<{}, State> {
 			entries = { ...project.entries, [filename]: splitted.map(s => new XMLio(s)) }
 		}
 
-		const partialState = this.updateProject(project, { xml, entries })
+		const partialState = this.updateProject({ xml, entries }, project, nextState.projects)
 		return { ...partialState, xmlio: xmlData.xmlio }
 	}
 
@@ -124,45 +155,73 @@ class App extends React.Component<{}, State> {
 		xmlio: null
 	}
 
-	private updateProject(prevProject: ProjectModel, props: Partial<ProjectModel>): Pick<State, 'project' | 'projects'> {
-		const project = { ...prevProject, ...props }	
-		const projects = this.state.projects
+	private updateProject(
+		props: Partial<ProjectModel>,
+		project?: ProjectModel,
+		projects?: ProjectModel[]
+	): Pick<State, 'project' | 'projects'> {
+		// Extend the project with next props
+		if (project == null) project = this.state.project
+		project = { ...project, ...props }	
+
+		// Replace the old project in state.projects
+		if (projects == null) projects = this.state.projects
+		projects = projects
 			.filter(p => p.id !== project.id)
 			.concat(project)
+
 		return { project, projects }
 	}
 
 	render() {
 		return (
 			<BrowserRouter>
-				<>
-					<Link to="/projects">Projects</Link>
-					&nbsp;
-					{
-						this.state.project != null &&
-						<Link to={`/projects/${this.state.project.slug}`}>{this.state.project.title}</Link>
-					}
-					<Route path="/projects" exact render={() =>
-						<Projects
-							{...this.state}
+				<Main>
+					<H1>DOCERE<small>Digital Scholarly Editions</small></H1>
+					<Switch>
+						<Route
+							path="/admin"
+							render={(props) => <Admin {...props} {...this.state} />}
 						/>
-					} />
-					<Route path="/projects/:slug" exact render={props =>
-						<Project
-							{...props}
-							{...this.state}
+						<Route
+							path="/"
+							render={() =>
+								<>
+									<Menu>
+										<Link to="/projects">Projects</Link>
+										&nbsp;
+										{
+											this.state.project != null &&
+											<Link to={`/projects/${this.state.project.slug}`}>{this.state.project.title}</Link>
+										}
+									</Menu>
+									<div>
+										<Route path="/projects" exact render={() =>
+											<Projects
+												{...this.state}
+											/>
+										} />
+										<Route path="/projects/:slug" exact render={props =>
+											<Project
+												{...props}
+												{...this.state}
+											/>
+										} />
+										<Route
+											exact
+											path="/projects/:projectSlug/xml/:xmlId"
+											render={this.renderEntry}
+										/>
+										<Route
+											path="/projects/:projectSlug/xml/:xmlId/entries/:entryId"
+											render={this.renderEntry}
+										/>
+									</div>
+								</>
+							}
 						/>
-					} />
-					<Route
-						exact
-						path="/projects/:projectSlug/xml/:xmlId"
-						render={this.renderEntry}
-					/>
-					<Route
-						path="/projects/:projectSlug/xml/:xmlId/entries/:entryId"
-						render={this.renderEntry}
-					/>
-				</>
+					</Switch>
+				</Main>
 			</BrowserRouter>
 		)
 	}

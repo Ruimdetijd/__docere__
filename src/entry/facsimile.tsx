@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Props as EntryProps } from './index'
-import facsimilePathExtractors from './facsimile-path-extractor'
 
 export default class Facsimile extends React.PureComponent<EntryProps, null> {
 	private osd
@@ -36,7 +35,7 @@ export default class Facsimile extends React.PureComponent<EntryProps, null> {
 			})
 		}
 
-		const path = facsimilePathExtractors[props.project.slug](props.xmlio)
+		const path = props.project.facsimile_extractor(props.xmlio)
 		this.osd.open(`/api/facsimile/${props.project.slug}/${path}.dzi`)
 	}
 }
