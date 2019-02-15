@@ -5,14 +5,13 @@ import Entry from './entry'
 import Projects from './projects'
 import Project from './project'
 import { Project as ProjectModel, XMLData } from './models'
-import extractors from './entry/extractors'
 import XMLio from 'xmlio';
 import splitters from './project/splitters'
 import { Main, Menu, H1 } from './entry/index.components'
-// import metadataBySlug from './entry/metadata'
-// import facsimilePathExtractor from './entry/facsimile-path-extractor';
 import Admin from './admin'
-import { Switch } from 'react-router';
+import { Switch } from 'react-router'
+import { parseReceivedProject } from './utils'
+import Toggle from './ui/toggle';
 
 function formatBytes(a: any) {
 	var c=1024,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));
@@ -31,7 +30,7 @@ function fetchXml(slug: string, filename: string): Promise<XMLData> {
 		xhr.onload = function() {
 			if (xhr.readyState === xhr.DONE && xhr.status === 200) {
 				const size = formatBytes(xhr.getResponseHeader('Content-length'))
-				const xmlio = new XMLio(xhr.responseXML.documentElement, { namespaces: ['af', 'md']})
+				const xmlio = new XMLio(xhr.responseXML)
 				resolve({ xmlio, size })
 			}
 		}
@@ -47,9 +46,28 @@ export interface State {
 	setProject: (slug: string) => void
 	setProjects: () => void
 	setXml: (slug: string, filename: string) => void
+	updateProject: (props: Partial<ProjectModel>) => void
 	xmlio: XMLio
 }
 class App extends React.Component<{}, State> {
+	private nextProjectState = (
+		props: Partial<ProjectModel>,
+		project?: ProjectModel,
+		projects?: ProjectModel[]
+	): Pick<State, 'project' | 'projects'> => {
+		// Extend the project with next props
+		if (project == null) project = this.state.project
+		project = { ...project, ...props }	
+
+		// Replace the old project in state.projects
+		if (projects == null) projects = this.state.projects
+		projects = projects
+			.filter(p => p.id !== project.id)
+			.concat(project)
+
+		return { project, projects }
+	}
+
 	private async ensureProjects(): Promise<Pick<State, 'projects'>> {
 		const nextState = {} as Pick<State, 'projects'>
 
@@ -64,13 +82,13 @@ class App extends React.Component<{}, State> {
 
 	private async fetchProject(slug: string): Promise<ProjectModel> {
 		const response = await fetch(`/api/projects/${slug}`)
-		const nextProject: ProjectModel = await response.json()
-		if (nextProject.facsimile_extractor != null) nextProject.facsimile_extractor = JSON.parse(nextProject.facsimile_extractor as any)
+		let nextProject: ProjectModel = await response.json()
+		nextProject = parseReceivedProject(nextProject)
+
+		// TODO entries and xml should be copied from current project
 		return {
 			...nextProject,
 			entries: {},
-			extractors: extractors[slug],
-			splitter: splitters[slug],
 			xml: {}
 		}
 	}
@@ -100,7 +118,7 @@ class App extends React.Component<{}, State> {
 
 		if (project.xml == null) {
 			const nextProject = await this.fetchProject(slug)
-			return this.updateProject(nextProject)	
+			return this.nextProjectState(nextProject)	
 		}
 
 		return {}
@@ -120,11 +138,12 @@ class App extends React.Component<{}, State> {
 
 		let entries = {}
 		if (splitters.hasOwnProperty(project.slug)) {
-			const splitted = splitters[project.slug](xmlData.xmlio) as Element[]
-			entries = { ...project.entries, [filename]: splitted.map(s => new XMLio(s)) }
+			// TODO fix this. new XMLio expects an XML Document
+			// const splitted = splitters[project.slug](xmlData.xmlio) as Element[]
+			// entries = { ...project.entries, [filename]: splitted.map(s => new XMLio(s)) }
 		}
 
-		const partialState = this.updateProject({ xml, entries }, project, nextState.projects)
+		const partialState = this.nextProjectState({ xml, entries }, project, nextState.projects)
 		return { ...partialState, xmlio: xmlData.xmlio }
 	}
 
@@ -152,33 +171,42 @@ class App extends React.Component<{}, State> {
 			}
 			this.setState(() => nextState)
 		},
+		updateProject: (nextProject: Partial<ProjectModel>) => {
+			this.setState(() => this.nextProjectState(nextProject))
+		},
 		xmlio: null
 	}
 
-	private updateProject(
-		props: Partial<ProjectModel>,
-		project?: ProjectModel,
-		projects?: ProjectModel[]
-	): Pick<State, 'project' | 'projects'> {
-		// Extend the project with next props
-		if (project == null) project = this.state.project
-		project = { ...project, ...props }	
-
-		// Replace the old project in state.projects
-		if (projects == null) projects = this.state.projects
-		projects = projects
-			.filter(p => p.id !== project.id)
-			.concat(project)
-
-		return { project, projects }
-	}
-
 	render() {
+		const title = this.state.project != null ?
+			<H1>{this.state.project.title || this.state.project.slug}</H1> :
+			<H1><div>DOCERE<small>Digital Scholarly Editions</small></div></H1>
+
 		return (
 			<BrowserRouter>
 				<Main>
-					<H1>DOCERE<small>Digital Scholarly Editions</small></H1>
+					{title}
 					<Switch>
+						<Route path="/tmp" render={() =>
+							<>
+								<div></div>
+								<div>
+									<div style={{ width: '20px', height: '10px' }}>
+										<Toggle change={() => true} value={true} />
+									</div>
+									<div style={{ width: '200px', height: '100px' }}>
+										<Toggle change={() => true} value={false} />
+									</div>
+									<div style={{ width: '600px', height: '100px' }}>
+										<Toggle change={() => true} value={true} />
+									</div>
+									<div style={{ width: '600px', height: '600px' }}>
+										<Toggle change={() => true} value={true} />
+									</div>
+
+								</div>
+							</>
+						} />
 						<Route
 							path="/admin"
 							render={(props) => <Admin {...props} {...this.state} />}
@@ -192,7 +220,11 @@ class App extends React.Component<{}, State> {
 										&nbsp;
 										{
 											this.state.project != null &&
-											<Link to={`/projects/${this.state.project.slug}`}>{this.state.project.title}</Link>
+											<>
+												<Link to={`/projects/${this.state.project.slug}`}>{this.state.project.title}</Link>
+												&nbsp; - &nbsp;
+												<Link to={`/admin/project/${this.state.project.slug}`}>admin</Link>
+											</>
 										}
 									</Menu>
 									<div>

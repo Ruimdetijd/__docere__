@@ -1,15 +1,29 @@
 import { Splitter } from './project/splitters'
 import XMLio from 'xmlio'
+import { FacsimileExtractor } from 'dispilio'
 
 export interface XMLData {
 	xmlio: XMLio,
 	size: string
 }
 
-interface MetadataField {
+export enum EsDataType {
+	boolean = "boolean",
+	date = "date",
+	geo_point = "geo_point",
+	integer = "integer",
+	keyword = "keyword",
+	null = "null",
+	text = "text",
+}
+export interface MetadataField {
+	aside: boolean
+	es_data_type: EsDataType
+	id: string
 	slug: string
 	sortorder: number
 	title: string
+	type: 'meta' | 'text'
 }
 
 export class Project {

@@ -1,0 +1,91 @@
+VAN GOGH working example
+http://localhost:4000/projects/vangogh/xml/let273
+
+GEKAAPTE BRIEVEN working example
+http://localhost:4000/projects/gekaaptebrieven/xml/105
+
+
+// VAN GOGH facsimile extractor
+
+function(xmlio) {
+	const attr = 'facs'
+	const selector = `pb[${attr}]`
+
+	let facsimileIDs = xmlio
+		.select(selector)
+		.export(({ type: 'data', deep: false }))
+	if (facsimileIDs == null) return []
+	if (!Array.isArray(facsimileIDs)) facsimileIDs = [facsimileIDs]
+	facsimileIDs = facsimileIDs
+
+	const facsimiles = facsimileIDs
+		.map(fid => fid.attributes.facs)
+		.map(id => {
+			id = id.slice(1)
+			const graphic = xmlio
+				.select(`zone[xml:id="${id}"] > graphic[rend="norend"]`)
+				.export({ type: 'data' })
+			if (graphic == null) return null
+			return {
+				id,
+				path: `/api/facsimile/vangogh/${graphic.attributes.url.slice(0, -4)}.dzi`,
+			}
+		})
+	
+	return { attr, facsimiles, selector }
+}
+
+// VAN GOGH metadata extractor
+function(xmlio) {
+	const selector = "vg:letHeading > *"
+	
+	// TODO vg:placeLet is exported as vg:placelet
+	const propMap = {
+		author: 'From',
+		'vg:addressee': 'To',
+		'vg:placelet': 'Place',
+		'vg:datelet': 'Date'
+	}
+
+	let meta = xmlio
+		.select(selector)
+		.export(({ type: 'data' }))
+	if (meta == null) return []
+	if (!Array.isArray(meta)) meta = [meta]
+
+	return meta.map(m => [propMap[m.name], m.children.join('')])
+}
+
+// GEKAAPTE BRIEVEN facsimile extractor
+
+function(xmlio) {
+	const attr = 'facs'
+	const selector = `pb[${attr}]`
+
+	const facsimileExtractor = { attr, selector }
+
+	let pbs = xmlio
+		.select(selector)
+		.export(({ type: 'data', deep: false }))
+	if (pbs == null) pbs = []
+	if (!Array.isArray(pbs)) pbs = [pbs]
+
+	facsimileExtractor.facsimiles = pbs
+		.map(pb => ({
+			path: `/api/facsimile/gekaaptebrieven/${pb.attributes.facs.slice(0, -4)}.dzi`,
+		}))
+	
+	return facsimileExtractor
+}
+
+// GEKAAPTE BRIEVEN metadata extractor
+
+function(xmlio) {
+	const selector = "meta"
+	let meta = xmlio
+		.select(selector)
+		.export(({ type: 'data', deep: false }))
+	if (meta == null) return []
+	if (!Array.isArray(meta)) meta = [meta]
+	return meta.map(m => [m.attributes.type, m.attributes.value])
+}

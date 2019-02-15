@@ -1,65 +1,63 @@
 import * as React from 'react'
 import { State as AppState } from '../../index'
 import { RouteComponentProps } from 'react-router'
-import Editor from '../editor'
-import HireInput from 'hire-forms-input'
-import FacsimileExtractorForm from './facsimile-extractor-form'
+import Menu from './menu'
+import Main from './main'
+import { parseReceivedProject } from '../../utils'
+import { Project, MetadataField } from '../../models'
+import { Link } from 'react-router-dom'
 
-const defaultMetadataExtractorValue = `/**
-function(xmlio) {
-	const selector = ""
-	let meta = xmlio
-		.select(selector)
-		.export(({ type: 'data', deep: false }))
-	if (meta == null) return []
-	if (!Array.isArray(meta)) meta = [meta]
-	return meta.map(m => [m.attributes.type, m.attributes.value])
+function getPropValue(project: Project, prop: keyof Project, initValue: any = null) {
+	if (project == null || project[prop] == null) return initValue
+	return project[prop]
 }
-*/`
 
-const defaultSplitter = `/**
-function(xmlio) {
-	const selector = ""
-	return xmlio
-		.select(selector)
-		.export({ type: 'dom' })
-}
-*/`
-
-interface MatchParams {
+export interface MatchParams {
 	slug: string
+	menuitem: string
 }
 interface Props extends AppState, RouteComponentProps<MatchParams> {
 }
-interface State {
+export interface State {
+	extractors: Extractor[]
 	facsimile_extractor: string
 	metadata_extractor: string
+	metadata_fields: MetadataField[]
 	splitter: string
 	title: string
 }
 export default class ProjectAdmin extends React.Component<Props, State> {
 	state: State = {
-		facsimile_extractor: (this.props.project != null) ? JSON.stringify(this.props.project.facsimile_extractor) : null,
-		metadata_extractor: (this.props.project != null) ? this.props.project.metadata_extractor.toString() : null,
-		splitter: (this.props.project != null) ? this.props.project.splitter.toString() : null,
-		title: (this.props.project != null) ? this.props.project.title : '',
+		extractors: getPropValue(this.props.project, 'extractors'),
+		facsimile_extractor: getPropValue(this.props.project, 'facsimile_extractor'),
+		metadata_extractor: getPropValue(this.props.project, 'metadata_extractor'),
+		metadata_fields: getPropValue(this.props.project, 'metadata_fields'),
+		splitter: getPropValue(this.props.project, 'splitter'),
+		title: getPropValue(this.props.project, 'title', ''),
 	}
 
 	async componentDidMount() {
 		this.props.setProject(this.props.match.params.slug)
 	}
 
-	componentDidUpdate(prevProps: Props) {
-		if (prevProps.project !== this.props.project) {
-			let { facsimile_extractor, metadata_extractor, splitter, title } = this.props.project
-
-			this.setState({
-				facsimile_extractor: facsimile_extractor == null ? null : JSON.stringify(facsimile_extractor),
-				metadata_extractor: metadata_extractor == null ? defaultMetadataExtractorValue : metadata_extractor.toString(),
-				splitter: splitter == null ? defaultSplitter : splitter.toString(),
-				title: title == null ? '' : title
-			})
+	componentDidUpdate() { 
+		const nextState: Partial<State> = {}
+		if (this.state.facsimile_extractor == null && this.props.project.facsimile_extractor != null) {
+			nextState.facsimile_extractor = this.props.project.facsimile_extractor.toString()
 		}
+		if (this.state.metadata_extractor == null && this.props.project.metadata_extractor != null) {
+			nextState.metadata_extractor = this.props.project.metadata_extractor.toString()
+		}
+		if (this.state.splitter == null && this.props.project.splitter != null) {
+			nextState.splitter = this.props.project.splitter.toString()
+		}
+		if (this.state.title == '' && this.props.project.title != null && this.props.project.title.length) {
+			nextState.title = this.props.project.title
+		}
+		if (this.state.extractors == null && this.props.project.extractors != null && this.props.project.extractors.length) {
+			nextState.extractors = this.props.project.extractors
+		}
+		if (Object.keys(nextState).length) this.setState(nextState as State)
 	}
 
 	render() {
@@ -68,20 +66,28 @@ export default class ProjectAdmin extends React.Component<Props, State> {
 		return (
 			<>
 				<h2 style={{ margin: 0 }}>
-					{`Project: ${this.props.project.title || this.props.project.slug}`}
+					{`${this.props.project.title || this.props.project.slug}`} - <Link to={`/projects/${this.props.project.slug}`}>site</Link>
 					<button
 						onClick={async () => {
 							const body = { ...this.state }
-							if (body.metadata_extractor === defaultMetadataExtractorValue) body.metadata_extractor = null
-							if (body.splitter === defaultSplitter) body.splitter = null
 
-							await fetch(`/api/projects/${this.props.project.slug}`, {
+							// Metadata_fields is not part of the project table
+							delete body.metadata_fields
+
+							if (Array.isArray(body.extractors)) {
+								body.extractors = body.extractors.map(e => {
+									if (e.idAttribute != null && !e.idAttribute.length) e.idAttribute = null
+									return e
+								})
+							}
+							const response = await fetch(`/api/projects/${this.props.project.slug}`, {
 								body: JSON.stringify(body),
-								headers: {
-									'Content-Type': 'application/json'
-								},
+								headers: { 'Content-Type': 'application/json' },
 								method: "PUT",
 							})	
+							let project = await response.json() as Project
+							project = parseReceivedProject(project as Project)
+							this.props.updateProject(project)
 						}}
 					>
 						Save
@@ -89,60 +95,17 @@ export default class ProjectAdmin extends React.Component<Props, State> {
 				</h2>
 				<div style={{
 					display: 'grid',
-					gridTemplateRows: 'repeat(3, 1fr)',
-					gridTemplateColumns: '1fr 3fr'
+					gridTemplateColumns: '1fr 3fr',
+					gridTemplateRows: '100%',
+					gridColumnGap: '8%'
 				}}>
-					<section style={{ overflow: 'auto', gridRow: '1 / span 4' }}>
-						<h3>XML documents</h3>
-						<ul>
-							{
-								this.props.project.files.map(filename =>
-									<li
-										key={filename}
-										style={{ textAlign: 'right' }}
-									>
-										{filename}
-									</li>
-								)
-							}
-						</ul>
-					</section>
-					<section>
-						<h3>Title</h3>
-						<HireInput
-							onChange={title => this.setState({ title })}
-							value={this.state.title}
-						/>
-					</section>
-					{
-						this.state.splitter != null &&
-						<section>
-							<h3>Splitter</h3>
-							<Editor
-								change={(splitter) =>
-									this.setState({ splitter })
-								}
-								initValue={this.state.splitter}
-							/>
-						</section>
-					}
-					<FacsimileExtractorForm
-						facsimileExtractor={this.props.project.facsimile_extractor}
-						onChange={facsimile_extractor => this.setState({ facsimile_extractor })}
-						slug={this.props.project.slug}
+					<Menu slug={this.props.project.slug} />
+					<Main
+						{...this.props}
+						change={(key: keyof State, value: any) => {
+							this.setState({ [key]: value } as Pick<State, keyof State>)
+						}}
 					/>
-					{
-						this.state.metadata_extractor != null &&
-						<section>
-							<h3>Metadata Extractor</h3>
-							<Editor
-								change={(metadata_extractor) =>
-									this.setState({ metadata_extractor })
-								}
-								initValue={this.state.metadata_extractor}
-							/>
-						</section>
-					}
 				</div>
 			</>
 		)
