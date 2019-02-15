@@ -1,4 +1,3 @@
-import { Splitter } from './project/splitters'
 import XMLio from 'xmlio'
 import { FacsimileExtractor } from 'dispilio'
 
@@ -6,6 +5,8 @@ export interface XMLData {
 	xmlio: XMLio,
 	size: string
 }
+
+type Splitter = (xmlio: XMLio) => Element | Element[]
 
 export enum EsDataType {
 	boolean = "boolean",

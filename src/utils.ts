@@ -1,4 +1,5 @@
-import { Project } from './models';
+import { Project, XMLData } from './models'
+import XMLio from 'xmlio'
 
 // str byteToHex(uint8 byte)
 //   converts a single byte to a hex string 
@@ -43,4 +44,30 @@ export function debounce(func: Function, wait: number) {
 		clearTimeout(timeout)
 		timeout = setTimeout(func, wait)
 	}
+}
+
+function formatBytes(a: any) {
+	var c=1024,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));
+	const num = (a/Math.pow(c,f))
+	const d = num < 10 ? 1 : 0
+	return parseFloat(num.toFixed(d))+e[f]
+}
+
+export function fetchXml(slug: string, filename: string): Promise<XMLData> {
+	return new Promise((resolve, _reject) => {
+		var xhr = new XMLHttpRequest
+		xhr.open('GET', `/api/xml/${slug}/${filename}.xml`)
+		xhr.responseType = 'document'
+		xhr.overrideMimeType('text/xml')
+
+		xhr.onload = function() {
+			if (xhr.readyState === xhr.DONE && xhr.status === 200) {
+				const size = formatBytes(xhr.getResponseHeader('Content-length'))
+				const xmlio = new XMLio(xhr.responseXML)
+				resolve({ xmlio, size })
+			}
+		}
+
+		xhr.send()
+	})
 }

@@ -4,40 +4,13 @@ import { BrowserRouter, Link, Route } from 'react-router-dom'
 import Entry from './entry'
 import Projects from './projects'
 import Project from './project'
-import { Project as ProjectModel, XMLData } from './models'
+import { Project as ProjectModel } from './models'
 import XMLio from 'xmlio';
-import splitters from './project/splitters'
 import { Main, Menu, H1 } from './entry/index.components'
 import Admin from './admin'
 import { Switch } from 'react-router'
-import { parseReceivedProject } from './utils'
+import { parseReceivedProject, fetchXml } from './utils'
 import Toggle from './ui/toggle';
-
-function formatBytes(a: any) {
-	var c=1024,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));
-	const num = (a/Math.pow(c,f))
-	const d = num < 10 ? 1 : 0
-	return parseFloat(num.toFixed(d))+e[f]
-}
-
-function fetchXml(slug: string, filename: string): Promise<XMLData> {
-	return new Promise((resolve, _reject) => {
-		var xhr = new XMLHttpRequest
-		xhr.open('GET', `/api/xml/${slug}/${filename}.xml`)
-		xhr.responseType = 'document'
-		xhr.overrideMimeType('text/xml')
-
-		xhr.onload = function() {
-			if (xhr.readyState === xhr.DONE && xhr.status === 200) {
-				const size = formatBytes(xhr.getResponseHeader('Content-length'))
-				const xmlio = new XMLio(xhr.responseXML)
-				resolve({ xmlio, size })
-			}
-		}
-
-		xhr.send()
-	})
-}
 
 export interface State {
 	projects: ProjectModel[]
@@ -50,103 +23,6 @@ export interface State {
 	xmlio: XMLio
 }
 class App extends React.Component<{}, State> {
-	private nextProjectState = (
-		props: Partial<ProjectModel>,
-		project?: ProjectModel,
-		projects?: ProjectModel[]
-	): Pick<State, 'project' | 'projects'> => {
-		// Extend the project with next props
-		if (project == null) project = this.state.project
-		project = { ...project, ...props }	
-
-		// Replace the old project in state.projects
-		if (projects == null) projects = this.state.projects
-		projects = projects
-			.filter(p => p.id !== project.id)
-			.concat(project)
-
-		return { project, projects }
-	}
-
-	private async ensureProjects(): Promise<Pick<State, 'projects'>> {
-		const nextState = {} as Pick<State, 'projects'>
-
-		if (!this.state.projects.length) {
-			const response = await fetch(`/api/projects`)
-			const projects = await response.json()
-			nextState.projects = projects
-		}
-
-		return nextState
-	}
-
-	private async fetchProject(slug: string): Promise<ProjectModel> {
-		const response = await fetch(`/api/projects/${slug}`)
-		let nextProject: ProjectModel = await response.json()
-		nextProject = parseReceivedProject(nextProject)
-
-		// TODO entries and xml should be copied from current project
-		return {
-			...nextProject,
-			entries: {},
-			xml: {}
-		}
-	}
-
-	private async ensureProject(slug: string): Promise<Partial<State>> {
-		if (this.state.project != null && this.state.project.slug === slug) return {}
-
-		if (!this.state.projects.length) {
-			const nextState: Partial<State> = {}
-
-			// If projects was not downloaded yet, the project to ensure must be new as well
-			nextState.project = await this.fetchProject(slug)
-
-			const { projects } = await this.ensureProjects()
-
-			// Assign projects to nextState and replace the project
-			// in projects with the full, fetched project
-			nextState.projects = projects
-				.filter(p => p.id !== nextState.project.id)
-				.concat(nextState.project)
-
-			return nextState
-		}
-
-		// const projects = nextState.hasOwnProperty('projects') ? nextState.projects : this.state.projects
-		const project = this.state.projects.find(p => p.slug === slug)
-
-		if (project.xml == null) {
-			const nextProject = await this.fetchProject(slug)
-			return this.nextProjectState(nextProject)	
-		}
-
-		return {}
-	}
-
-	private async ensureXml(slug: string, filename: string): Promise<Partial<State>> {
-		const nextState = await this.ensureProject(slug)
-		const project = nextState.hasOwnProperty('project') ? nextState.project : this.state.project
-
-		if (project.xml.hasOwnProperty(filename)) {
-			const { xmlio } = project.xml[filename]
-			return (xmlio !== this.state.xmlio) ? { xmlio } : {}
-		}
-
-		const xmlData = await fetchXml(project.slug, filename)	
-		const xml = { ...project.xml, [filename]: xmlData }	
-
-		let entries = {}
-		if (splitters.hasOwnProperty(project.slug)) {
-			// TODO fix this. new XMLio expects an XML Document
-			// const splitted = splitters[project.slug](xmlData.xmlio) as Element[]
-			// entries = { ...project.entries, [filename]: splitted.map(s => new XMLio(s)) }
-		}
-
-		const partialState = this.nextProjectState({ xml, entries }, project, nextState.projects)
-		return { ...partialState, xmlio: xmlData.xmlio }
-	}
-
 	state: State = {
 		project: null,
 		projects: [],
@@ -266,9 +142,107 @@ class App extends React.Component<{}, State> {
 			/>
 		)
 	}
+
+	private nextProjectState = (
+		props: Partial<ProjectModel>,
+		project?: ProjectModel,
+		projects?: ProjectModel[]
+	): Pick<State, 'project' | 'projects'> => {
+		// Extend the project with next props
+		if (project == null) project = this.state.project
+		project = { ...project, ...props }	
+
+		// Replace the old project in state.projects
+		if (projects == null) projects = this.state.projects
+		projects = projects
+			.filter(p => p.id !== project.id)
+			.concat(project)
+
+		return { project, projects }
+	}
+
+
+	private async ensureProjects(): Promise<Pick<State, 'projects'>> {
+		const nextState = {} as Pick<State, 'projects'>
+
+		if (!this.state.projects.length) {
+			const response = await fetch(`/api/projects`)
+			const projects = await response.json()
+			nextState.projects = projects
+		}
+
+		return nextState
+	}
+
+	private async fetchProject(slug: string): Promise<ProjectModel> {
+		const response = await fetch(`/api/projects/${slug}`)
+		let nextProject: ProjectModel = await response.json()
+		nextProject = parseReceivedProject(nextProject)
+
+		// TODO entries and xml should be copied from current project
+		return {
+			...nextProject,
+			entries: {},
+			xml: {}
+		}
+	}
+
+	private async ensureProject(slug: string): Promise<Partial<State>> {
+		if (this.state.project != null && this.state.project.slug === slug) return {}
+
+		if (!this.state.projects.length) {
+			const nextState: Partial<State> = {}
+
+			// If projects was not downloaded yet, the project to ensure must be new as well
+			nextState.project = await this.fetchProject(slug)
+
+			const { projects } = await this.ensureProjects()
+
+			// Assign projects to nextState and replace the project
+			// in projects with the full, fetched project
+			nextState.projects = projects
+				.filter(p => p.id !== nextState.project.id)
+				.concat(nextState.project)
+
+			return nextState
+		}
+
+		// const projects = nextState.hasOwnProperty('projects') ? nextState.projects : this.state.projects
+		const project = this.state.projects.find(p => p.slug === slug)
+
+		if (project.xml == null) {
+			const nextProject = await this.fetchProject(slug)
+			return this.nextProjectState(nextProject)	
+		}
+
+		return {}
+	}
+
+	private async ensureXml(slug: string, filename: string): Promise<Partial<State>> {
+		const nextState = await this.ensureProject(slug)
+		const project = nextState.hasOwnProperty('project') ? nextState.project : this.state.project
+
+		if (project.xml.hasOwnProperty(filename)) {
+			const { xmlio } = project.xml[filename]
+			return (xmlio !== this.state.xmlio) ? { xmlio } : {}
+		}
+
+		const xmlData = await fetchXml(project.slug, filename)	
+		const xml = { ...project.xml, [filename]: xmlData }	
+
+		// TODO fix this. new XMLio expects an XML Document
+		// let entries = {}
+		// if (splitters.hasOwnProperty(project.slug)) {
+		// 	const splitted = splitters[project.slug](xmlData.xmlio) as Element[]
+		// 	entries = { ...project.entries, [filename]: splitted.map(s => new XMLio(s)) }
+		// }
+
+		const partialState = this.nextProjectState({ xml }, project, nextState.projects)
+		return { ...partialState, xmlio: xmlData.xmlio }
+	}
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
 	const container = document.getElementById('container')
 	ReactDOM.render(<App />, container)
-});
+})
