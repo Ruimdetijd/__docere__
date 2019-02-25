@@ -25,6 +25,19 @@ export function parseReceivedProject(nextProject: Project): Project {
 	return nextProject
 }
 
+export async function fetchPost(url: string, body: any) {
+	const response = await fetch(url, {
+		body: JSON.stringify(body),
+		headers: { 'Content-Type': 'application/json' },
+		method: "POST",
+	})
+
+	if (response.headers.get("content-length") !== '0')	{
+		const data = await response.json()
+		return data
+	}
+}
+
 export async function fetchPut(url: string, body: any) {
 	const response = await fetch(url, {
 		body: JSON.stringify(body),

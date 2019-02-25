@@ -4,9 +4,19 @@
 		<meta charset="UTF-8" />
 		<title>Docere</title>
 		<style>
+			@font-face {
+				font-family: 'Roboto';
+				src: url('/static/roboto/Roboto-Regular.ttf')  format('truetype');
+			}
+
+			@font-face {
+				font-family: 'Merriweather';
+				src: url('/static/merriweather/Merriweather-Regular.ttf')  format('truetype');
+			}
+
 			html, body {
-				font-family: sans-serif;
-				height: 100%;
+				font-family: 'Roboto', sans-serif;
+				font-size: 18px;
 				margin: 0;
 				padding: 0;
 				width: 100%;
@@ -16,10 +26,13 @@
 				margin: 0;
 				padding: 0;
 			}
+			input { 
+				font-family: 'Roboto', sans-serif;
+			}
 			#container {
-				height: 100%;
 				width: 100%;
 			}
+
 		</style>
 	</head>
 	<body>

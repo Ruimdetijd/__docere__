@@ -2,16 +2,17 @@ import * as React from 'react'
 import HucFacetedSearch, { FullTextSearch, Facets, BooleanFacet, ListFacet, RangeFacet, Reset } from 'huc-faceted-search'
 import { State as AppState } from '../index'
 import { RouteComponentProps } from 'react-router'
+// TODO remove dep on huc-ui-components. Plus, a search result should be configurable per project
 import { HucSearchResults } from 'huc-ui-components'
 import ResultBodyComponent from './result-body'
 import styled from '@emotion/styled'
+import { debounce } from '../utils';
 
 const Wrapper = styled.div`
 	display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-template-rows: 4em auto;
-    grid-column-gap: 6%;
-    padding: 0px 4%;
+    grid-template-columns: 320px auto;
+    grid-column-gap: 64px;
+    padding: 64px;
 	
 	h2 {
 		grid-column: 1 / span 2;
@@ -25,18 +26,29 @@ interface Props extends AppState, RouteComponentProps<MatchParams> {
 }
 interface State {
 	// filename: string
+	request: any
 	searchResults: any
 }
 export default class Project extends React.Component<Props, State> {
+	private searchRef: React.RefObject<HucFacetedSearch>
+
 	state: State = {
+		request: null,
 		searchResults: {
 			hits: [],
 			total: 0
 		}
 	}
 
+	constructor(props: Props) {
+		super(props)
+		this.searchRef = React.createRef()
+	}
+
 	componentDidMount() {
 		this.props.setProject(this.props.match.params.slug)
+
+		document.addEventListener('scroll', this.onScrollDebounced)
 	}
 
 	shouldComponentUpdate(nextProps: Props, nextState: State) {
@@ -54,9 +66,8 @@ export default class Project extends React.Component<Props, State> {
 			<Wrapper>
 				<HucFacetedSearch
 					backend="elasticsearch"
-					onChange={(_req, searchResults) => {
-						this.setState({ searchResults })
-					}}
+					onChange={this.handleChange}
+					ref={this.searchRef}
 					url={`/search/${this.props.project.slug}/_search`}
 				>
 					<FullTextSearch autoSuggest={async () => []} />
@@ -94,53 +105,21 @@ export default class Project extends React.Component<Props, State> {
 					resultBodyComponent={ResultBodyComponent(this.props.project.slug)}
 					searchResults={this.state.searchResults}
 				/>
-
-				{/* <div>
-					<h3>XML documents</h3>
-					<ul>
-						{
-							this.props.project.files.map(filename =>
-								<li key={filename}>
-									<Link to={`/projects/${this.props.project.slug}/xml/${filename}`}>{filename}</Link>
-									{
-										splitters.hasOwnProperty(this.props.project.slug) &&
-										<span
-											onClick={() => {
-												this.setState({ filename })
-												this.props.setXml(this.props.match.params.slug, filename)
-											}}
-										>
-											split
-										</span>
-									}
-									{
-										this.props.project.xml.hasOwnProperty(filename) &&
-										<span>{this.props.project.xml[filename].size}</span>
-									}
-								</li>
-							)
-						}
-					</ul>
-				</div>
-				{
-					splitters.hasOwnProperty(this.props.project.slug) &&
-					this.state.filename != null &&
-					this.props.project.entries.hasOwnProperty(this.state.filename) &&
-					this.props.project.entries[this.state.filename].length &&
-					<div>
-						<h3>Entries</h3>
-						<ul>
-							{
-								this.props.project.entries[this.state.filename].map((_xmlio, index) =>
-									<li key={index}>
-										<Link to={`/projects/${this.props.project.slug}/xml/${this.state.filename}/entries/${index}`}>{index}</Link>
-									</li>
-								)
-							}
-						</ul>
-					</div>
-				} */}
 			</Wrapper>
 		)
 	}
+
+	private handleChange = (req: any, searchResults: any, query: string) => {
+		if (query.length) this.props.setSearchQuery(query)
+		this.setState({ request: req, searchResults })
+	}
+
+	private onScroll = () => {
+		const { documentElement: doc } = document
+		if (doc.scrollHeight - (doc.scrollTop + doc.clientHeight) < doc.scrollHeight * .1) {
+			this.searchRef.current.getNext()
+		}
+	}
+
+	private onScrollDebounced = debounce(this.onScroll, 100)
 }

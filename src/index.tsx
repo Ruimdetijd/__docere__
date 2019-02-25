@@ -10,14 +10,15 @@ import { Main, Menu, H1 } from './entry/index.components'
 import Admin from './admin'
 import { Switch } from 'react-router'
 import { parseReceivedProject, fetchXml } from './utils'
-import Toggle from './ui/toggle';
 
 export interface State {
 	projects: ProjectModel[]
 	project: ProjectModel
+	searchQuery: string
 	setEntry: (slug: string, xmlId: string, entryId: string) => void
 	setProject: (slug: string) => void
 	setProjects: () => void
+	setSearchQuery: (query: string) => void
 	setXml: (slug: string, filename: string) => void
 	updateProject: (props: Partial<ProjectModel>) => void
 	xmlio: XMLio
@@ -26,6 +27,7 @@ class App extends React.Component<{}, State> {
 	state: State = {
 		project: null,
 		projects: [],
+		searchQuery: null,
 		setProjects: async () => {
 			const nextState = await this.ensureProjects()
 			this.setState(() => nextState)
@@ -35,16 +37,19 @@ class App extends React.Component<{}, State> {
 			this.setState(() => nextState)
 
 		},
+		setSearchQuery: (searchQuery: string) => {
+			this.setState({ searchQuery })
+		},
 		setXml: async (slug: string, filename: string) => {
 			const nextState = await this.ensureXml(slug, filename) as State
 			this.setState(() => nextState)
 		},
-		setEntry: async (slug: string, filename: string, entryId: string) => {
+		setEntry: async (slug: string, filename: string) => {
 			const nextState = await this.ensureXml(slug, filename) as State
-			if (entryId != null) {
-				const project = nextState.hasOwnProperty('project') ? nextState.project : this.state.project
-				nextState.xmlio = project.entries[filename][parseInt(entryId, 10)]
-			}
+			// if (entryId != null) {
+			// 	const project = nextState.hasOwnProperty('project') ? nextState.project : this.state.project
+			// 	nextState.xmlio = project.entries[filename][parseInt(entryId, 10)]
+			// }
 			this.setState(() => nextState)
 		},
 		updateProject: (nextProject: Partial<ProjectModel>) => {
@@ -55,34 +60,51 @@ class App extends React.Component<{}, State> {
 
 	render() {
 		const title = this.state.project != null ?
-			<H1>{this.state.project.title || this.state.project.slug}</H1> :
+			<H1>
+				<Link to={`/projects/${this.state.project.slug}`}>
+					{this.state.project.title || this.state.project.slug}
+				</Link>
+			</H1> :
 			<H1><div>DOCERE<small>Digital Scholarly Editions</small></div></H1>
 
 		return (
 			<BrowserRouter>
 				<Main>
+					<Menu>
+						{/* <Link to="/projects">Projects</Link>
+						&nbsp;
+						{
+							this.state.project != null &&
+							<>
+								<Link to={`/projects/${this.state.project.slug}`}>{this.state.project.title}</Link>
+								&nbsp; - &nbsp;
+								<Link to={`/admin/project/${this.state.project.slug}`}>admin</Link>
+							</>
+						} */}
+						<div></div>
+						<Route
+							path="/projects/:projectSlug/xml/:xmlId"
+							render={() =>
+								<div>
+									<input
+										onKeyUp={ev => {
+											if (ev.keyCode === 13) {
+												this.state.setSearchQuery((ev.target as HTMLInputElement).value)
+											}
+										}}
+									/>
+									<div>
+										<svg viewBox="0 0 250.313 250.313">
+											<path d="M244.186,214.604l-54.379-54.378c-0.289-0.289-0.628-0.491-0.93-0.76 c10.7-16.231,16.945-35.66,16.945-56.554C205.822,46.075,159.747,0,102.911,0S0,46.075,0,102.911 c0,56.835,46.074,102.911,102.91,102.911c20.895,0,40.323-6.245,56.554-16.945c0.269,0.301,0.47,0.64,0.759,0.929l54.38,54.38 c8.169,8.168,21.413,8.168,29.583,0C252.354,236.017,252.354,222.773,244.186,214.604z M102.911,170.146 c-37.134,0-67.236-30.102-67.236-67.235c0-37.134,30.103-67.236,67.236-67.236c37.132,0,67.235,30.103,67.235,67.236 C170.146,140.044,140.043,170.146,102.911,170.146z" />
+										</svg>
+									</div>
+								</div>
+
+							}
+						/>
+					</Menu>
 					{title}
 					<Switch>
-						<Route path="/tmp" render={() =>
-							<>
-								<div></div>
-								<div>
-									<div style={{ width: '20px', height: '10px' }}>
-										<Toggle change={() => true} value={true} />
-									</div>
-									<div style={{ width: '200px', height: '100px' }}>
-										<Toggle change={() => true} value={false} />
-									</div>
-									<div style={{ width: '600px', height: '100px' }}>
-										<Toggle change={() => true} value={true} />
-									</div>
-									<div style={{ width: '600px', height: '600px' }}>
-										<Toggle change={() => true} value={true} />
-									</div>
-
-								</div>
-							</>
-						} />
 						<Route
 							path="/admin"
 							render={(props) => <Admin {...props} {...this.state} />}
@@ -91,18 +113,6 @@ class App extends React.Component<{}, State> {
 							path="/"
 							render={() =>
 								<>
-									<Menu>
-										<Link to="/projects">Projects</Link>
-										&nbsp;
-										{
-											this.state.project != null &&
-											<>
-												<Link to={`/projects/${this.state.project.slug}`}>{this.state.project.title}</Link>
-												&nbsp; - &nbsp;
-												<Link to={`/admin/project/${this.state.project.slug}`}>admin</Link>
-											</>
-										}
-									</Menu>
 									<div>
 										<Route path="/projects" exact render={() =>
 											<Projects

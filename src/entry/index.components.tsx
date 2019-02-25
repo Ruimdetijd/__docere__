@@ -1,14 +1,14 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/core'
 
+const TOPMENU_HEIGHT = 32
+const MAINHEADER_HEIGHT = 64 
+
 export const Main = styled('div')`
+	background-color: white;
 	box-sizing: border-box;
 	display: grid;
-	grid-row-gap: 1%;
-	grid-template-rows: 10% 3% 85%;
-	height: 100%;
-	padding: 0 2%;
-	transition: all 1s;
+	grid-template-rows: 32px 64px auto;
 	width: 100%;
 `
 
@@ -17,7 +17,6 @@ interface LayersProps {
 }
 export const Layers = styled.div`
 	display: grid;
-	grid-column-gap: 2%;
 	${(props: LayersProps) => {
 		console.log(props)
 		if (props.orientation === 0) return 'grid-template-columns: 1fr 1fr;'
@@ -28,12 +27,22 @@ export const Layers = styled.div`
 
 export const H1 = styled('h1')`
 	align-items: center;	
-	background: #333;
-	color: #DDD;
+	background: #e3c386;
+	color: #444;
 	display: grid;
+	font-size: 1.75rem;
+	height: ${MAINHEADER_HEIGHT}px;
 	justify-items: center;
 	margin: 0;
+	position: sticky;
+	top: ${TOPMENU_HEIGHT}px;
 	text-transform: uppercase;
+	z-index: 1;
+
+	a:hover, a:link, a:active, a:visited {
+		color: inherit;
+		text-decoration: none;
+	}
 
 	div {
 		text-align: center;
@@ -48,6 +57,41 @@ export const H1 = styled('h1')`
 `
 
 export const Menu = styled.div`
+	background-color: #c7aa71;
+	display: grid;
+	grid-template-columns: 80% 20%;
+	height: ${TOPMENU_HEIGHT}px;
+	position: sticky;
+	top: 0;
+	z-index: 1;
+
+	& > div {
+		display: grid;
+		grid-template-columns: 64px auto 28px 32px;
+
+		& > input { 
+			background-color: #988258;
+			border: none;
+			box-sizing: border-box;
+			color: white;
+			font-size: 1rem;
+			grid-column: 2;
+			outline: none;
+			padding: 0 .5em;
+			width: 100%;
+		}
+		& > div {
+			align-items: center;
+			background-color: #988258;
+			grid-column: 3;
+			padding-right: 8px;
+			display: grid;
+
+			svg {
+				fill: #c7aa71;
+			}
+		}
+	}
 `
 
 export const MetadataItem = styled.li`

@@ -1,24 +1,24 @@
 import styled from '@emotion/styled';
 import { ID_ATTRIBUTE_NAME, COLOR_ATTRIBUTE_NAME } from 'dispilio'
 
-const div = styled.div`
+export const div = styled.div`
 `
 
-const p = styled.div`
+export const p = styled.div`
 	margin-bottom: 1em;
 `
 
-const add = styled.span`
+export const add = styled.span`
 	color: green;
 `
 
-const del = styled.span`
+export const del = styled.span`
 	color: red;
 	text-decoration: line-through;
 `
 
 type WWProps = Pick<LbProps, 'wordwrap'>
-const lb = styled.span`
+export const lb = styled.span`
 	display: ${(props: WWProps) => props.wordwrap ? 'block' : 'inline' };
 
 	${(props: WWProps) =>
@@ -43,7 +43,7 @@ interface RsProps {
 	activeId: string
 	type: string
 }
-const rs = styled.span`
+export const rs = styled.span`
 	border-bottom: 2px;
 	border-bottom-style: solid;
 	border-bottom-color: ${(props: RsProps) => props[COLOR_ATTRIBUTE_NAME]};
@@ -57,7 +57,7 @@ const rs = styled.span`
 	padding: .05em .1em;
 `
 
-const damage = styled.span`
+export const damage = styled.span`
 	&:before {
 		content: '✸';
 		color: ${(props: RsProps) => props.activeId === props[ID_ATTRIBUTE_NAME] ? props[COLOR_ATTRIBUTE_NAME] : '#444'};
@@ -67,7 +67,7 @@ const damage = styled.span`
 interface HiProps {
 	rend: string
 }
-const hi = styled.span`
+export const hi = styled.span`
 	${(props: HiProps) => {
 		if (!props.hasOwnProperty('rend')) return ''
 		const has = (rendStyle: string) => props.rend.indexOf(rendStyle) > -1
@@ -78,17 +78,17 @@ const hi = styled.span`
 	}}
 `
 
+	// add,
+	// damage,
+	// del,
+	// div,
+	// geo: rs,
+	// head: styled.strong``,
+	// hi,
+	// lb,
+	// p,
+	// rs,
 const components: DispilioComponents = {
-	add,
-	damage,
-	del,
-	div,
-	geo: rs,
-	head: styled.strong``,
-	hi,
-	lb,
-	p,
-	rs,
 }
 
 export default components
