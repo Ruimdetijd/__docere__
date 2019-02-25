@@ -5,6 +5,8 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
+    "build": "tsc",
+    "dist": "webpack",
     "start:dev": "webpack-dev-server --mode=development",
     "watch": "tsc -w"
   },
