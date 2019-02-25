@@ -47,7 +47,6 @@ export default class Project extends React.Component<Props, State> {
 
 	componentDidMount() {
 		this.props.setProject(this.props.match.params.slug)
-
 		document.addEventListener('scroll', this.onScrollDebounced)
 	}
 
@@ -57,6 +56,10 @@ export default class Project extends React.Component<Props, State> {
 			this.props.project == null && nextProps.project != null ||
 			this.props.project.slug !== nextProps.project.slug
 		)
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener('scroll', this.onScrollDebounced)
 	}
 
 	render() {
