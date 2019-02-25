@@ -7,40 +7,17 @@ const react_router_dom_1 = require("react-router-dom");
 const entry_1 = require("./entry");
 const projects_1 = require("./projects");
 const project_1 = require("./project");
-const extractors_1 = require("./entry/extractors");
-const xmlio_1 = require("xmlio");
-const splitters_1 = require("./project/splitters");
 const index_components_1 = require("./entry/index.components");
-const metadata_1 = require("./entry/metadata");
-const facsimile_path_extractor_1 = require("./entry/facsimile-path-extractor");
-function formatBytes(a) {
-    var c = 1024, e = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"], f = Math.floor(Math.log(a) / Math.log(c));
-    const num = (a / Math.pow(c, f));
-    const d = num < 10 ? 1 : 0;
-    return parseFloat(num.toFixed(d)) + e[f];
-}
-function fetchXml(slug, filename) {
-    return new Promise((resolve, _reject) => {
-        var xhr = new XMLHttpRequest;
-        xhr.open('GET', `/api/xml/${slug}/${filename}.xml`);
-        xhr.responseType = 'document';
-        xhr.overrideMimeType('text/xml');
-        xhr.onload = function () {
-            if (xhr.readyState === xhr.DONE && xhr.status === 200) {
-                const size = formatBytes(xhr.getResponseHeader('Content-length'));
-                const xmlio = new xmlio_1.default(xhr.responseXML.documentElement, { namespaces: ['af', 'md'] });
-                resolve({ xmlio, size });
-            }
-        };
-        xhr.send();
-    });
-}
+const admin_1 = require("./admin");
+const react_router_1 = require("react-router");
+const utils_1 = require("./utils");
 class App extends React.Component {
     constructor() {
         super(...arguments);
         this.state = {
             project: null,
             projects: [],
+            searchQuery: null,
             setProjects: () => tslib_1.__awaiter(this, void 0, void 0, function* () {
                 const nextState = yield this.ensureProjects();
                 this.setState(() => nextState);
@@ -49,23 +26,67 @@ class App extends React.Component {
                 const nextState = yield this.ensureProject(slug);
                 this.setState(() => nextState);
             }),
+            setSearchQuery: (searchQuery) => {
+                this.setState({ searchQuery });
+            },
             setXml: (slug, filename) => tslib_1.__awaiter(this, void 0, void 0, function* () {
                 const nextState = yield this.ensureXml(slug, filename);
                 this.setState(() => nextState);
             }),
-            setEntry: (slug, filename, entryId) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+            setEntry: (slug, filename) => tslib_1.__awaiter(this, void 0, void 0, function* () {
                 const nextState = yield this.ensureXml(slug, filename);
-                if (entryId != null) {
-                    const project = nextState.hasOwnProperty('project') ? nextState.project : this.state.project;
-                    nextState.xmlio = project.entries[filename][parseInt(entryId, 10)];
-                }
                 this.setState(() => nextState);
             }),
+            updateProject: (nextProject) => {
+                this.setState(() => this.nextProjectState(nextProject));
+            },
             xmlio: null
         };
         this.renderEntry = (props) => {
             return (React.createElement(entry_1.default, Object.assign({}, props, this.state)));
         };
+        this.nextProjectState = (props, project, projects) => {
+            if (project == null)
+                project = this.state.project;
+            project = Object.assign({}, project, props);
+            if (projects == null)
+                projects = this.state.projects;
+            projects = projects
+                .filter(p => p.id !== project.id)
+                .concat(project);
+            return { project, projects };
+        };
+    }
+    render() {
+        const title = this.state.project != null ?
+            React.createElement(index_components_1.H1, null,
+                React.createElement(react_router_dom_1.Link, { to: `/projects/${this.state.project.slug}` }, this.state.project.title || this.state.project.slug)) :
+            React.createElement(index_components_1.H1, null,
+                React.createElement("div", null,
+                    "DOCERE",
+                    React.createElement("small", null, "Digital Scholarly Editions")));
+        return (React.createElement(react_router_dom_1.BrowserRouter, null,
+            React.createElement(index_components_1.Main, null,
+                React.createElement(index_components_1.Menu, null,
+                    React.createElement("div", null),
+                    React.createElement(react_router_dom_1.Route, { path: "/projects/:projectSlug/xml/:xmlId", render: () => React.createElement("div", null,
+                            React.createElement("input", { onKeyUp: ev => {
+                                    if (ev.keyCode === 13) {
+                                        this.state.setSearchQuery(ev.target.value);
+                                    }
+                                } }),
+                            React.createElement("div", null,
+                                React.createElement("svg", { viewBox: "0 0 250.313 250.313" },
+                                    React.createElement("path", { d: "M244.186,214.604l-54.379-54.378c-0.289-0.289-0.628-0.491-0.93-0.76 c10.7-16.231,16.945-35.66,16.945-56.554C205.822,46.075,159.747,0,102.911,0S0,46.075,0,102.911 c0,56.835,46.074,102.911,102.91,102.911c20.895,0,40.323-6.245,56.554-16.945c0.269,0.301,0.47,0.64,0.759,0.929l54.38,54.38 c8.169,8.168,21.413,8.168,29.583,0C252.354,236.017,252.354,222.773,244.186,214.604z M102.911,170.146 c-37.134,0-67.236-30.102-67.236-67.235c0-37.134,30.103-67.236,67.236-67.236c37.132,0,67.235,30.103,67.235,67.236 C170.146,140.044,140.043,170.146,102.911,170.146z" })))) })),
+                title,
+                React.createElement(react_router_1.Switch, null,
+                    React.createElement(react_router_dom_1.Route, { path: "/admin", render: (props) => React.createElement(admin_1.default, Object.assign({}, props, this.state)) }),
+                    React.createElement(react_router_dom_1.Route, { path: "/", render: () => React.createElement(React.Fragment, null,
+                            React.createElement("div", null,
+                                React.createElement(react_router_dom_1.Route, { path: "/projects", exact: true, render: () => React.createElement(projects_1.default, Object.assign({}, this.state)) }),
+                                React.createElement(react_router_dom_1.Route, { path: "/projects/:slug", exact: true, render: props => React.createElement(project_1.default, Object.assign({}, props, this.state)) }),
+                                React.createElement(react_router_dom_1.Route, { exact: true, path: "/projects/:projectSlug/xml/:xmlId", render: this.renderEntry }),
+                                React.createElement(react_router_dom_1.Route, { path: "/projects/:projectSlug/xml/:xmlId/entries/:entryId", render: this.renderEntry }))) })))));
     }
     ensureProjects() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -81,8 +102,9 @@ class App extends React.Component {
     fetchProject(slug) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const response = yield fetch(`/api/projects/${slug}`);
-            const nextProject = yield response.json();
-            return Object.assign({}, nextProject, { entries: {}, extractors: extractors_1.default[slug], facsimile_extractor: facsimile_path_extractor_1.default[slug], metadata_extractor: metadata_1.default[slug], splitter: splitters_1.default[slug], xml: {} });
+            let nextProject = yield response.json();
+            nextProject = utils_1.parseReceivedProject(nextProject);
+            return Object.assign({}, nextProject, { entries: {}, xml: {} });
         });
     }
     ensureProject(slug) {
@@ -101,7 +123,7 @@ class App extends React.Component {
             const project = this.state.projects.find(p => p.slug === slug);
             if (project.xml == null) {
                 const nextProject = yield this.fetchProject(slug);
-                return this.updateProject(nextProject);
+                return this.nextProjectState(nextProject);
             }
             return {};
         });
@@ -114,48 +136,14 @@ class App extends React.Component {
                 const { xmlio } = project.xml[filename];
                 return (xmlio !== this.state.xmlio) ? { xmlio } : {};
             }
-            const xmlData = yield fetchXml(project.slug, filename);
+            const xmlData = yield utils_1.fetchXml(project.slug, filename);
             const xml = Object.assign({}, project.xml, { [filename]: xmlData });
-            let entries = {};
-            if (splitters_1.default.hasOwnProperty(project.slug)) {
-                const splitted = splitters_1.default[project.slug](xmlData.xmlio);
-                entries = Object.assign({}, project.entries, { [filename]: splitted.map(s => new xmlio_1.default(s)) });
-            }
-            const partialState = this.updateProject({ xml, entries }, project, nextState.projects);
+            const partialState = this.nextProjectState({ xml }, project, nextState.projects);
             return Object.assign({}, partialState, { xmlio: xmlData.xmlio });
         });
     }
-    updateProject(props, project, projects) {
-        if (project == null)
-            project = this.state.project;
-        project = Object.assign({}, project, props);
-        if (projects == null)
-            projects = this.state.projects;
-        projects = projects
-            .filter(p => p.id !== project.id)
-            .concat(project);
-        return { project, projects };
-    }
-    render() {
-        return (React.createElement(react_router_dom_1.BrowserRouter, null,
-            React.createElement(index_components_1.Main, null,
-                React.createElement(index_components_1.H1, null,
-                    "NINEVEH",
-                    React.createElement("small", null, "Digital Scholarly Editions")),
-                React.createElement(react_router_dom_1.Route, { path: "/admin", exact: true, render: () => React.createElement("strong", null, "ADMIN") }),
-                React.createElement(react_router_dom_1.Route, { path: "/", render: () => React.createElement("div", null,
-                        React.createElement(index_components_1.Menu, null,
-                            React.createElement(react_router_dom_1.Link, { to: "/projects" }, "Projects"),
-                            "\u00A0",
-                            this.state.project != null &&
-                                React.createElement(react_router_dom_1.Link, { to: `/projects/${this.state.project.slug}` }, this.state.project.title)),
-                        React.createElement(react_router_dom_1.Route, { path: "/projects", exact: true, render: () => React.createElement(projects_1.default, Object.assign({}, this.state)) }),
-                        React.createElement(react_router_dom_1.Route, { path: "/projects/:slug", exact: true, render: props => React.createElement(project_1.default, Object.assign({}, props, this.state)) }),
-                        React.createElement(react_router_dom_1.Route, { exact: true, path: "/projects/:projectSlug/xml/:xmlId", render: this.renderEntry }),
-                        React.createElement(react_router_dom_1.Route, { path: "/projects/:projectSlug/xml/:xmlId/entries/:entryId", render: this.renderEntry })) }))));
-    }
 }
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function () {
     const container = document.getElementById('container');
     ReactDOM.render(React.createElement(App, null), container);
 });
