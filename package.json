@@ -13,7 +13,7 @@
   "dependencies": {
     "@emotion/core": "^10.0.5",
     "@emotion/styled": "^10.0.5",
-    "dispilio": "^1.2.0",
+    "dispilio": "^1.2.1",
     "emotion": "^10.0.5",
     "hire-forms-input": "^3.0.5",
     "hire-tabs": "^2.0.5",
