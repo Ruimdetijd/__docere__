@@ -8,6 +8,7 @@ module.exports = {
 		path: __dirname + '/build',
 		publicPath: '/build/',
   },
+  mode: 'production',
   module: {
     rules: [
 			{
