@@ -6,7 +6,7 @@ module.exports = {
 		contentBase: path.resolve(__dirname),
 		disableHostCheck: true,
 		historyApiFallback: true,
-		port: 80,
+		port: 4000,
 		proxy: {
 			'/api': {
 				target: 'http://localhost:3377',

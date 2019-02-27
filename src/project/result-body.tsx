@@ -39,27 +39,37 @@ const ResultBody = (slug: string) => (props: any) =>
 		to={`/projects/${slug}/xml/${props.result.m__filebasename}`}
 		style={{
 			display: 'grid',
-			gridTemplateRows: '1fr .5fr .5fr 1fr 1fr',
-			gridTemplateColumns: '4fr auto 4fr',
+			gridColumnGap: '1em',
+			gridTemplateColumns: props.result.hasOwnProperty('__facsimiles') && props.result.__facsimiles.length ? '120px auto' : 'auto',
 			textDecoration: 'none',
 		}}
 	>
-		<Cell bold>{props.result.m_date}</Cell>
-		<div/>
-		<div/>
-		<div style={{ gridColumn: '1 / 4' }} />
-		<div style={{ borderTop: '1px solid #CCC', gridColumn: '1 / 4' }} />
-		<Cell>{props.result.m_sender}</Cell>
-		<div>⇒</div>
-		<Cell right>{props.result.m_recipient}</Cell>
-		<Cell small>{props.result.m_senderloc}</Cell>
-		<div/>
-		<Cell right small>{props.result.m_recipientloc}</Cell>
-		<Snippets>
-			{props.result.snippets.map((snippet, index) =>
-				<li dangerouslySetInnerHTML={{ __html: `...${snippet}...` }}  key={index} />
-			)}
-		</Snippets>
+		{
+			props.result.hasOwnProperty('__facsimiles') && props.result.__facsimiles.length &&
+			<img src={props.result.__facsimiles[0].replace('info.json', 'full/120,/0/default.jpg')} />
+		}
+		<div style={{
+			display: 'grid',
+			gridTemplateRows: '1fr .5fr .5fr 1fr 1fr',
+			gridTemplateColumns: '4fr auto 4fr',
+		}}>
+			<Cell bold>{props.result.m_date}</Cell>
+			<div/>
+			<div/>
+			<div style={{ gridColumn: '1 / 4' }} />
+			<div style={{ borderTop: '1px solid #CCC', gridColumn: '1 / 4' }} />
+			<Cell>{props.result.m_sender}</Cell>
+			<div>⇒</div>
+			<Cell right>{props.result.m_recipient}</Cell>
+			<Cell small>{props.result.m_senderloc}</Cell>
+			<div/>
+			<Cell right small>{props.result.m_recipientloc}</Cell>
+			<Snippets>
+				{props.result.snippets.map((snippet, index) =>
+					<li dangerouslySetInnerHTML={{ __html: `...${snippet}...` }}  key={index} />
+				)}
+			</Snippets>
+		</div>
 		{/* <div style={{ fontSize: '.6em', gridColumn: '1 / span 3', color: '#444', marginTop: '1em' }}>
 			{props.result.text.slice(0, 140)}
 			{props.result.text.length > 140 ? '...' : ''}
