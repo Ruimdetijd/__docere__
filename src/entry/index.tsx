@@ -41,7 +41,7 @@ export default class Entry extends React.Component<Props, State> {
 		if (this.props.project == null || this.props.xmlio == null) return null
 
 		const extractedMetadata: Metadata = this.props.project.hasOwnProperty('metadata_extractor') && this.props.project.metadata_extractor != null ?
-			this.props.project.metadata_extractor(this.props.xmlio) :
+			this.props.project.metadata_extractor(this.props.xmlio, this.props.match.params.xmlId) :
 			[]
 
 		const metadata = this.props.project.metadata_fields

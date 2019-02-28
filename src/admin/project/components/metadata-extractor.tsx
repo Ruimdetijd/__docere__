@@ -2,7 +2,7 @@ import * as React from 'react'
 import Editor from '../../editor'
 
 const defaultMetadataExtractorValue = `/**
-function(xmlio) {
+function(xmlio, fileName) {
 	const selector = ""
 	let meta = xmlio
 		.select(selector)

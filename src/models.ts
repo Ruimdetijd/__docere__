@@ -66,7 +66,7 @@ export class Project {
 	// references to /public/xml/<project-slug/file<n>.xml
 	files: string[]
 
-	metadata_extractor: (xmlio: XMLio) => [string, string][]
+	metadata_extractor: (xmlio: XMLio, fileName: string) => [string, string][]
 	facsimile_extractor: FacsimileExtractor
 }
 

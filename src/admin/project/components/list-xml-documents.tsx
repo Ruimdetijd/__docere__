@@ -51,7 +51,7 @@ export default class ListXMLDocuments extends React.PureComponent<Props> {
 						this.props.project.metadata_extractor != null &&
 						<ul>
 							{
-								this.props.project.metadata_extractor(this.props.xmlio).map(([key, value]) =>
+								this.props.project.metadata_extractor(this.props.xmlio, '').map(([key, value]) =>
 									<li key={key}>
 										<div>{key}</div>
 										<div>{value}</div>
