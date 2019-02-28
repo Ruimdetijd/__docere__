@@ -21,5 +21,14 @@ function pb(props: FacsThumbProps & { facs: string }) {
 	)
 }
 
-const components: DispilioComponents = { lb, add, del, rs, pb }
+const components: DispilioComponents = {
+	lb,
+	add,
+	del,
+	'rs[type="person"]': rs('green'),
+	'rs[type="place"]': rs('red'),
+	'rs[type="media"]': rs('blue'),
+	'rs[type="org"]': rs('orange'),
+	pb
+}
 export default components

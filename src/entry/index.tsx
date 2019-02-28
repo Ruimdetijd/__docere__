@@ -54,10 +54,10 @@ export default class Entry extends React.Component<Props, State> {
 			.filter(m => m != null)
 
 		const extractors = this.props.project.metadata_fields
-			.filter(field => field.type === 'text' && field.aside)
+			.filter(field => field.slug.slice(0, 2) === 't_' && field.aside)
 			.sort((f1, f2) => f1.sortorder - f2.sortorder)
 			.map(field => {
-				const extractor = this.props.project.extractors.find(ex => ex.id === field.slug)
+				const extractor = this.props.project.extractors.find(ex => `t_${ex.id}` === field.slug)
 				if (extractor == null) return null
 				extractor.title = field.title
 				return extractor

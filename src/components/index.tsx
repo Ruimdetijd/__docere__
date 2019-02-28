@@ -43,19 +43,22 @@ interface RsProps {
 	activeId: string
 	type: string
 }
-export const rs = styled.span`
-	border-bottom: 2px;
-	border-bottom-style: solid;
-	border-bottom-color: ${(props: RsProps) => props[COLOR_ATTRIBUTE_NAME]};
-	background-color: ${(props: RsProps) =>
-		props.activeId === props[ID_ATTRIBUTE_NAME] ? props[COLOR_ATTRIBUTE_NAME] : 'initial'
-	};
-	color: ${(props: RsProps) =>
-		props.activeId === props[ID_ATTRIBUTE_NAME] ? 'white' : 'initial'
-	};
-	cursor: pointer;
-	padding: .05em .1em;
-`
+export function rs(color: string) {
+	return styled.span`
+		background-color: ${(props: RsProps) => {
+			console.log(props)
+			return props.activeId === props[ID_ATTRIBUTE_NAME] ? color : 'initial'
+		}};
+		border-bottom: 2px;
+		border-bottom-style: solid;
+		border-bottom-color: ${color};
+		color: ${(props: RsProps) =>
+			props.activeId === props[ID_ATTRIBUTE_NAME] ? 'white' : 'initial'
+		};
+		cursor: pointer;
+		padding: .05em .1em;
+	`
+}
 
 export const damage = styled.span`
 	&:before {
