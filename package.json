@@ -15,7 +15,7 @@
   "dependencies": {
     "@emotion/core": "^10.0.5",
     "@emotion/styled": "^10.0.5",
-    "dispilio": "^1.2.1",
+    "dispilio": "^1.3.0",
     "emotion": "^10.0.5",
     "hire-forms-input": "^3.0.5",
     "hire-tabs": "^2.0.5",
@@ -27,7 +27,7 @@
     "react-dom": "^16.7.0",
     "react-emotion": "^10.0.0",
     "react-router-dom": "^4.3.1",
-    "xmlio": "^5.3.1"
+    "xmlio": "^5.4.0"
   },
   "devDependencies": {
     "@types/react": "^16.7.18",
