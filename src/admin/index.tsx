@@ -6,7 +6,7 @@ import { State as AppState } from '../index'
 export default function(appState: AppState) {
 	return (
 		<Route
-			path="/admin/project/:slug"
+			path="/admin/projects/:slug"
 			render={(props) =>
 				<ProjectAdmin {...appState} {...props} />
 			}

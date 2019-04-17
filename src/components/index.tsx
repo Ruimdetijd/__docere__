@@ -25,7 +25,7 @@ export const lb = styled.span`
 		(props.wordwrap) ?
 			`&:before {
 				box-sizing: border-box;
-				color: #444;
+				color: #666;
 				content: counter(linenumber);
 				counter-increment: linenumber;
 				font-size: .8em;
@@ -46,7 +46,6 @@ interface RsProps {
 export function rs(color: string) {
 	return styled.span`
 		background-color: ${(props: RsProps) => {
-			console.log(props)
 			return props.activeId === props[ID_ATTRIBUTE_NAME] ? color : 'initial'
 		}};
 		border-bottom: 2px;
@@ -77,6 +76,7 @@ export const hi = styled.span`
 		const rules = []
 		if (has('underline')) rules.push('text-decoration: underline;')
 		if (has('super')) rules.push('font-style: italic;')
+		if (has('italic')) rules.push('font-style: italic;')
 		return rules.join('')
 	}}
 `

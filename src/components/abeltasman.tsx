@@ -8,6 +8,7 @@ const Img = styled.img`
 	width: 32px;
 `
 function div(props: FacsThumbProps & { facs: string, children: any }) {
+	const src = `http://localhost:5004/abeltasman/${props.facs}/full/,32/0/default.jpg`
 	return (
 		<div>
 			<Img
@@ -18,7 +19,7 @@ function div(props: FacsThumbProps & { facs: string, children: any }) {
 					const facsimile = props.extractedFacsimileData.facsimiles.find(facs => facs.id === id)
 					props.setState({ facsimiles: [facsimile] })
 				}}
-				src={`/api/facsimile/abeltasman/${props.facs.slice(2)}_files/5/0_0.jpeg`}
+				src={src}
 			/>
 			{props.children}
 		</div>
@@ -26,7 +27,7 @@ function div(props: FacsThumbProps & { facs: string, children: any }) {
 }
 
 const components: DispilioComponents = {
-	div
+	pb: div
 }
 
 export default components

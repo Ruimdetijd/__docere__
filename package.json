@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "dist": "webpack --config webpack.config.prod.js",
-    "start:dev": "webpack-dev-server --mode=development",
+    "dev": "webpack-dev-server --mode=development",
     "watch": "tsc -w"
   },
   "author": "",

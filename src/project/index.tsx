@@ -64,6 +64,7 @@ export default class Project extends React.Component<Props, State> {
 
 	render() {
 		if (this.props.project == null) return null
+		console.log(this.state.searchResults)
 
 		return (
 			<Wrapper>

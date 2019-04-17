@@ -14,7 +14,7 @@ export default function Menu(props: Props) {
 						<li key={item.slug} style={{ display: 'grid', borderBottom: '1px solid lightblue', alignContent: 'center', cursor: 'pointer'}}>
 							<Link
 								style={{ textDecoration: 'none', color: '#888', textTransform: 'uppercase' }}
-								to={`/admin/project/${props.slug}/${item.slug}`}
+								to={`/admin/projects/${props.slug}/${item.slug}`}
 							>
 								{item.title}
 							</Link>

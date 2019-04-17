@@ -11,9 +11,10 @@ const Img = styled.img`
 	width: 32px;
 `
 function pb(props: FacsThumbProps & { facs: string }) {
+	if (props.extractedFacsimileData == null) return null
 	const facsimile = props.extractedFacsimileData.facsimiles.find(facs => facs.id === props.facs)
 	const thumbSource = facsimile.path.replace('/info.json', '/full/,32/0/default.jpg')
-
+	
 	return (
 		<span onClick={() => props.setState({ facsimiles: [facsimile] })}>
 			<Img src={thumbSource} />

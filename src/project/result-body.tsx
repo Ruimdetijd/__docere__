@@ -36,7 +36,7 @@ const Cell: React.SFC<ICell> = (props) =>
 
 const ResultBody = (slug: string) => (props: any) =>
 	<Link
-		to={`/projects/${slug}/xml/${props.result.__filebasename}`}
+		to={`/projects/${slug}/xml/${props.result.m__filebasename || props.result.__filebasename}`}
 		style={{
 			display: 'grid',
 			gridColumnGap: '1em',
