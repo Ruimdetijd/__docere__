@@ -26,10 +26,10 @@ const components: DispilioComponents = {
 	lb,
 	add,
 	del,
-	'rs[type="person"]': rs('green'),
-	'rs[type="place"]': rs('red'),
-	'rs[type="media"]': rs('blue'),
-	'rs[type="org"]': rs('orange'),
+	'rs[type="person"]': rs('green', 'id'),
+	'rs[type="place"]': rs('red', 'id'),
+	'rs[type="media"]': rs('blue', 'id'),
+	'rs[type="org"]': rs('orange', 'id'),
 	pb
 }
 export default components

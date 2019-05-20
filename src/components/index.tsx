@@ -43,16 +43,16 @@ interface RsProps {
 	activeId: string
 	type: string
 }
-export function rs(color: string) {
+export function rs(color: string, idAttribute: string) {
 	return styled.span`
 		background-color: ${(props: RsProps) => {
-			return props.activeId === props[ID_ATTRIBUTE_NAME] ? color : 'initial'
+			return props.activeId === props[idAttribute] ? color : 'initial'
 		}};
 		border-bottom: 2px;
 		border-bottom-style: solid;
 		border-bottom-color: ${color};
 		color: ${(props: RsProps) =>
-			props.activeId === props[ID_ATTRIBUTE_NAME] ? 'white' : 'initial'
+			props.activeId === props[idAttribute] ? 'white' : 'initial'
 		};
 		cursor: pointer;
 		padding: .05em .1em;

@@ -1,12 +1,13 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { BrowserRouter, Link, Route } from 'react-router-dom'
+import 'docere-config'
 import Entry from './entry'
 import Projects from './projects'
 import Project from './project'
 import { Project as ProjectModel } from './models'
 import XMLio from 'xmlio';
-import { Main, Menu, H1 } from './entry/index.components'
+import { Main, Menu, H1 } from './__index.components'
 import Admin from './admin'
 import { Switch } from 'react-router'
 import { parseReceivedProject, fetchXml } from './utils'
@@ -59,28 +60,11 @@ class App extends React.Component<{}, State> {
 	}
 
 	render() {
-		const title = this.state.project != null ?
-			<H1>
-				<Link to={`/projects/${this.state.project.slug}`}>
-					{this.state.project.title || this.state.project.slug}
-				</Link>
-			</H1> :
-			<H1><div>DOCERE<small>Digital Scholarly Editions</small></div></H1>
 
 		return (
 			<BrowserRouter>
 				<Main>
 					<Menu>
-						{/* <Link to="/projects">Projects</Link>
-						&nbsp;
-						{
-							this.state.project != null &&
-							<>
-								<Link to={`/projects/${this.state.project.slug}`}>{this.state.project.title}</Link>
-								&nbsp; - &nbsp;
-								<Link to={`/admin/project/${this.state.project.slug}`}>admin</Link>
-							</>
-						} */}
 						<div></div>
 						<Route
 							path="/projects/:projectSlug/xml/:xmlId"
@@ -103,7 +87,7 @@ class App extends React.Component<{}, State> {
 							}
 						/>
 					</Menu>
-					{title}
+					<H1><Link to={`/projects/${config.slug}`}>{config.title}</Link></H1>
 					<Switch>
 						<Route
 							path="/admin"

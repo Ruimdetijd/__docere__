@@ -42,6 +42,9 @@ const ResultBody = (slug: string) => (props: any) =>
 			gridColumnGap: '1em',
 			gridTemplateColumns: props.result.hasOwnProperty('__facsimiles') && props.result.__facsimiles.length ? '120px auto' : 'auto',
 			textDecoration: 'none',
+			background: '#f6f6f6',
+			padding: '1em',
+			marginBottom: '1em'
 		}}
 	>
 		{

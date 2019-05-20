@@ -1,3 +1,5 @@
+declare const config: DocereConfig
+
 declare interface FormProps<T> {
 	change: (handlerProps: Partial<T>) => void
 	close: () => void

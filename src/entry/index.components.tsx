@@ -1,15 +1,14 @@
+import * as React from 'react'
 import styled from '@emotion/styled'
 import { css } from '@emotion/core'
 
-const TOPMENU_HEIGHT = 32
-const MAINHEADER_HEIGHT = 64 
+// const COLOR_ATTRIBUTE_NAME = '__color'
+const TOP_OFFSET = '96px';
 
-export const Main = styled('div')`
-	background-color: white;
-	box-sizing: border-box;
+interface MainProps { asideVisible: boolean }
+export const Main = styled.div`
 	display: grid;
-	grid-template-rows: 32px 64px auto;
-	width: 100%;
+	grid-template-columns: ${(props: MainProps) => props.asideVisible ? '80% 20%' : 'auto 64px'};
 `
 
 interface LayersProps {
@@ -18,114 +17,187 @@ interface LayersProps {
 export const Layers = styled.div`
 	display: grid;
 	${(props: LayersProps) => {
-		console.log(props)
-		if (props.orientation === 0) return 'grid-template-columns: 1fr 1fr;'
-		if (props.orientation === 1) return 'grid-template-rows: 1fr 1fr;'
-
+		// Yes, I know props.orientation ? 'columns' : 'rows' would be sufficient here,
+		// but this is clearer
+		if (props.orientation === Orientation.Horizontal) {
+			return `
+				grid-template-columns: auto 576px;
+				grid-template-rows: 100% auto;
+			`
+		}
+		if (props.orientation === Orientation.Vertical) { 
+			return `
+				grid-template-columns: 100%;
+				grid-template-rows: calc((100vh - ${TOP_OFFSET}) / 2) calc((100vh - ${TOP_OFFSET}) / 2) auto;
+			`
+		}
 	}}
 `
 
-export const H1 = styled('h1')`
-	align-items: center;	
-	background: #e3c386;
-	color: #444;
+export const TextWrapper = styled.div`
 	display: grid;
-	font-size: 1.75rem;
-	height: ${MAINHEADER_HEIGHT}px;
-	justify-items: center;
-	margin: 0;
-	position: sticky;
-	top: ${TOPMENU_HEIGHT}px;
-	text-transform: uppercase;
-	z-index: 1;
-
-	a:hover, a:link, a:active, a:visited {
-		color: inherit;
-		text-decoration: none;
-	}
-
-	div {
-		text-align: center;
-	}
-
-	small {
-		color: #888;
-		font-weight: normal;
-		font-size: .375em;
-		display: block;
+	grid-column: ${(props: LayersProps) => props.orientation === Orientation.Horizontal ? 2 : 1};
+	grid-row: ${(props: LayersProps) => props.orientation === Orientation.Horizontal ? '1 / span 2' : '1 / span 3'};
+	grid-template-rows: 64px auto;
+	${(props: LayersProps) =>
+		props.orientation === Orientation.Horizontal ?
+			`padding: 0 32px 0 64px;` :
+			`padding-bottom: calc((100vh - ${TOP_OFFSET}) / 2)`	
 	}
 `
 
 export const Menu = styled.div`
-	background-color: #c7aa71;
+	background-color: white;
+	border-bottom: 1px solid #CCC;
 	display: grid;
-	grid-template-columns: 80% 20%;
-	height: ${TOPMENU_HEIGHT}px;
+	grid-template-columns: 1fr 1fr;
+	height: 64px;
 	position: sticky;
-	top: 0;
+	top: ${TOP_OFFSET};
 	z-index: 1;
 
 	& > div {
+		align-items: center;
 		display: grid;
-		grid-template-columns: 64px auto 28px 32px;
+		grid-template-columns: repeat(auto-fill, 48px);
+		justify-items: center;
+	}
 
-		& > input { 
-			background-color: #988258;
-			border: none;
-			box-sizing: border-box;
-			color: white;
-			font-size: 1rem;
-			grid-column: 2;
-			outline: none;
-			padding: 0 .5em;
-			width: 100%;
-		}
-		& > div {
-			align-items: center;
-			background-color: #988258;
-			grid-column: 3;
-			padding-right: 8px;
-			display: grid;
+	& > div:first-of-type {
+	}
 
-			svg {
-				fill: #c7aa71;
-			}
-		}
+	& > div:last-of-type {
+		direction: rtl;
 	}
 `
 
+interface TextProps {
+	hasLb: boolean
+	hasFacs: boolean
+	wordwrap: boolean
+}
+export const Text = styled.div`
+	color: #222;
+	counter-reset: linenumber notenumber;
+	font-family: 'Merriweather', serif;
+	font-size: 1.1rem;
+	grid-column: 2;
+	line-height: 2rem;
+	padding-top: 32px;
+	padding-left: ${(props: TextProps) => {
+		let paddingLeft = 0;
+		// The facsthumb is 32px wide and get 16px extra space
+		if (props.hasFacs) paddingLeft += 48 
+
+		// The linenumber gets 42 px, so check if the facsthumb is already adding 16px extra space
+		if (props.wordwrap && props.hasLb) {
+			paddingLeft += props.hasFacs ? 26 : 42 
+		}
+		return `${paddingLeft}px`
+	}};
+	padding-bottom: 33vh;
+	position: relative;
+`
+
 export const MetadataItem = styled.li`
-	margin-bottom: .5em;
+	margin-bottom: 1em;
 
 	& span:first-of-type {
+		color: #888;
 		display: block;
-		font-weight: bold;
+		font-size: .75rem;
+		margin-bottom: .25rem;
+		text-transform: uppercase;
 	}
 `
 
 export const small = css`
-	color: #444;
-	font-size: .8em;
-	margin-left: .5em;
+		color: #444;
+		font-size: .8em;
+		margin-left: .5em;
 `
 
-// export const H1 = styled('h1')`
-// 	grid-column-start: 1;
-//     margin: 0;
-//     justify-self: center;
-//     background: rgba(255, 255, 255, .8);
-//     align-self: start;
-//     padding: 0.2em 1.4em;
-//     border-bottom-left-radius: 1em;
-//     border-bottom-right-radius: 1em;
-// 	box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2);
-// 	text-align: center;
-	
-// 	small {
-// 		color: #888;
-// 		font-weight: normal;
-// 		font-size: .375em;
-// 		display: block;
-// 		text-transform: uppercase;
-// 	}
-// `
+interface IITProps {
+	active: boolean
+	count: number
+	// node: DataNode
+}
+	// background-color: ${(props: IITProps) =>
+	// 	props.active ? props.node.attributes[COLOR_ATTRIBUTE_NAME] : 'initial'
+	// };
+export const ItemInText = styled.li`
+	border-radius: .2em;
+	color: ${(props: IITProps) =>
+		props.active ? 'white' : 'initial'
+	};
+	cursor: pointer;
+	margin-left: -.2em;
+	padding: .2em;
+
+	&:after {
+		${small}
+		color: ${(props: IITProps) =>
+			props.active ? '#AAA' : 'initial'
+		};
+		content: ${(props: IITProps) => props.count > 1 ? `"(${props.count})"` : ''};
+	}
+`
+
+interface ButtonProps {
+	children: any
+	onClick: () => void
+	title: string
+}
+export const SVGButton = function(props: ButtonProps) {
+	return (
+		<svg
+			onClick={props.onClick}
+			style={{ cursor: 'pointer' }}
+			viewBox="0 0 40 30"
+			width="24px"
+		>
+			<title>{props.title}</title>
+			<g fill="#444" stroke="#444">
+				{props.children}
+			</g>
+		</svg>
+	)
+}
+
+interface OBProps {
+	orientation: Orientation
+	onClick: () => void
+}
+export const OrientationButton = function(props: OBProps) {
+	return (
+		<SVGButton
+			onClick={props.onClick}
+			title={`Switch to ${props.orientation === Orientation.Horizontal ? 'vertical' : 'horizontal' } layout`}
+		>
+			<rect width="40" height="30" fill="white" stroke="#444" />
+			<rect width="40" height="8" />
+			{
+				props.orientation === Orientation.Horizontal ?
+					<rect width="40" height="4" y="16" /> :
+					<rect width="4" height="30" x="18" />
+			}
+		</SVGButton>
+	)
+}
+
+interface WWProps {
+	wordwrap: boolean
+	onClick: () => void
+}
+export const WordWrapButton = function(props: WWProps) {
+	return (
+		<SVGButton
+			onClick={props.onClick}
+			title={`${props.wordwrap ? 'Disable' : 'Enable'} wordwrap`}
+		>
+			<polygon points="4,18 20,9 20,27" />
+			<line x1="20" y1="18" x2="32" y2="18" strokeWidth="6" />
+			<line x1="32" y1="21" x2="32" y2="4" strokeWidth="6" />
+		</SVGButton>
+	)
+}
