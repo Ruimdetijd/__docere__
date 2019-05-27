@@ -1,7 +1,7 @@
 import * as React from 'react'
+import styled from '@emotion/styled'
 import { State as EntryState } from './index'
-import { TOP_OFFSET } from './aside';
-import styled from '@emotion/styled';
+import { TOP_OFFSET } from '../constants'
 
 // TODO change facsimile when user scroll past a <pb />
 
@@ -61,12 +61,9 @@ export default class Facsimile extends React.PureComponent<Props> {
 				id: "openseadragon",
 				navigatorPosition: 'BOTTOM_LEFT',
 				prefixUrl: "/node_modules/openseadragon/build/openseadragon/images/",
-				// sequenceMode: true,
-				// showReferenceStrip: true,
 				showHomeControl: false,
 				showRotationControl: true,
 				showZoomControl: false,
-				// showNavigationControl: false,
 				showNavigator: true,
 				visibilityRatio: 1.0,
 			})

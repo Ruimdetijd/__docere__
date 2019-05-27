@@ -8,7 +8,7 @@ const TOP_OFFSET = '96px';
 interface MainProps { asideVisible: boolean }
 export const Main = styled.div`
 	display: grid;
-	grid-template-columns: ${(props: MainProps) => props.asideVisible ? '80% 20%' : 'auto 64px'};
+	grid-template-columns: ${(props: MainProps) => props.asideVisible ? '70% 30%' : 'auto 64px'};
 `
 
 interface LayersProps {
@@ -115,32 +115,6 @@ export const small = css`
 		color: #444;
 		font-size: .8em;
 		margin-left: .5em;
-`
-
-interface IITProps {
-	active: boolean
-	count: number
-	// node: DataNode
-}
-	// background-color: ${(props: IITProps) =>
-	// 	props.active ? props.node.attributes[COLOR_ATTRIBUTE_NAME] : 'initial'
-	// };
-export const ItemInText = styled.li`
-	border-radius: .2em;
-	color: ${(props: IITProps) =>
-		props.active ? 'white' : 'initial'
-	};
-	cursor: pointer;
-	margin-left: -.2em;
-	padding: .2em;
-
-	&:after {
-		${small}
-		color: ${(props: IITProps) =>
-			props.active ? '#AAA' : 'initial'
-		};
-		content: ${(props: IITProps) => props.count > 1 ? `"(${props.count})"` : ''};
-	}
 `
 
 interface ButtonProps {

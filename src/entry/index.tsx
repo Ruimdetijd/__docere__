@@ -8,6 +8,8 @@ import { Main, Layers, TextWrapper, Menu, Text, WordWrapButton, OrientationButto
 import Aside from './aside'
 import Facsimile from './facsimile'
 
+export enum TabName { Metadata = 'Metadata', TextData = 'TextData' }
+
 function getXmlFilePath(slug: string, filename: string) {
 	return `/node_modules/docere-config/projects/${slug}/xml/${filename}.xml`
 }
@@ -36,7 +38,8 @@ interface MatchParams {
 export type Props = AppState & RouteComponentProps<MatchParams>
 export interface State {
 	activeId: string
-	asideVisible: boolean
+	activeListId: string
+	activeTab: TabName
 	doc: XMLDocument
 	extractors: Extractor[]
 	facsimiles: ExtractedFacsimile[]
@@ -53,7 +56,8 @@ export default class Entry extends React.Component<Props, State> {
 
 	state: State = {
 		activeId: null,
-		asideVisible: true,
+		activeListId: config.textdata[0].id,
+		activeTab: TabName.Metadata,
 		doc: null,
 		extractors: [],
 		facsimiles: [],
@@ -66,7 +70,7 @@ export default class Entry extends React.Component<Props, State> {
 
 	async componentDidMount() {
 		const { xmlId } = this.props.match.params
-		// await this.props.setEntry(projectSlug, xmlId, entryId)
+
 		await import(`../components/${config.slug}`).then(components => {
 			this.components = {...this.components, ...components.default}
 			this.forceUpdate()
@@ -74,8 +78,6 @@ export default class Entry extends React.Component<Props, State> {
 
 		let doc = await fetchXml(config.slug, xmlId)
 		doc = prepareDocument(doc, config)
-		console.log(doc)
-		// console.log(prepareDocument)
 
 		const facsimiles = extractFacsimiles(doc)
 		const metadata = extractMetadata(doc)
@@ -97,37 +99,10 @@ export default class Entry extends React.Component<Props, State> {
 	}
 
 	render() {
-		// if (this.props.project == null || this.props.xmlio == null) return null
 		if (this.state.doc == null) return null
 
-		// console.log(extractFacsimiles)
-
-		// const extractedMetadata: Metadata = this.props.project.hasOwnProperty('metadata_extractor') && this.props.project.metadata_extractor != null ?
-		// 	this.props.project.metadata_extractor(this.props.xmlio, this.props.match.params.xmlId) :
-		// 	[]
-
-		// const metadata = this.props.project.metadata_fields
-		// 	.filter(field => field.type === 'meta' && field.aside)
-		// 	.sort((f1, f2) => f1.sortorder - f2.sortorder)
-		// 	.map(field => {
-		// 		const metadata = extractedMetadata.find(([key]) => `m_${key}` === field.slug)
-		// 		return metadata == null ? null : [field.title, metadata[1]] as [string, string]
-		// 	})
-		// 	.filter(m => m != null)
-
-		// const extractors = this.props.project.metadata_fields
-		// 	.filter(field => field.slug.slice(0, 2) === 't_' && field.aside)
-		// 	.sort((f1, f2) => f1.sortorder - f2.sortorder)
-		// 	.map(field => {
-		// 		const extractor = this.props.project.extractors.find(ex => `t_${ex.id}` === field.slug)
-		// 		if (extractor == null) return null
-		// 		extractor.title = field.title
-		// 		return extractor
-		// 	})
-		// 	.filter(m => m != null)
-
 		return (
-			<Main asideVisible={this.state.asideVisible}>
+			<Main asideVisible={this.state.activeTab != null}>
 				<Layers orientation={this.state.orientation}>
 					<Facsimile
 						facsimiles={this.state.facsimiles}
@@ -173,15 +148,12 @@ export default class Entry extends React.Component<Props, State> {
 								<DocereTextView
 									customProps={{
 										activeId: this.state.activeId,
+										activeTab: this.state.activeTab,
 										setActiveId: this.setActiveId,
 									}}
 									components={this.components}
 									node={this.state.doc}
-									// extractors={extractors}
-									// facsimileExtractor={this.props.project.facsimile_extractor}
-									// metadata={metadata}
 									highlight={this.state.highlight}
-									// xmlio={this.props.xmlio}
 								/>
 							</Text>
 						</div>
@@ -190,16 +162,18 @@ export default class Entry extends React.Component<Props, State> {
 				<Aside
 					{...this.state}
 					onClick={this.setActiveId}
-					setVisible={() => this.setState({ asideVisible: !this.state.asideVisible })}
+					setActiveTab={activeTab => {
+						if (activeTab === this.state.activeTab) activeTab = null
+						this.setState({ activeTab, activeId: null })
+					}}
 				/>
 			</Main>
 		)
 	}
 
-	private setActiveId = (activeId: string) => {
+	private setActiveId = (activeListId: string, activeId: string) => {
 		if (activeId === this.state.activeId) activeId = null
-		console.log(activeId)
-		this.setState({ activeId })
+		this.setState({ activeId, activeListId })
 	}
 
 	private async setHighlight() {
