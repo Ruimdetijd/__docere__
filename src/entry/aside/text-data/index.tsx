@@ -6,11 +6,6 @@ const Wrapper = styled.div`
 	height: 100%;
 `
 
-interface KeyValue {
-	key: string
-	value: string
-}
-
 interface Props {
 	activeId: string
 	activeListId: string
@@ -19,7 +14,7 @@ interface Props {
 }
 interface State {
 	containerHeight: number
-	items: Record<string, KeyValue[]>
+	items: Record<string, TextDataValue[]>
 }
 export default class TextDataAside extends React.PureComponent<Props, State> {
 	private wrapperRef = React.createRef() as React.RefObject<HTMLDivElement>
@@ -32,15 +27,28 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 	componentDidMount() {
 		this.setState({
 			containerHeight: this.wrapperRef.current.getBoundingClientRect().height,
-			items: config.textdata.reduce((prev, curr) => {
-				prev[curr.id] = Array.from(this.props.doc.querySelectorAll(curr.extractor.selector))
-					.map(el => ({
-						key: el.getAttribute(curr.extractor.idAttribute),
-						value: el.textContent,
-					}))
-				return prev
-			}, {})
+			items: this.extractItems()
 		})
+	}
+
+	private extractItems() {
+		return config.textdata.reduce((prev, curr) => {
+			const items = {}
+			prev[curr.id] = Array.from(this.props.doc.querySelectorAll(curr.extractor.selector))
+				.reduce((prev, currEl) => {
+					const key = currEl.textContent
+					if (items.hasOwnProperty(key)) {
+						items[key].count = items[key].count + 1
+					}
+					else {
+						items[key] = { key, value: currEl.textContent, count: 1 }
+						prev.push(items[key])
+					}
+					return prev
+				}, []) 
+			
+			return prev
+		}, {})
 	}
 
 	render() {

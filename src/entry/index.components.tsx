@@ -14,7 +14,7 @@ export const Main = styled.div`
 interface LayersProps {
 	orientation: Orientation
 }
-export const Layers = styled.div`
+export const Panels = styled.div`
 	display: grid;
 	${(props: LayersProps) => {
 		// Yes, I know props.orientation ? 'columns' : 'rows' would be sufficient here,
@@ -112,9 +112,9 @@ export const MetadataItem = styled.li`
 `
 
 export const small = css`
-		color: #444;
-		font-size: .8em;
-		margin-left: .5em;
+	color: #444;
+	font-size: .8em;
+	margin-left: .5em;
 `
 
 interface ButtonProps {

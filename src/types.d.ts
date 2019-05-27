@@ -6,6 +6,12 @@ declare interface FormProps<T> {
 	handler: T
 }
 
+interface TextDataValue {
+	count: number
+	key: string
+	value: string
+}
+
 interface ContextState {
 	activeId: string
 	dataNodeTree: DataNode,

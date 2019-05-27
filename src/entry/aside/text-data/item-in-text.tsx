@@ -14,9 +14,7 @@ const Li = styled.li`
 
 	&:after {
 		${small}
-		color: ${(props: IITProps) =>
-			props.active ? '#AAA' : 'initial'
-		};
+		color: #777;
 		content: ${(props: IITProps) => props.count > 1 ? `"(${props.count})"` : ''};
 	}
 `

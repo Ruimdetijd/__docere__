@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router'
 import { State as AppState } from '../index'
 import DocereTextView from 'docere-text-view'
 import { fetchPost } from '../utils'
-import { Main, Layers, TextWrapper, Menu, Text, WordWrapButton, OrientationButton } from './index.components'
+import { Main, Panels, TextWrapper, Menu, Text, WordWrapButton, OrientationButton } from './index.components'
 import Aside from './aside'
 import Facsimile from './facsimile'
 
@@ -103,7 +103,7 @@ export default class Entry extends React.Component<Props, State> {
 
 		return (
 			<Main asideVisible={this.state.activeTab != null}>
-				<Layers orientation={this.state.orientation}>
+				<Panels orientation={this.state.orientation}>
 					<Facsimile
 						facsimiles={this.state.facsimiles}
 						orientation={this.state.orientation}
@@ -148,6 +148,7 @@ export default class Entry extends React.Component<Props, State> {
 								<DocereTextView
 									customProps={{
 										activeId: this.state.activeId,
+										activeListId: this.state.activeListId,
 										activeTab: this.state.activeTab,
 										setActiveId: this.setActiveId,
 									}}
@@ -158,7 +159,7 @@ export default class Entry extends React.Component<Props, State> {
 							</Text>
 						</div>
 					</TextWrapper>
-				</Layers>
+				</Panels>
 				<Aside
 					{...this.state}
 					onClick={this.setActiveId}

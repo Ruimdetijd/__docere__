@@ -44,24 +44,24 @@ interface RsProps {
 	activeId: string
 	activeTab: TabName
 	type: string
+	color: string
+	active: boolean
 }
-export function rs(color: string, idAttribute: string) {
-	return styled.span`
-		background-color: ${(props: RsProps) => {
-			return props.activeId === props[idAttribute] ? color : 'rgba(0, 0, 0, 0)'
-		}};
-		color: ${(props: RsProps) =>
-			props.activeId === props[idAttribute] ? 'white' : 'inherit'
-		};
-		cursor: ${(props: RsProps) =>
-			props.activeTab === TabName.TextData ? 'pointer' : 'default'
-		};
-		transition: all 300ms;
-		
-		border-bottom: ${(props: RsProps) => props.activeTab === TabName.TextData && props.activeId !== props[idAttribute] ? `3px solid ${color}` : '0 solid rgba(0, 0, 0, 0)'};
-		${(props: RsProps) => props.activeId === props[idAttribute] ? 'padding: .1em .25em;' : 'padding: 0 .25em;'}
-	`
-}
+export const Rs = styled.span`
+	background-color: ${(props: RsProps) => {
+		return props.active ? props.color : 'rgba(0, 0, 0, 0)'
+	}};
+	color: ${(props: RsProps) =>
+		props.active ? 'white' : 'inherit'
+	};
+	cursor: ${(props: RsProps) =>
+		props.activeTab === TabName.TextData ? 'pointer' : 'default'
+	};
+	transition: all 300ms;
+	
+	border-bottom: ${(props: RsProps) => props.activeTab === TabName.TextData && !props.active ? `3px solid ${props.color}` : '0 solid rgba(0, 0, 0, 0)'};
+	${(props: RsProps) => props.active ? 'padding: .1em .25em;' : 'padding: 0 .25em;'}
+`
 
 export const damage = styled.span`
 	&:before {

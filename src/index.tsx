@@ -1,16 +1,23 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { BrowserRouter, Link, Route } from 'react-router-dom'
+import { BrowserRouter, Route } from 'react-router-dom'
+import styled from '@emotion/styled';
 import 'docere-config'
+import Header from './header'
 import Entry from './entry'
-import Projects from './projects'
 import Project from './project'
 import { Project as ProjectModel } from './models'
 import XMLio from 'xmlio';
-import { Main, Menu, H1 } from './__index.components'
-import Admin from './admin'
-import { Switch } from 'react-router'
 import { parseReceivedProject, fetchXml } from './utils'
+import { TOP_OFFSET } from './constants';
+
+export const Main = styled('div')`
+	background-color: white;
+	box-sizing: border-box;
+	display: grid;
+	grid-template-rows: ${TOP_OFFSET} auto;
+	width: 100%;
+`
 
 export interface State {
 	projects: ProjectModel[]
@@ -64,65 +71,18 @@ class App extends React.Component<{}, State> {
 		return (
 			<BrowserRouter>
 				<Main>
-					<Menu>
-						<div></div>
+					<Header />
+						<Route path="/:slug" exact render={props =>
+							<Project
+								{...props}
+								{...this.state}
+							/>
+						} />
 						<Route
-							path="/projects/:projectSlug/xml/:xmlId"
-							render={() =>
-								<div>
-									<input
-										onKeyUp={ev => {
-											if (ev.keyCode === 13) {
-												this.state.setSearchQuery((ev.target as HTMLInputElement).value)
-											}
-										}}
-									/>
-									<div>
-										<svg viewBox="0 0 250.313 250.313">
-											<path d="M244.186,214.604l-54.379-54.378c-0.289-0.289-0.628-0.491-0.93-0.76 c10.7-16.231,16.945-35.66,16.945-56.554C205.822,46.075,159.747,0,102.911,0S0,46.075,0,102.911 c0,56.835,46.074,102.911,102.91,102.911c20.895,0,40.323-6.245,56.554-16.945c0.269,0.301,0.47,0.64,0.759,0.929l54.38,54.38 c8.169,8.168,21.413,8.168,29.583,0C252.354,236.017,252.354,222.773,244.186,214.604z M102.911,170.146 c-37.134,0-67.236-30.102-67.236-67.235c0-37.134,30.103-67.236,67.236-67.236c37.132,0,67.235,30.103,67.235,67.236 C170.146,140.044,140.043,170.146,102.911,170.146z" />
-										</svg>
-									</div>
-								</div>
-
-							}
+							exact
+							path="/:projectSlug/:xmlId"
+							render={this.renderEntry}
 						/>
-					</Menu>
-					<H1><Link to={`/projects/${config.slug}`}>{config.title}</Link></H1>
-					<Switch>
-						<Route
-							path="/admin"
-							render={(props) => <Admin {...props} {...this.state} />}
-						/>
-						<Route
-							path="/"
-							render={() =>
-								<>
-									<div>
-										<Route path="/projects" exact render={() =>
-											<Projects
-												{...this.state}
-											/>
-										} />
-										<Route path="/projects/:slug" exact render={props =>
-											<Project
-												{...props}
-												{...this.state}
-											/>
-										} />
-										<Route
-											exact
-											path="/projects/:projectSlug/xml/:xmlId"
-											render={this.renderEntry}
-										/>
-										<Route
-											path="/projects/:projectSlug/xml/:xmlId/entries/:entryId"
-											render={this.renderEntry}
-										/>
-									</div>
-								</>
-							}
-						/>
-					</Switch>
 				</Main>
 			</BrowserRouter>
 		)

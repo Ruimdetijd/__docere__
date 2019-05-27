@@ -1,4 +1,4 @@
-import { add, del, lb, rs } from './index'
+import { add, del, lb  } from './index'
 
 import * as React from 'react'
 import styled from '@emotion/styled'
@@ -26,10 +26,10 @@ const components: DispilioComponents = {
 	lb,
 	add,
 	del,
-	'rs[type="person"]': rs('green', 'id'),
-	'rs[type="place"]': rs('red', 'id'),
-	'rs[type="media"]': rs('blue', 'id'),
-	'rs[type="org"]': rs('orange', 'id'),
+	// 'rs[type="person"]': rs('green', 'id'),
+	// 'rs[type="place"]': rs('red', 'id'),
+	// 'rs[type="media"]': rs('blue', 'id'),
+	// 'rs[type="org"]': rs('orange', 'id'),
 	pb
 }
 export default components
