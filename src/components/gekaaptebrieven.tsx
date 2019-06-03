@@ -13,12 +13,16 @@ const Img = styled.img`
 	position: absolute;
 	left: 0;
 	margin-top: 6px;
+	padding-bottom: 6px;
 	width: 32px;
 
 	${(props: { active: boolean}) => props.active ?
-		`border-bottom: 6px solid ${BROWN_LIGHT};
-		padding-bottom: 6px;` :
-		'cursor: pointer;'
+		`border-bottom: 6px solid ${BROWN_LIGHT};` :
+		`cursor: pointer;
+
+		&:hover {
+			border-bottom: 6px solid ${BROWN_LIGHT};
+		}`
 	}}
 `
 
