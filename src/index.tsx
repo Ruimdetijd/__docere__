@@ -20,15 +20,12 @@ export const Main = styled('div')`
 // TODO when clicking facsimile in search results, activate and scroll to that facsimile in entry view
 // TODO add middle page in search result pagination ie: 1 2 3 ... 10 ... 18 19 20 (add the 10)
 
-export interface State {
-	searchQuery: string
-	setSearchQuery: (query: string) => void
-}
-class App extends React.Component<{}, State> {
-	state: State = {
+class App extends React.Component<{}, AppState> {
+	state: AppState = {
+		getPrevNext: null,
 		searchQuery: null,
-		setSearchQuery: (searchQuery: string) => {
-			this.setState({ searchQuery })
+		setAppState: (key, value) => {
+			this.setState({ [key]: value } as any)
 		},
 	}
 

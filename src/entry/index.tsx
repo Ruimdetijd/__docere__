@@ -1,7 +1,6 @@
 import * as React from 'react'
 import components from '../components'
 import { RouteComponentProps } from 'react-router'
-import { State as AppState } from '../index'
 import DocereTextView from 'docere-text-view'
 import { fetchPost } from '../utils'
 import { Main, Panels, TextWrapper, Menu, Text, WordWrapButton, OrientationButton } from './index.components'

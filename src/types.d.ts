@@ -6,14 +6,20 @@ declare interface FormProps<T> {
 	handler: T
 }
 
-interface ContextState {
-	activeId: string
-	dataNodeTree: DataNode,
-	extractors: Extractor[]
-	input: string
-	metadata: Metadata
-	orientation: Orientation
+interface AppState {
+	getPrevNext: (id: string) => [Hit, Hit]
+	searchQuery: string
+	setAppState: (key: keyof AppState, value: any) => void
 }
+
+// interface ContextState {
+// 	activeId: string
+// 	dataNodeTree: DataNode,
+// 	extractors: Extractor[]
+// 	input: string
+// 	metadata: Metadata
+// 	orientation: Orientation
+// }
 
 interface ExtractedItem {
 	count: number

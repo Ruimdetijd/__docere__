@@ -9,14 +9,14 @@ const Wrapper = styled.div`
 	margin-top: ${DEFAULT_SPACING * 2}px;
 `
 
-interface Props {
-	setSearchQuery: (query: string) => void
-}
+type Props = Pick<AppState, 'setAppState'>
 interface State {
 	request: any
 	searchResults: any
 }
 export default class Search extends React.Component<Props, State> {
+	private searchRef = React.createRef() as React.RefObject<HucFacetedSearch>
+
 	state: State = {
 		request: null,
 		searchResults: {
@@ -36,6 +36,7 @@ export default class Search extends React.Component<Props, State> {
 				<HucFacetedSearch
 					backend="elasticsearch"
 					onChange={this.handleChange}
+					ref={this.searchRef}
 					resultBodyComponent={ResultBodyComponent(config.slug)}
 					resultsPerPage={config.searchResultCount}
 					url={`/search/${config.slug}/_search`}
@@ -69,7 +70,7 @@ export default class Search extends React.Component<Props, State> {
 	}
 
 	private handleChange = (changeResponse: OnChangeResponse) => {
-		if (changeResponse.query.length) this.props.setSearchQuery(changeResponse.query)
+		if (changeResponse.query.length) this.props.setAppState('searchQuery', changeResponse.query)
 		this.setState({ request: changeResponse.request, searchResults: changeResponse.response })
 	}
 }
