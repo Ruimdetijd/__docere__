@@ -9,22 +9,26 @@ import { TOP_OFFSET } from '../constants'
 const Wrapper = styled.div`
 	background: white;
 	position: sticky;
-	top: ${(props: Props) =>
-		props.orientation === Orientation.Horizontal ?
-			TOP_OFFSET :
-			`calc((((100vh - ${TOP_OFFSET}) / 2) + ${TOP_OFFSET}))`
-	};
-	height: ${(props: Props) =>
-		props.orientation === Orientation.Horizontal ?
-			`calc(100vh - ${TOP_OFFSET})` :
-			`calc((100vh - ${TOP_OFFSET}) / 2)`
-	};
+	${(props: Props) => {
+		if (props.orientation === Orientation.Horizontal) {
+			return `
+				height: calc(100vh - ${TOP_OFFSET}px);
+				top: ${TOP_OFFSET}px;
+			`
+		}
+
+		return `
+			box-shadow: 0px -16px 24px white;
+			height: calc((100vh - ${TOP_OFFSET}px) / 2);
+			top: calc((((100vh - ${TOP_OFFSET}px) / 2) + ${TOP_OFFSET}px));
+		`
+	}}
 	grid-column: 1;
 	grid-row: ${(props: Props) => props.orientation === Orientation.Horizontal ? 1 : 2};
 	z-index: 1;
 `
 
-type Props = Pick<EntryState, 'facsimiles' | 'orientation'>
+type Props = Pick<EntryState, 'activeFacsimilePath' | 'orientation'>
 export default class Facsimile extends React.PureComponent<Props> {
 	private osd: any
 
@@ -33,8 +37,8 @@ export default class Facsimile extends React.PureComponent<Props> {
 	}
 
 	componentDidUpdate(prevProps: Props) {
-		if (prevProps.facsimiles !== this.props.facsimiles) {
-			if (this.osd) this.osd.open(this.props.facsimiles.map(f => f.path))
+		if (prevProps.activeFacsimilePath !== this.props.activeFacsimilePath) {
+			if (this.osd) this.osd.open(this.props.activeFacsimilePath)
 			else this.init()
 		}
 	}
@@ -52,8 +56,6 @@ export default class Facsimile extends React.PureComponent<Props> {
 	}
 
 	private async init() {
-		if (!this.props.facsimiles.length) return
-
 		const OpenSeaDragon = await import('openseadragon')
 		if (this.osd == null) {
 			this.osd = OpenSeaDragon({
@@ -69,7 +71,6 @@ export default class Facsimile extends React.PureComponent<Props> {
 			})
 		}
 
-		const facs = this.props.facsimiles.map(f => f.path)
-		this.osd.open(facs[0])
+		this.osd.open(this.props.activeFacsimilePath)
 	}
 }

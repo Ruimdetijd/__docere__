@@ -1,9 +1,17 @@
-export const ASIDE_HANDLE_HEIGHT = '48px';
-export const ASIDE_HANDLE_WIDTH = '32px';
-export const TOP_OFFSET = '96px';
+export const DEFAULT_SPACING = 32
 
-export const TOPMENU_HEIGHT = 32
-export const MAINHEADER_HEIGHT = 64 
+export const ASIDE_WIDTH = DEFAULT_SPACING * 15
+export const ASIDE_HANDLE_HEIGHT = DEFAULT_SPACING * 1.5
+export const ASIDE_HANDLE_WIDTH = DEFAULT_SPACING
+
+export const TOPMENU_HEIGHT = DEFAULT_SPACING
+export const MAINHEADER_HEIGHT = DEFAULT_SPACING * 2
+export const TOP_OFFSET = MAINHEADER_HEIGHT + TOPMENU_HEIGHT
+
+export const TEXT_PANEL_WIDTH = DEFAULT_SPACING * 15
 
 export const GRAY_LIGHT = '#373b47'
 export const GRAY_DARK = '#212830'
+
+export const BROWN_LIGHT = '#c7aa71'
+export const BROWN_DARK = '#988258'

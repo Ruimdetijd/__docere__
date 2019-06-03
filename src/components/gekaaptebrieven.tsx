@@ -1,35 +1,38 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { FacsThumbProps } from 'dispilio'
 import 'docere-config'
 import { Rs } from './index'
 import { TabName } from '../entry/index'
+import { BROWN_LIGHT } from '../constants';
 
 const NoWrap = styled.span`
 	white-space: nowrap;
 `
 
 const Img = styled.img`
-	cursor: pointer;
 	position: absolute;
 	left: 0;
 	margin-top: 6px;
 	width: 32px;
+
+	${(props: { active: boolean}) => props.active ?
+		`border-bottom: 6px solid ${BROWN_LIGHT};
+		padding-bottom: 6px;` :
+		'cursor: pointer;'
+	}}
 `
 
-function pb(props: FacsThumbProps & { facs: string }) {
+function pb(props: { activeFacsimilePath: string, facs: string, setActiveFacsimile: (a: string) => void }) {
+	const baseUrl = `https://images.huygens.knaw.nl/iiif/${props.facs.slice(0, -4)}.tif`
+	const active = props.activeFacsimilePath === `${baseUrl}/info.json`
 	return (
 		<span
-			onClick={() => {
-				console.log(props)
-				// // Use the attr provided by extractedFacsimileData to retrieve the ID of the current element
-				// const id = props[props.extractedFacsimileData.attr]
-				// // With the ID find the associated path
-				// const facsimile = props.extractedFacsimileData.facsimiles.find(facs => facs.id === id)
-				// props.setState({ facsimiles: [props.facs] })
-			}}
+			onClick={() => !active ? props.setActiveFacsimile(`${baseUrl}/info.json`) : null}
 		>
-			<Img src={`https://images.huygens.knaw.nl/iiif/${props.facs.slice(0, -4)}.tif/full/,32/0/native.jpg`} />
+			<Img
+				active={active}
+				src={`${baseUrl}/full/,32/0/native.jpg`}
+			/>
 		</span>
 	)
 }
@@ -53,7 +56,7 @@ config.textdata.forEach(td => {
 })
 
 
-function rsWithIcon(rsConfig: TextData, SvgComponent: React.StatelessComponent<SvgProps>) {
+function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessComponent<SvgProps>) {
 	return function (props) {
 		// The RS is active when the text data list (defined by the ID), for example: person, place, theme, etc
 		// and the ID match. Only the ID is not sufficient, because two lists could have matching IDs.

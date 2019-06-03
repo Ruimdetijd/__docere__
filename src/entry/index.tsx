@@ -7,6 +7,7 @@ import { fetchPost } from '../utils'
 import { Main, Panels, TextWrapper, Menu, Text, WordWrapButton, OrientationButton } from './index.components'
 import Aside from './aside'
 import Facsimile from './facsimile'
+import { TEXT_PANEL_WIDTH } from '../constants';
 
 export enum TabName { Metadata = 'Metadata', TextData = 'TextData' }
 
@@ -37,12 +38,12 @@ interface MatchParams {
 }
 export type Props = AppState & RouteComponentProps<MatchParams>
 export interface State {
+	activeFacsimilePath: string
 	activeId: string
 	activeListId: string
 	activeTab: TabName
 	doc: XMLDocument
-	extractors: Extractor[]
-	facsimiles: ExtractedFacsimile[]
+	hasScroll: boolean
 	highlight: string[]
 	input: string
 	metadata: ExtractedMetadata
@@ -55,12 +56,12 @@ export default class Entry extends React.Component<Props, State> {
 	private textRef: React.RefObject<HTMLDivElement>
 
 	state: State = {
+		activeFacsimilePath: null,
 		activeId: null,
 		activeListId: config.textdata[0].id,
 		activeTab: TabName.Metadata,
 		doc: null,
-		extractors: [],
-		facsimiles: [],
+		hasScroll: false,
 		highlight: [],
 		input: null,
 		metadata: [],
@@ -81,7 +82,14 @@ export default class Entry extends React.Component<Props, State> {
 
 		const facsimiles = extractFacsimiles(doc)
 		const metadata = extractMetadata(doc)
-		this.setState({ doc, facsimiles: facsimiles.facsimiles, metadata })
+		this.setState({
+			doc,
+			activeFacsimilePath: facsimiles.facsimiles[0].path,
+			metadata
+		})
+
+		const hasScroll = window.innerHeight < document.documentElement.scrollHeight
+		if (hasScroll) this.setState({ hasScroll })
 
 		if (this.props.searchQuery != null) this.setHighlight()
 	}
@@ -105,7 +113,7 @@ export default class Entry extends React.Component<Props, State> {
 			<Main asideVisible={this.state.activeTab != null}>
 				<Panels orientation={this.state.orientation}>
 					<Facsimile
-						facsimiles={this.state.facsimiles}
+						activeFacsimilePath={this.state.activeFacsimilePath}
 						orientation={this.state.orientation}
 					/>
 					<TextWrapper orientation={this.state.orientation}>
@@ -138,18 +146,21 @@ export default class Entry extends React.Component<Props, State> {
 								/>
 							</div>
 						</Menu>
-						<div style={{ display: 'grid', gridTemplateColumns: 'auto 480px auto' }}>
+						<div style={{ display: 'grid', gridTemplateColumns: `auto ${TEXT_PANEL_WIDTH}px auto` }}>
 							<Text 
 								hasLb={this.components.hasOwnProperty('lb')}
 								hasFacs={extractFacsimiles != null}
+								hasScroll={this.state.hasScroll}
 								ref={this.textRef}
 								wordwrap={this.state.wordwrap}
 							>
 								<DocereTextView
 									customProps={{
+										activeFacsimilePath: this.state.activeFacsimilePath,
 										activeId: this.state.activeId,
 										activeListId: this.state.activeListId,
 										activeTab: this.state.activeTab,
+										setActiveFacsimile: (activeFacsimilePath: string) => this.setState({ activeFacsimilePath }),
 										setActiveId: this.setActiveId,
 									}}
 									components={this.components}
@@ -173,12 +184,12 @@ export default class Entry extends React.Component<Props, State> {
 	}
 
 	private setActiveId = (activeListId: string, activeId: string) => {
-		if (activeId === this.state.activeId) activeId = null
+		if (activeListId === this.state.activeListId && activeId === this.state.activeId) activeId = null
 		this.setState({ activeId, activeListId })
 	}
 
 	private async setHighlight() {
-		const response = await fetchPost(`/search/${this.props.project.slug}/_search`, {
+		const response = await fetchPost(`/search/${config.slug}/_search`, {
 			_source: false,
 			query: {
 				bool: {

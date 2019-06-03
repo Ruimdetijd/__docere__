@@ -2,26 +2,27 @@ import * as React from 'react'
 import styled from '@emotion/styled'
 import { Route } from 'react-router'
 import { Link } from 'react-router-dom'
-import { TOPMENU_HEIGHT, MAINHEADER_HEIGHT, TOP_OFFSET } from './constants';
+import { ASIDE_HANDLE_WIDTH, MAINHEADER_HEIGHT, TOP_OFFSET, DEFAULT_SPACING } from './constants';
 
 const Wrapper = styled.header`
 	background: linear-gradient(to right, #988258, #c7aa71);
 	display: grid;
-	grid-template-rows: ${TOPMENU_HEIGHT}px ${MAINHEADER_HEIGHT}px;
-	height: ${TOP_OFFSET};
+	grid-template-rows: ${ASIDE_HANDLE_WIDTH}px ${MAINHEADER_HEIGHT}px;
+	height: ${TOP_OFFSET}px;
 	position: sticky;
 	top: 0;
-	z-index: 1;
+	z-index: 1001;
 `
 
 const TopMenu = styled.div`
 	display: grid;
 	grid-template-columns: 80% 20%;
-	height: ${TOPMENU_HEIGHT}px;
+	height: ${DEFAULT_SPACING}px;
+	padding: 0 ${DEFAULT_SPACING}px;
 
 	& > div {
 		display: grid;
-		grid-template-columns: 64px auto 28px 32px;
+		grid-template-columns: 64px auto 28px;
 
 		& > input { 
 			background-color: #988258;
@@ -53,7 +54,6 @@ const H1 = styled('h1')`
 	margin: 0;
 	text-transform: uppercase;
 	align-self: center;
-    padding-left: 32px;
     font-style: italic;
     color: #c7aa71;
     text-shadow: 1px 1px 5px #404040;

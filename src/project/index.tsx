@@ -1,27 +1,22 @@
 import * as React from 'react'
-import { RouteComponentProps } from 'react-router'
 import styled from '@emotion/styled'
 import HucFacetedSearch, { BooleanFacet, ListFacet, RangeFacet } from 'huc-faceted-search'
-import { State as AppState } from '../index'
 import ResultBodyComponent from './result-body'
+import { DEFAULT_SPACING } from '../constants';
+import { defaultMetadata } from 'docere-config';
 
 const Wrapper = styled.div`
-	margin-top: 64px;
+	margin-top: ${DEFAULT_SPACING * 2}px;
 `
 
-interface MatchParams {
-	slug: string
-}
-interface Props extends AppState, RouteComponentProps<MatchParams> {
+interface Props {
+	setSearchQuery: (query: string) => void
 }
 interface State {
-	// filename: string
 	request: any
 	searchResults: any
 }
-export default class Project extends React.Component<Props, State> {
-	private searchRef: React.RefObject<HucFacetedSearch>
-
+export default class Search extends React.Component<Props, State> {
 	state: State = {
 		request: null,
 		searchResults: {
@@ -30,59 +25,41 @@ export default class Project extends React.Component<Props, State> {
 		}
 	}
 
-	constructor(props: Props) {
-		super(props)
-		this.searchRef = React.createRef()
-	}
-
-	componentDidMount() {
-		this.props.setProject(this.props.match.params.slug)
-	}
-
-	shouldComponentUpdate(nextProps: Props, nextState: State) {
-		return (
-			this.state !== nextState ||
-			this.props.project == null && nextProps.project != null ||
-			this.props.project.slug !== nextProps.project.slug
-		)
-	}
-
 	render() {
-		if (this.props.project == null) return null
-
-		const fields = this.props.project.metadata_fields
-			.filter(field => field.es_data_type !== 'null')
-			.sort((f1, f2) => f1.sortorder - f2.sortorder)
+		const fields = config.metadata
+			.map(m => ({ ...defaultMetadata, ...m }))
+			.filter(field => field.datatype !== 'null')
+			.sort((f1, f2) => f1.order - f2.order)
 
 		return (
 			<Wrapper>
 				<HucFacetedSearch
 					backend="elasticsearch"
 					onChange={this.handleChange}
-					ref={this.searchRef}
-					resultBodyComponent={ResultBodyComponent(this.props.project.slug)}
-					url={`/search/${this.props.project.slug}/_search`}
+					resultBodyComponent={ResultBodyComponent(config.slug)}
+					resultsPerPage={config.searchResultCount}
+					url={`/search/${config.slug}/_search`}
 				>
 					{
 						fields.map(field => 
-							field.es_data_type === 'boolean' ?
+							field.datatype === 'boolean' ?
 								<BooleanFacet
-									field={field.slug}
-									key={field.slug}
+									field={field.id}
+									key={field.id}
 									labels={["Nee", "Ja"]}
-									title={field.title}
+									title={field.title || field.id}
 								/> :
-								field.es_data_type === 'date' ?
+								field.datatype === 'date' ?
 									<RangeFacet
-										field={field.slug}
-										key={field.slug}
-										title={field.title}
+										field={field.id}
+										key={field.id}
+										title={field.title || field.id}
 										type="timestamp"
 									/> :
 									<ListFacet
-										field={field.slug}
-										key={field.slug}
-										title={field.title}
+										field={field.id}
+										key={field.id}
+										title={field.title || field.id}
 									/>
 						)
 					}

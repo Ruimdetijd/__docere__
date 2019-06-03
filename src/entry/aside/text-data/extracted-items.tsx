@@ -70,7 +70,7 @@ const ActiveIndicator = styled.li`
 interface Props {
 	active: boolean
 	activeItemId: string
-	data: TextData
+	data: TextDataConfig
 	containerHeight: number
 	items: TextDataValue[]
 	onItemClick: (activeListId: string, activeId: string) => void

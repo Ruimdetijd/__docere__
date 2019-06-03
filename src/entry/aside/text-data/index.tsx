@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import ExtractedItems from "./extracted-items"
+import 'docere-config'
 
 const Wrapper = styled.div`
 	height: 100%;
@@ -14,7 +15,7 @@ interface Props {
 }
 interface State {
 	containerHeight: number
-	items: Record<string, TextDataValue[]>
+	items: ExtractedTextData
 }
 export default class TextDataAside extends React.PureComponent<Props, State> {
 	private wrapperRef = React.createRef() as React.RefObject<HTMLDivElement>
@@ -27,28 +28,8 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 	componentDidMount() {
 		this.setState({
 			containerHeight: this.wrapperRef.current.getBoundingClientRect().height,
-			items: this.extractItems()
+			items: extractTextData(this.props.doc, config)
 		})
-	}
-
-	private extractItems() {
-		return config.textdata.reduce((prev, curr) => {
-			const items = {}
-			prev[curr.id] = Array.from(this.props.doc.querySelectorAll(curr.extractor.selector))
-				.reduce((prev, currEl) => {
-					const key = currEl.textContent
-					if (items.hasOwnProperty(key)) {
-						items[key].count = items[key].count + 1
-					}
-					else {
-						items[key] = { key, value: currEl.textContent, count: 1 }
-						prev.push(items[key])
-					}
-					return prev
-				}, []) 
-			
-			return prev
-		}, {})
 	}
 
 	render() {
