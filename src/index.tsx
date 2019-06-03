@@ -16,6 +16,10 @@ export const Main = styled('div')`
 	width: 100%;
 `
 
+// TODO keep search state when navigating to/from entry
+// TODO when clicking facsimile in search results, activate and scroll to that facsimile in entry view
+// TODO add middle page in search result pagination ie: 1 2 3 ... 10 ... 18 19 20 (add the 10)
+
 export interface State {
 	searchQuery: string
 	setSearchQuery: (query: string) => void
