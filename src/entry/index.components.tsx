@@ -1,12 +1,27 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { css } from '@emotion/core'
-import { TOP_OFFSET, TEXT_PANEL_WIDTH, DEFAULT_SPACING, ASIDE_WIDTH } from '../constants';
+import { TOP_OFFSET, TEXT_PANEL_WIDTH, DEFAULT_SPACING, ASIDE_WIDTH, Viewport } from '../constants';
 
-interface MainProps { asideVisible: boolean }
+interface MainProps { viewport: Viewport }
 export const Main = styled.div`
-	width: ${(props: MainProps) => props.asideVisible ? `calc(100% - ${ASIDE_WIDTH}px)` : '100%'};
-	transition: width 300ms;
+	width: ${(props: MainProps) =>
+		props.viewport === Viewport.Results ||
+		props.viewport === Viewport.Metadata ||
+		props.viewport === Viewport.TextData ?
+		`calc(100vw - ${ASIDE_WIDTH}px)` :
+		'100vw'
+	};
+	position: fixed;
+	transform: translateX(${(props: MainProps) =>
+		props.viewport === Viewport.Search ?
+			'100vw' :
+			props.viewport === Viewport.Results ?
+				`${ASIDE_WIDTH}px` :
+				0
+	});
+	top: ${TOP_OFFSET}px;
+	transition: all 300ms;
 `
 
 interface LayersProps {
@@ -14,12 +29,12 @@ interface LayersProps {
 }
 export const Panels = styled.div`
 	display: grid;
+	height: calc(100vh - ${TOP_OFFSET}px);
+	overflow-y: auto;
 	${(props: LayersProps) => {
-		// Yes, I know props.orientation ? 'columns' : 'rows' would be sufficient here,
-		// but this is clearer
 		if (props.orientation === Orientation.Horizontal) {
 			return `
-				grid-template-columns: auto ${TEXT_PANEL_WIDTH + (DEFAULT_SPACING * 4)}px;
+				grid-template-columns: auto ${TEXT_PANEL_WIDTH + (DEFAULT_SPACING * 6)}px;
 				grid-template-rows: 100% auto;
 			`
 		}
@@ -51,7 +66,7 @@ export const Menu = styled.div`
 	grid-template-columns: 1fr 1fr;
 	height: 64px;
 	position: sticky;
-	top: ${TOP_OFFSET}px;
+	top: 0;
 	z-index: 1;
 
 	& > div {
@@ -99,7 +114,7 @@ export const Text = styled.div`
 `
 
 export const MetadataItem = styled.li`
-	margin-bottom: 1em;
+	margin-bottom: ${DEFAULT_SPACING}px;
 
 	& span:first-of-type {
 		color: #888;

@@ -1,12 +1,11 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { BrowserRouter, Route } from 'react-router-dom'
 import styled from '@emotion/styled'
 import 'docere-config'
 import Header from './header'
 import Entry from './entry'
-import Search from './project'
-import { TOP_OFFSET } from './constants'
+import Search from './search'
+import { TOP_OFFSET, Viewport } from './constants'
 
 export const Main = styled('div')`
 	background-color: white;
@@ -22,42 +21,42 @@ export const Main = styled('div')`
 
 class App extends React.Component<{}, AppState> {
 	state: AppState = {
+		id: window.location.pathname.split('/')[2],
 		getPrevNext: null,
+		project: window.location.pathname.split('/')[1],
 		searchQuery: null,
+		setId: (id?: string) => {
+			let url = `/${this.state.project}`
+			if (id != null) url += `/${id}`
+
+			let viewport = Viewport.Entry
+			if (id == null) viewport = Viewport.Search
+			if (this.state.viewport === Viewport.Results) viewport = Viewport.Results
+
+			this.setState({ id, viewport })
+
+			history.pushState({}, this.state.project, url)
+		},
 		setAppState: (key, value) => {
 			this.setState({ [key]: value } as any)
 		},
+		viewport: Viewport.Results
 	}
 
 	render() {
 		return (
-			<BrowserRouter>
-				<Main>
-					<Header />
-						<Route path="/:slug" exact render={props =>
-							<Search
-								{...props}
-								{...this.state}
-							/>
-						} />
-						<Route
-							exact
-							path="/:projectSlug/:xmlId"
-							render={this.renderEntry}
-						/>
-				</Main>
-			</BrowserRouter>
+			<Main>
+				<Header {...this.state}/>
+				<Search {...this.state}/>
+				<Entry {...this.state}/>
+			</Main>
 		)
 	}
 
-	private renderEntry = (props) => {
-		return (
-			<Entry
-				{...props}
-				{...this.state}
-			/>
-		)
-	}
+	// private renderEntry = (props) => {
+	// 	return (
+	// 	)
+	// }
 
 }
 

@@ -15,3 +15,11 @@ export const GRAY_DARK = '#212830'
 
 export const BROWN_LIGHT = '#c7aa71'
 export const BROWN_DARK = '#988258'
+
+export enum Viewport {
+	Search = 'Search',
+	Results = 'Results',
+	Entry = 'Entry',
+	Metadata = 'Metadata',
+	TextData = 'TextData',
+}

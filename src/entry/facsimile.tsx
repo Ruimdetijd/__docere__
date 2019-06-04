@@ -13,14 +13,14 @@ const Wrapper = styled.div`
 		if (props.orientation === Orientation.Horizontal) {
 			return `
 				height: calc(100vh - ${TOP_OFFSET}px);
-				top: ${TOP_OFFSET}px;
+				top: 0;
 			`
 		}
 
 		return `
 			box-shadow: 0px -16px 24px white;
 			height: calc((100vh - ${TOP_OFFSET}px) / 2);
-			top: calc((((100vh - ${TOP_OFFSET}px) / 2) + ${TOP_OFFSET}px));
+			top: calc((100vh - ${TOP_OFFSET}px) / 2);
 		`
 	}}
 	grid-column: 1;
@@ -60,6 +60,8 @@ export default class Facsimile extends React.PureComponent<Props> {
 		if (this.osd == null) {
 			this.osd = OpenSeaDragon({
 				constrainDuringPan: true,
+				controlsFadeDelay: 0,
+				controlsFadeLength: 300,
 				id: "openseadragon",
 				navigatorPosition: 'BOTTOM_LEFT',
 				prefixUrl: "/node_modules/openseadragon/build/openseadragon/images/",

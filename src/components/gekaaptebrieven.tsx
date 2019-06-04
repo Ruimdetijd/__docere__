@@ -2,8 +2,7 @@ import * as React from 'react'
 import styled from '@emotion/styled'
 import 'docere-config'
 import { Rs } from './index'
-import { TabName } from '../entry/index'
-import { BROWN_LIGHT } from '../constants';
+import { BROWN_LIGHT, Viewport } from '../constants';
 
 const NoWrap = styled.span`
 	white-space: nowrap;
@@ -53,7 +52,7 @@ config.textdata.forEach(td => {
 				{...props}
 				active={props.activeListId === td.id && props.activeId === props.children[0]}
 				color={td.color}
-				onClick={() => props.activeTab === TabName.TextData ? props.setActiveId(td.id, props.children[0]) : null}
+				onClick={() => props.viewport === Viewport.TextData ? props.setActiveId(td.id, props.children[0]) : null}
 			/>
 		)
 	}
@@ -81,11 +80,11 @@ function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessCompo
 				{...props}
 				active={active}
 				color={rsConfig.color}
-				onClick={() => props.activeTab === TabName.TextData ? props.setActiveId(rsConfig.id, props.children[0]) : null}
+				onClick={() => props.viewport === Viewport.TextData ? props.setActiveId(rsConfig.id, props.children[0]) : null}
 			>
 				<NoWrap>
 					{
-						props.activeTab === TabName.TextData &&
+						props.viewport === Viewport.TextData &&
 						<SvgComponent
 							active={active}
 							color={rsConfig.color}

@@ -1,14 +1,11 @@
 import * as React from 'react'
 import components from '../components'
-import { RouteComponentProps } from 'react-router'
 import DocereTextView from 'docere-text-view'
 import { fetchPost } from '../utils'
 import { Main, Panels, TextWrapper, Menu, Text, WordWrapButton, OrientationButton } from './index.components'
 import Aside from './aside'
 import Facsimile from './facsimile'
-import { TEXT_PANEL_WIDTH } from '../constants';
-
-export enum TabName { Metadata = 'Metadata', TextData = 'TextData' }
+import { TEXT_PANEL_WIDTH } from '../constants'
 
 function getXmlFilePath(slug: string, filename: string) {
 	return `/node_modules/docere-config/projects/${slug}/xml/${filename}.xml`
@@ -30,17 +27,16 @@ function fetchXml(slug: string, filename: string): Promise<XMLDocument> {
 	})
 }
 
-interface MatchParams {
-	entryId: string
-	projectSlug: string
-	xmlId: string
-}
-export type Props = AppState & RouteComponentProps<MatchParams>
+// interface MatchParams {
+// 	entryId: string
+// 	projectSlug: string
+// 	xmlId: string
+// }
+// export type Props = AppState & RouteComponentProps<MatchParams>
 export interface State {
 	activeFacsimilePath: string
 	activeId: string
 	activeListId: string
-	activeTab: TabName
 	doc: XMLDocument
 	hasScroll: boolean
 	highlight: string[]
@@ -50,7 +46,7 @@ export interface State {
 	wordwrap: boolean
 }
 
-export default class Entry extends React.Component<Props, State> {
+export default class Entry extends React.Component<AppState, State> {
 	private components = components
 	private textRef: React.RefObject<HTMLDivElement>
 
@@ -58,7 +54,6 @@ export default class Entry extends React.Component<Props, State> {
 		activeFacsimilePath: null,
 		activeId: null,
 		activeListId: config.textdata[0].id,
-		activeTab: TabName.Metadata,
 		doc: null,
 		hasScroll: false,
 		highlight: [],
@@ -69,34 +64,20 @@ export default class Entry extends React.Component<Props, State> {
 	}
 
 	async componentDidMount() {
-		const { xmlId } = this.props.match.params
-
 		await import(`../components/${config.slug}`).then(components => {
 			this.components = {...this.components, ...components.default}
 			this.forceUpdate()
 		})
 
-		let doc = await fetchXml(config.slug, xmlId)
-		doc = prepareDocument(doc, config)
-
-		const facsimiles = extractFacsimiles(doc)
-		const metadata = extractMetadata(doc)
-		this.setState({
-			doc,
-			activeFacsimilePath: facsimiles.facsimiles[0].path,
-			metadata
-		})
-
-		const hasScroll = window.innerHeight < document.documentElement.scrollHeight
-		if (hasScroll) this.setState({ hasScroll })
+		await this.loadDoc()
 
 		if (this.props.searchQuery != null) this.setHighlight()
 	}
 
-	componentDidUpdate(prevProps: Props, prevState: State) {
-		if (prevProps.searchQuery !== this.props.searchQuery) {
-			this.setHighlight()
-		}
+	componentDidUpdate(prevProps: AppState, prevState: State) {
+		if (prevProps.id !== this.props.id) this.loadDoc()
+		if (prevProps.searchQuery !== this.props.searchQuery) this.setHighlight()
+		if (prevProps.viewport !== this.props.viewport) this.setState({ activeId: null })
 		
 		if (prevState.highlight.length && !this.state.highlight.length) {
 			for (const el of this.textRef.current.querySelectorAll('mark')) {
@@ -109,7 +90,9 @@ export default class Entry extends React.Component<Props, State> {
 		if (this.state.doc == null) return null
 
 		return (
-			<Main asideVisible={this.state.activeTab != null}>
+			<Main
+				viewport={this.props.viewport}
+			>
 				<Panels orientation={this.state.orientation}>
 					<Facsimile
 						activeFacsimilePath={this.state.activeFacsimilePath}
@@ -123,7 +106,7 @@ export default class Entry extends React.Component<Props, State> {
 							<div>
 								<a
 									download="test.xml"
-									href={getXmlFilePath(config.slug, this.props.match.params.xmlId)}
+									href={getXmlFilePath(config.slug, this.props.id)}
 								>
 									<img src="https://tei-c.org/Vault/Logos/TEIlogo.svg" width="32px" />
 								</a>
@@ -158,9 +141,9 @@ export default class Entry extends React.Component<Props, State> {
 										activeFacsimilePath: this.state.activeFacsimilePath,
 										activeId: this.state.activeId,
 										activeListId: this.state.activeListId,
-										activeTab: this.state.activeTab,
 										setActiveFacsimile: (activeFacsimilePath: string) => this.setState({ activeFacsimilePath }),
 										setActiveId: this.setActiveId,
+										viewport: this.props.viewport
 									}}
 									components={this.components}
 									node={this.state.doc}
@@ -171,12 +154,9 @@ export default class Entry extends React.Component<Props, State> {
 					</TextWrapper>
 				</Panels>
 				<Aside
+					{...this.props}
 					{...this.state}
-					onClick={this.setActiveId}
-					setActiveTab={activeTab => {
-						if (activeTab === this.state.activeTab) activeTab = null
-						this.setState({ activeTab, activeId: null })
-					}}
+					setActiveId={this.setActiveId}
 				/>
 			</Main>
 		)
@@ -185,6 +165,22 @@ export default class Entry extends React.Component<Props, State> {
 	private setActiveId = (activeListId: string, activeId: string) => {
 		if (activeListId === this.state.activeListId && activeId === this.state.activeId) activeId = null
 		this.setState({ activeId, activeListId })
+	}
+
+	private async loadDoc() {
+		let doc = await fetchXml(config.slug, this.props.id)
+		doc = prepareDocument(doc, config)
+
+		const facsimiles = extractFacsimiles(doc)
+		const metadata = extractMetadata(doc)
+		this.setState({
+			doc,
+			activeFacsimilePath: facsimiles.facsimiles[0].path,
+			metadata
+		})
+
+		const hasScroll = window.innerHeight < document.documentElement.scrollHeight
+		if (hasScroll) this.setState({ hasScroll })
 	}
 
 	private async setHighlight() {
@@ -200,7 +196,7 @@ export default class Entry extends React.Component<Props, State> {
 						},
 						{
 							match: {
-								id: this.props.match.params.xmlId
+								id: this.props.id
 							}
 						}
 					]

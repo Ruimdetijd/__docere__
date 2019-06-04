@@ -1,8 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { Route } from 'react-router'
-import { Link } from 'react-router-dom'
-import { ASIDE_HANDLE_WIDTH, MAINHEADER_HEIGHT, TOP_OFFSET, DEFAULT_SPACING } from './constants';
+import { ASIDE_HANDLE_WIDTH, MAINHEADER_HEIGHT, TOP_OFFSET, DEFAULT_SPACING } from './constants'
 
 const Wrapper = styled.header`
 	background: linear-gradient(to right, #988258, #c7aa71);
@@ -50,6 +48,7 @@ const TopMenu = styled.div`
 `
 
 const H1 = styled('h1')`
+	cursor: pointer;
 	font-size: 1.1em;
 	margin: 0;
 	text-transform: uppercase;
@@ -66,13 +65,17 @@ const H1 = styled('h1')`
 `
 
 
-export default class Header extends React.PureComponent<{}> {
+export default class Header extends React.PureComponent<AppState> {
 	render() {
 		return (
 			<Wrapper>
 				<TopMenu>
-					<H1><Link to={`/${config.slug}`}>{config.title}</Link></H1>
-					<Route
+					<H1
+						onClick={() => this.props.setId()}
+					>
+						{config.title}
+					</H1>
+					{/* <Route
 						path="/:projectSlug/:xmlId"
 						render={() =>
 							<div>
@@ -91,7 +94,7 @@ export default class Header extends React.PureComponent<{}> {
 							</div>
 
 						}
-					/>
+					/> */}
 				</TopMenu>
 			</Wrapper>
 		)

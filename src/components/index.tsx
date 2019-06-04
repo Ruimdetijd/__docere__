@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { ID_ATTRIBUTE_NAME, COLOR_ATTRIBUTE_NAME } from 'dispilio'
-import { TabName } from '../entry';
+import { Viewport } from '../constants';
 
 export const div = styled.div`
 `
@@ -41,11 +41,11 @@ export const lb = styled.span`
 `
 
 interface RsProps {
-	activeId: string
-	activeTab: TabName
-	type: string
-	color: string
 	active: boolean
+	activeId: string
+	color: string
+	type: string
+	viewport: Viewport
 }
 export const Rs = styled.span`
 	background-color: ${(props: RsProps) => {
@@ -55,11 +55,11 @@ export const Rs = styled.span`
 		props.active ? 'white' : 'inherit'
 	};
 	cursor: ${(props: RsProps) =>
-		props.activeTab === TabName.TextData ? 'pointer' : 'default'
+		props.viewport === Viewport.TextData ? 'pointer' : 'default'
 	};
 	transition: all 300ms;
 	
-	border-bottom: ${(props: RsProps) => props.activeTab === TabName.TextData && !props.active ? `3px solid ${props.color}` : '0 solid rgba(0, 0, 0, 0)'};
+	border-bottom: ${(props: RsProps) => props.viewport === Viewport.TextData && !props.active ? `3px solid ${props.color}` : '0 solid rgba(0, 0, 0, 0)'};
 	${(props: RsProps) => props.active ? 'padding: .1em .25em;' : 'padding: 0 .25em;'}
 `
 

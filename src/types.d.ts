@@ -7,9 +7,13 @@ declare interface FormProps<T> {
 }
 
 interface AppState {
+	id: string
 	getPrevNext: (id: string) => [Hit, Hit]
+	project: string
 	searchQuery: string
 	setAppState: (key: keyof AppState, value: any) => void
+	setId: (id?: string) => void
+	viewport: import('./index').Viewport
 }
 
 // interface ContextState {
