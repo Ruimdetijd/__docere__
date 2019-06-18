@@ -1,5 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
+import { rsPerson } from '../rs';
 
 const Img = styled.img`
 	position: absolute;
@@ -14,9 +15,11 @@ function pb(props: any) {
 	)
 }
 
-const getComponents: FunctionTypes['getComponents'] = function(_config) {
+const getComponents: FunctionTypes['getComponents'] = function(config) {
+	const personConfig = config.textdata.find(td => td.id === 'person')
 	return {
-		pb
+		pb,
+		'rs[type="pers"]': rsPerson(personConfig),
 	}
 }
 

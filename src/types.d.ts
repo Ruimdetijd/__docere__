@@ -25,6 +25,17 @@ interface AppState extends DocereConfigData {
 	viewport: import('./constants').Viewport
 }
 
+
+interface DocereComponentProps {
+	activeFacsimilePath: string
+	activeId: string
+	activeListId: string
+	children?: any
+	config: DocereConfig
+	setActiveFacsimile: (activeFacsimilePath: string) => void
+	setActiveId: (activeListId: string, activeId: string) => void
+	viewport: AppState['viewport']
+}
 // interface ContextState {
 // 	activeId: string
 // 	dataNodeTree: DataNode,

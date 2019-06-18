@@ -8,16 +8,6 @@ import { Main, Panels, TextWrapper, Menu, Text, WordWrapButton, OrientationButto
 import Aside from './aside'
 import Facsimile from './facsimile'
 
-interface DocereComponentProps {
-	activeFacsimilePath: string
-	activeId: string
-	activeListId: string
-	config: DocereConfig
-	setActiveFacsimile: (activeFacsimilePath: string) => void
-	setActiveId: (activeListId: string, activeId: string) => void
-	viewport: AppState['viewport']
-}
-
 export interface State {
 	activeFacsimilePath: string
 	activeId: string
