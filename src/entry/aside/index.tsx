@@ -11,16 +11,17 @@ const Wrapper = styled.aside`
 	display: grid;
 	grid-template-columns: ${ASIDE_HANDLE_WIDTH}px auto;
 	height: calc(100vh - ${TOP_OFFSET}px);
+	pointer-events: none;
 	position: absolute;
 	top: 0;
 	right: -${ASIDE_WIDTH}px;
 	width: ${ASIDE_WIDTH + DEFAULT_SPACING}px;
 	z-index: 6000;
-`
-	// right: 0;
-	// transform: translateX(${(props: HProps) => props.active ? 0 : `${ASIDE_WIDTH + 6}px`});
-	// transition: transform 300ms;
 
+	& > * {
+		pointer-events: all;
+	}
+`
 
 const Body = styled.div`
 	background-color: ${GRAY_DARK};
