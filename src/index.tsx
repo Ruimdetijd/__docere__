@@ -18,7 +18,6 @@ export const Main = styled('div')`
 
 // BUGS
 // TODO fix faceted search Reset button
-// TODO fix text view scrollbar (mouse not working because of metadata/textdata tabs)
 
 // Asides
 // TODO results and metadata show at same time
