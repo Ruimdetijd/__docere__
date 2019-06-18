@@ -62,7 +62,7 @@ export const Main = styled('div')`
 // 	entryId: AppState['entryId']
 // 	pageId: AppState['pageId']
 // }
-type Props = Pick<AppState, 'config' | 'entryId' | 'extractFacsimiles' | 'extractMetadata' | 'extractTextData' | 'pageId' | 'prepareDocument'>
+type Props = Pick<AppState, 'config' | 'entryId' | 'extractFacsimiles' | 'extractMetadata' | 'extractTextData' | 'pageId' | 'prepareDocument' | 'viewport'>
 
 class App extends React.Component<Props, AppState> {
 	private lastEntryId: string
@@ -73,7 +73,6 @@ class App extends React.Component<Props, AppState> {
 		setAppState: (key, value) => this.setState({ [key]: value } as any),
 		setEntryId: (entryId: string) => this.setEntryId(entryId),
 		setPage: (page: Page) => this.setPage(page),
-		viewport: Viewport.Search
 	}
 
 	render() {
@@ -117,6 +116,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 	const dcdImport: { default: DocereConfigData } = await import(`docere-config/projects/${projectSlug}/index.js`)
 	const container = document.getElementById('container')
 
+	let viewport = Viewport.Search
+	if (pageId != null) viewport = Viewport.Page
+	else if (entryId != null) viewport = Viewport.Entry
+
 	ReactDOM.render(
 		<App
 			{...defaultDocereConfigData}
@@ -124,6 +127,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 			config={{...defaultDocereConfigData.config, ...dcdImport.default.config}}
 			entryId={entryId}
 			pageId={pageId}
+			viewport={viewport}
 		/>,
 		container
 	)
