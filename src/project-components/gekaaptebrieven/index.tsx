@@ -1,8 +1,10 @@
+/// <reference path="../../types.d.ts" />
+
 import * as React from 'react'
 import styled from '@emotion/styled'
 import 'docere-config'
-import { Rs } from './index'
-import { BROWN_LIGHT, Viewport } from '../constants';
+import { Rs } from '../index'
+import { BROWN_LIGHT, Viewport } from '../../constants'
 
 const NoWrap = styled.span`
 	white-space: nowrap;
@@ -40,27 +42,9 @@ function pb(props: { activeFacsimilePath: string, facs: string, setActiveFacsimi
 	)
 }
 
-const components: DispilioComponents = {
-	pb,
-}
-
-// Map all the text data configs to components. Person and Loc are overwritten later
-config.textdata.forEach(td => {
-	components[td.extractor.selector] = function(props) {
-		return (
-			<Rs
-				{...props}
-				active={props.activeListId === td.id && props.activeId === props.children[0]}
-				color={td.color}
-				onClick={() => props.viewport === Viewport.TextData ? props.setActiveId(td.id, props.children[0]) : null}
-			/>
-		)
-	}
-})
-
 
 function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessComponent<SvgProps>) {
-	return function (props) {
+	return function (props: any) {
 		// The RS is active when the text data list (defined by the ID), for example: person, place, theme, etc
 		// and the ID match. Only the ID is not sufficient, because two lists could have matching IDs.
 		const active = props.activeListId === rsConfig.id && props.activeId === props.children[0]
@@ -112,8 +96,6 @@ function PersonSvg(props: SvgProps) {
 		</svg>
 	)
 }
-const personConfig = config.textdata.find(td => td.id === 'person')
-components['ner[type="per"]'] = rsWithIcon(personConfig, PersonSvg)
 
 
 // Place
@@ -126,7 +108,34 @@ function PlaceSvg(props: SvgProps) {
 		</svg>
 	)
 }
-const placeConfig = config.textdata.find(td => td.id === 'loc')
-components['ner[type="loc"]'] = rsWithIcon(placeConfig, PlaceSvg)
 
-export default components
+const getComponents: FunctionTypes['getComponents'] = function(config) {
+	const placeConfig = config.textdata.find(td => td.id === 'loc')
+	const personConfig = config.textdata.find(td => td.id === 'person')
+
+	const components: DocereComponents = {
+		'ner[type="loc"]': rsWithIcon(placeConfig, PlaceSvg),
+		'ner[type="per"]': rsWithIcon(personConfig, PersonSvg),
+		pb,
+	}
+
+	// Map all the text data configs to components. Person and Loc are overwritten later
+	config.textdata
+		.filter(td => td.id !== 'person' && td.id !== 'loc')
+		.forEach(td => {
+			components[td.extractor.selector] = function(props: any) {
+				return (
+					<Rs
+						{...props}
+						active={props.activeListId === td.id && props.activeId === props.children[0]}
+						color={td.color}
+						onClick={() => props.viewport === Viewport.TextData ? props.setActiveId(td.id, props.children[0]) : null}
+					/>
+				)
+			}
+		})
+
+	return components
+}
+
+export default getComponents

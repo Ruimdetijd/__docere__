@@ -9,11 +9,15 @@ const Img = styled.img`
 function pb(props: any) {
 	return (
 		<span onClick={props.onClick}>
-			<Img src={`/api/facsimile/gekaaptebrieven/${props.facs.slice(0, -4)}_files/5/0_0.jpeg`} />
+			<Img src={`/api/facsimile/${props.config.slug}/${props.facs.slice(0, -4)}_files/5/0_0.jpeg`} />
 		</span>
 	)
 }
 
-const components: DispilioComponents = { pb }
+const getComponents: FunctionTypes['getComponents'] = function(_config) {
+	return {
+		pb
+	}
+}
 
-export default components
+export default getComponents

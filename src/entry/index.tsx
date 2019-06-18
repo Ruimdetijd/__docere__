@@ -1,42 +1,28 @@
 import * as React from 'react'
-import components from '../components'
 import DocereTextView from 'docere-text-view'
-import { fetchPost } from '../utils'
+
+import { TEXT_PANEL_WIDTH } from '../constants'
+import { fetchPost, getEntryXmlPath, fetchEntryXml } from '../utils'
+
 import { Main, Panels, TextWrapper, Menu, Text, WordWrapButton, OrientationButton } from './index.components'
 import Aside from './aside'
 import Facsimile from './facsimile'
-import { TEXT_PANEL_WIDTH } from '../constants'
 
-function getXmlFilePath(slug: string, filename: string) {
-	return `/node_modules/docere-config/projects/${slug}/xml/${filename}.xml`
-}
-function fetchXml(slug: string, filename: string): Promise<XMLDocument> {
-	return new Promise((resolve, _reject) => {
-		var xhr = new XMLHttpRequest
-		xhr.open('GET', getXmlFilePath(slug, filename))
-		xhr.responseType = 'document'
-		xhr.overrideMimeType('text/xml')
-
-		xhr.onload = function() {
-			if (xhr.readyState === xhr.DONE && xhr.status === 200) {
-				resolve(xhr.responseXML)
-			}
-		}
-
-		xhr.send()
-	})
+interface DocereComponentProps {
+	activeFacsimilePath: string
+	activeId: string
+	activeListId: string
+	config: DocereConfig
+	setActiveFacsimile: (activeFacsimilePath: string) => void
+	setActiveId: (activeListId: string, activeId: string) => void
+	viewport: AppState['viewport']
 }
 
-// interface MatchParams {
-// 	entryId: string
-// 	projectSlug: string
-// 	xmlId: string
-// }
-// export type Props = AppState & RouteComponentProps<MatchParams>
 export interface State {
 	activeFacsimilePath: string
 	activeId: string
 	activeListId: string
+	components: DocereComponents
 	doc: XMLDocument
 	hasScroll: boolean
 	highlight: string[]
@@ -47,27 +33,26 @@ export interface State {
 }
 
 export default class Entry extends React.Component<AppState, State> {
-	private components = components
 	private textRef: React.RefObject<HTMLDivElement>
 
 	state: State = {
 		activeFacsimilePath: null,
 		activeId: null,
-		activeListId: config.textdata[0].id,
+		activeListId: this.props.config.textdata.length ? this.props.config.textdata[0].id : null,
+		components: {},
 		doc: null,
 		hasScroll: false,
 		highlight: [],
 		input: null,
-		metadata: [],
+		metadata: {},
 		orientation: Orientation.Horizontal,
 		wordwrap: false,
 	}
 
 	async componentDidMount() {
-		await import(`../components/${config.slug}`).then(components => {
-			this.components = {...this.components, ...components.default}
-			this.forceUpdate()
-		})
+		const { default: getComponents } = await import(`../project-components/${this.props.config.slug}`) as { default : FunctionTypes['getComponents'] }
+		const components = getComponents(this.props.config)
+		this.setState({ components })
 
 		await this.loadDoc()
 
@@ -75,7 +60,7 @@ export default class Entry extends React.Component<AppState, State> {
 	}
 
 	componentDidUpdate(prevProps: AppState, prevState: State) {
-		if (prevProps.id !== this.props.id) this.loadDoc()
+		if (prevProps.entryId !== this.props.entryId) this.loadDoc()
 		if (prevProps.searchQuery !== this.props.searchQuery) this.setHighlight()
 		if (prevProps.viewport !== this.props.viewport) this.setState({ activeId: null })
 		
@@ -88,6 +73,16 @@ export default class Entry extends React.Component<AppState, State> {
 
 	render() {
 		if (this.state.doc == null) return null
+
+		const customProps: DocereComponentProps = {
+			activeFacsimilePath: this.state.activeFacsimilePath,
+			activeId: this.state.activeId,
+			activeListId: this.state.activeListId,
+			config: this.props.config,
+			setActiveFacsimile: (activeFacsimilePath: string) => this.setState({ activeFacsimilePath }),
+			setActiveId: this.setActiveId,
+			viewport: this.props.viewport,
+		}
 
 		return (
 			<Main
@@ -106,12 +101,12 @@ export default class Entry extends React.Component<AppState, State> {
 							<div>
 								<a
 									download="test.xml"
-									href={getXmlFilePath(config.slug, this.props.id)}
+									href={getEntryXmlPath(this.props.config.slug, this.props.entryId)}
 								>
 									<img src="https://tei-c.org/Vault/Logos/TEIlogo.svg" width="32px" />
 								</a>
 								{
-									this.components.hasOwnProperty('lb') &&
+									this.state.components.hasOwnProperty('lb') &&
 									<WordWrapButton
 										onClick={() => this.setState({ wordwrap: !this.state.wordwrap })}
 										wordwrap={this.state.wordwrap}
@@ -130,22 +125,15 @@ export default class Entry extends React.Component<AppState, State> {
 						</Menu>
 						<div style={{ display: 'grid', gridTemplateColumns: `auto ${TEXT_PANEL_WIDTH}px auto` }}>
 							<Text 
-								hasLb={this.components.hasOwnProperty('lb')}
-								hasFacs={extractFacsimiles != null}
+								hasLb={this.state.components.hasOwnProperty('lb')}
+								hasFacs={this.props.extractFacsimiles != null}
 								hasScroll={this.state.hasScroll}
 								ref={this.textRef}
 								wordwrap={this.state.wordwrap}
 							>
 								<DocereTextView
-									customProps={{
-										activeFacsimilePath: this.state.activeFacsimilePath,
-										activeId: this.state.activeId,
-										activeListId: this.state.activeListId,
-										setActiveFacsimile: (activeFacsimilePath: string) => this.setState({ activeFacsimilePath }),
-										setActiveId: this.setActiveId,
-										viewport: this.props.viewport
-									}}
-									components={this.components}
+									customProps={customProps}
+									components={this.state.components}
 									node={this.state.doc}
 									highlight={this.state.highlight}
 								/>
@@ -168,14 +156,14 @@ export default class Entry extends React.Component<AppState, State> {
 	}
 
 	private async loadDoc() {
-		let doc = await fetchXml(config.slug, this.props.id)
-		doc = prepareDocument(doc, config)
+		let doc = await fetchEntryXml(this.props.config.slug, this.props.entryId)
+		doc = this.props.prepareDocument(doc, this.props.config)
 
-		const facsimiles = extractFacsimiles(doc)
-		const metadata = extractMetadata(doc)
+		const facsimiles = this.props.extractFacsimiles(doc)
+		const metadata = this.props.extractMetadata(doc)
 		this.setState({
 			doc,
-			activeFacsimilePath: facsimiles.facsimiles[0].path,
+			activeFacsimilePath: facsimiles.length ? facsimiles[0].path : null,
 			metadata
 		})
 
@@ -184,7 +172,7 @@ export default class Entry extends React.Component<AppState, State> {
 	}
 
 	private async setHighlight() {
-		const response = await fetchPost(`/search/${config.slug}/_search`, {
+		const response = await fetchPost(`/search/${this.props.config.slug}/_search`, {
 			_source: false,
 			query: {
 				bool: {
@@ -196,7 +184,7 @@ export default class Entry extends React.Component<AppState, State> {
 						},
 						{
 							match: {
-								id: this.props.id
+								id: this.props.entryId
 							}
 						}
 					]

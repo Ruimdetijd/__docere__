@@ -1,0 +1,4 @@
+header		9999
+page		8000
+search		6000
+aside		6000

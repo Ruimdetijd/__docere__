@@ -39,11 +39,12 @@ const H2 = styled.h2`
 
 interface UlProps {
 	active: boolean
+	textdataLength: number
 	height: number
 }
 const Ul = styled.ul`
 	background: ${GRAY_DARK};
-	height: ${(props: UlProps) => props.active ? `calc(${props.height}px - ${config.textdata.length * 48}px)` : 0};
+	height: ${(props: UlProps) => props.active ? `calc(${props.height}px - ${props.textdataLength * 48}px)` : 0};
 	list-style: none;
 	margin: 0;
 	overflow: auto;
@@ -70,6 +71,7 @@ const ActiveIndicator = styled.li`
 interface Props {
 	active: boolean
 	activeItemId: string
+	config: AppState['config']
 	data: TextDataConfig
 	containerHeight: number
 	items: TextDataValue[]
@@ -88,6 +90,7 @@ export default class ExtractedItems extends React.Component<Props> {
 				</H2>
 				<Ul
 					active={this.props.active}
+					textdataLength={this.props.config.textdata.length}
 					height={this.props.containerHeight}
 				>
 					<ActiveIndicator

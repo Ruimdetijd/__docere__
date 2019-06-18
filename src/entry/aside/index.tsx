@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled';
-import { State as EntryProps } from '../index'
+import { State as EntryState } from '../index'
 import MetadataAside from './metadata'
 import TextDataAside from './text-data'
 import { ASIDE_HANDLE_WIDTH, GRAY_DARK, ASIDE_WIDTH, DEFAULT_SPACING, TOP_OFFSET, Viewport } from '../../constants'
@@ -15,7 +15,7 @@ const Wrapper = styled.aside`
 	top: 0;
 	right: -${ASIDE_WIDTH}px;
 	width: ${ASIDE_WIDTH + DEFAULT_SPACING}px;
-	z-index: 1000;
+	z-index: 6000;
 `
 	// right: 0;
 	// transform: translateX(${(props: HProps) => props.active ? 0 : `${ASIDE_WIDTH + 6}px`});
@@ -31,7 +31,7 @@ const Body = styled.div`
 interface AsideProps {
 	setActiveId: (activeListId: string, activeItemId: string) => void
 }
-type Props = AppState & EntryProps & AsideProps
+type Props = AppState & EntryState & AsideProps
 export default class Aside extends React.Component<Props> {
 	render() {
 		return (
@@ -58,6 +58,7 @@ export default class Aside extends React.Component<Props> {
 					{
 						this.props.viewport === Viewport.Metadata &&
 						<MetadataAside
+							config={this.props.config}
 							metadata={this.props.metadata}
 						/>
 					}
@@ -66,7 +67,9 @@ export default class Aside extends React.Component<Props> {
 						<TextDataAside
 							activeId={this.props.activeId}
 							activeListId={this.props.activeListId}
+							config={this.props.config}
 							doc={this.props.doc}
+							extractTextData={this.props.extractTextData}
 							onItemClick={this.props.setActiveId}
 						/>
 					}

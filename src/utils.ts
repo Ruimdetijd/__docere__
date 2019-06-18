@@ -1,5 +1,4 @@
-import { Project, XMLData } from './models'
-import XMLio from 'xmlio'
+// import { Project } from './models'
 
 // str byteToHex(uint8 byte)
 //   converts a single byte to a hex string 
@@ -18,12 +17,12 @@ export function generateId(len: number = 10) {
 	return `${head}${tail}`
 }
 
-export function parseReceivedProject(nextProject: Project): Project {
-	if (nextProject.facsimile_extractor != null) nextProject.facsimile_extractor = new Function(`return ${nextProject.facsimile_extractor}`)()
-	if (nextProject.metadata_extractor != null) nextProject.metadata_extractor = new Function(`return ${nextProject.metadata_extractor}`)()
-	if (nextProject.extractors == null) nextProject.extractors = []
-	return nextProject
-}
+// export function parseReceivedProject(nextProject: Project): Project {
+// 	if (nextProject.facsimile_extractor != null) nextProject.facsimile_extractor = new Function(`return ${nextProject.facsimile_extractor}`)()
+// 	if (nextProject.metadata_extractor != null) nextProject.metadata_extractor = new Function(`return ${nextProject.metadata_extractor}`)()
+// 	if (nextProject.extractors == null) nextProject.extractors = []
+// 	return nextProject
+// }
 
 export async function fetchPost(url: string, body: any) {
 	const response = await fetch(url, {
@@ -59,25 +58,34 @@ export function debounce(func: Function, wait: number) {
 	}
 }
 
-function formatBytes(a: any) {
-	var c=1024,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));
-	const num = (a/Math.pow(c,f))
-	const d = num < 10 ? 1 : 0
-	return parseFloat(num.toFixed(d))+e[f]
+// function formatBytes(a: any) {
+// 	var c=1024,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));
+// 	const num = (a/Math.pow(c,f))
+// 	const d = num < 10 ? 1 : 0
+// 	return parseFloat(num.toFixed(d))+e[f]
+// }
+
+export function getEntryXmlPath(projectSlug: string, filename: string) {
+	return `/node_modules/docere-config/projects/${projectSlug}/xml/${filename}.xml`
+}
+export function getPageXmlPath(projectSlug: string, page: Page) {
+	return `/node_modules/docere-config/projects/${projectSlug}/pages/${page.path}`
 }
 
-export function fetchXml(slug: string, filename: string): Promise<XMLData> {
+export function fetchEntryXml(projectSlug: string, filename: string) {
+	return fetchXml(getEntryXmlPath(projectSlug, filename))
+}
+
+export function fetchXml(url: string): Promise<XMLDocument> {
 	return new Promise((resolve, _reject) => {
 		var xhr = new XMLHttpRequest
-		xhr.open('GET', `/api/xml/${slug}/${filename}.xml`)
+		xhr.open('GET', url)
 		xhr.responseType = 'document'
 		xhr.overrideMimeType('text/xml')
 
 		xhr.onload = function() {
 			if (xhr.readyState === xhr.DONE && xhr.status === 200) {
-				const size = formatBytes(xhr.getResponseHeader('Content-length'))
-				const xmlio = new XMLio(xhr.responseXML)
-				resolve({ xmlio, size })
+				resolve(xhr.responseXML)
 			}
 		}
 

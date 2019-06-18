@@ -7,7 +7,7 @@ const Wrapper = styled.div`
 	height: 100%;
 `
 
-interface Props {
+interface Props extends Pick<AppState, 'config' | 'extractTextData'> {
 	activeId: string
 	activeListId: string
 	doc: XMLDocument
@@ -28,12 +28,12 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 	componentDidMount() {
 		this.setState({
 			containerHeight: this.wrapperRef.current.getBoundingClientRect().height,
-			items: extractTextData(this.props.doc, config)
+			items: this.props.extractTextData(this.props.doc, this.props.config)
 		})
 	}
 
 	render() {
-		const textdata = (!Array.isArray(config.textdata) || this.state.items == null) ? [] : config.textdata
+		const textdata = (!Array.isArray(this.props.config.textdata) || this.state.items == null) ? [] : this.props.config.textdata
 
 		return (
 			<Wrapper ref={this.wrapperRef}>
@@ -43,6 +43,7 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 							<ExtractedItems
 								active={this.props.activeListId === data.id}
 								activeItemId={this.props.activeId}
+								config={this.props.config}
 								data={data}
 								containerHeight={this.state.containerHeight}
 								items={this.state.items[data.id]}

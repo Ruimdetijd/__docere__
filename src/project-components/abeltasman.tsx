@@ -1,13 +1,12 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { FacsThumbProps } from 'dispilio';
 
 const Img = styled.img`
 	position: absolute;
 	left: 0;
 	width: 32px;
 `
-function div(props: FacsThumbProps & { facs: string, children: any }) {
+function div(props: any & { facs: string, children: any }) {
 	const src = `http://localhost:5004/abeltasman/${props.facs}/full/,32/0/default.jpg`
 	return (
 		<div>
@@ -16,7 +15,7 @@ function div(props: FacsThumbProps & { facs: string, children: any }) {
 					// Use the attr provided by extractedFacsimileData to retrieve the ID of the current element
 					const id = props[props.extractedFacsimileData.attr]
 					// With the ID find the associated path
-					const facsimile = props.extractedFacsimileData.facsimiles.find(facs => facs.id === id)
+					const facsimile = props.extractedFacsimileData.facsimiles.find((facs: ExtractedFacsimile) => facs.id === id)
 					props.setState({ facsimiles: [facsimile] })
 				}}
 				src={src}
@@ -26,7 +25,7 @@ function div(props: FacsThumbProps & { facs: string, children: any }) {
 	)
 }
 
-const components: DispilioComponents = {
+const components: any = {
 	pb: div
 }
 

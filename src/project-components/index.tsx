@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { ID_ATTRIBUTE_NAME, COLOR_ATTRIBUTE_NAME } from 'dispilio'
 import { Viewport } from '../constants';
 
 export const div = styled.div`
@@ -18,7 +17,7 @@ export const del = styled.span`
 	text-decoration: line-through;
 `
 
-type WWProps = Pick<LbProps, 'wordwrap'>
+type WWProps = Pick<any, 'wordwrap'>
 export const lb = styled.span`
 	display: ${(props: WWProps) => props.wordwrap ? 'block' : 'inline' };
 
@@ -63,12 +62,12 @@ export const Rs = styled.span`
 	${(props: RsProps) => props.active ? 'padding: .1em .25em;' : 'padding: 0 .25em;'}
 `
 
-export const damage = styled.span`
-	&:before {
-		content: '✸';
-		color: ${(props: RsProps) => props.activeId === props[ID_ATTRIBUTE_NAME] ? props[COLOR_ATTRIBUTE_NAME] : '#444'};
-	}
-`
+export const damage = styled.span``
+// 	&:before {
+// 		content: '✸';
+// 		color: ${(props: RsProps) => props.activeId === props[ID_ATTRIBUTE_NAME] ? props[COLOR_ATTRIBUTE_NAME] : '#444'};
+// 	}
+// `
 
 interface HiProps {
 	rend: string
@@ -95,7 +94,7 @@ export const hi = styled.span`
 	// lb,
 	// p,
 	// rs,
-const components: DispilioComponents = {
+const components: any = {
 }
 
 export default components

@@ -56,7 +56,7 @@ export default class Facsimile extends React.PureComponent<Props> {
 	}
 
 	private async init() {
-		const OpenSeaDragon = await import('openseadragon')
+		const OpenSeaDragon = await import('openseadragon' as any)
 		if (this.osd == null) {
 			this.osd = OpenSeaDragon({
 				constrainDuringPan: true,

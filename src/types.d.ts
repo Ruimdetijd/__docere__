@@ -1,4 +1,7 @@
-declare const config: DocereConfig
+declare const enum Orientation {
+	Horizontal,
+	Vertical
+}
 
 declare interface FormProps<T> {
 	change: (handlerProps: Partial<T>) => void
@@ -6,14 +9,20 @@ declare interface FormProps<T> {
 	handler: T
 }
 
-interface AppState {
-	id: string
-	getPrevNext: (id: string) => [Hit, Hit]
-	project: string
+// TODO type props
+type DocereComponents = Record<string, (props: any) => JSX.Element>
+interface FunctionTypes {
+	getComponents: (config: DocereConfig) => DocereComponents
+}
+
+interface AppState extends DocereConfigData {
+	entryId: string
+	pageId: string
 	searchQuery: string
 	setAppState: (key: keyof AppState, value: any) => void
-	setId: (id?: string) => void
-	viewport: import('./index').Viewport
+	setEntryId: (id?: string) => void
+	setPage: (page?: Page) => void
+	viewport: import('./constants').Viewport
 }
 
 // interface ContextState {
@@ -25,11 +34,11 @@ interface AppState {
 // 	orientation: Orientation
 // }
 
-interface ExtractedItem {
-	count: number
-	node: DataNode
-	id: string
-}
+// interface ExtractedItem {
+// 	count: number
+// 	node: DataNode
+// 	id: string
+// }
 
 	
 // interface Extractor {

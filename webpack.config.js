@@ -1,5 +1,4 @@
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
-const path = require('path');
+const path = require('path')
 
 module.exports = {
 	devServer: {
@@ -26,10 +25,6 @@ module.exports = {
   },
   module: {
     rules: [
-			{
-				test: /\.css$/,
-				use: ['style-loader', 'css-loader']
-			},
 			// All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
 			{
 				test: /\.tsx?$/,
@@ -40,8 +35,5 @@ module.exports = {
 	resolve: {
 		// Add '.ts' and '.tsx' as resolvable extensions.
 		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
-	},
-  plugins: [
-    new MonacoWebpackPlugin()
-  ]
+	}
 };

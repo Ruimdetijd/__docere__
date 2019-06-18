@@ -12,15 +12,17 @@ const Wrapper = styled.ul`
 `
 
 interface Props {
+	config: AppState['config']
 	metadata: ExtractedMetadata
 }
 export default function MetadataAside(props: Props) {
 	return (
 		<Wrapper>
 			{
-				props.metadata
-					.map(([id, value]) => {
-						const data = config.metadata.find(md => md.id === id)
+				Object.keys(props.metadata)
+					.map(id => {
+						const data = props.config.metadata.find(md => md.id === id)
+						const value = props.metadata[id]
 						if (data == null) return { ...defaultMetadata, title: id, value }
 						else return { ...defaultMetadata, ...data, value }
 

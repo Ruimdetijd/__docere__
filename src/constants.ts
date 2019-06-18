@@ -22,4 +22,5 @@ export enum Viewport {
 	Entry = 'Entry',
 	Metadata = 'Metadata',
 	TextData = 'TextData',
+	Page = 'Page'
 }

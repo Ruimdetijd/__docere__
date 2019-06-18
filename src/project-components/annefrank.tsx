@@ -2,7 +2,6 @@ import { add, del, lb  } from './index'
 
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { FacsThumbProps } from 'dispilio'
 
 const Img = styled.img`
 	cursor: pointer;
@@ -10,9 +9,9 @@ const Img = styled.img`
 	left: 0;
 	width: 32px;
 `
-function pb(props: FacsThumbProps & { facs: string }) {
+function pb(props: any & { facs: string }) {
 	if (props.extractedFacsimileData == null) return null
-	const facsimile = props.extractedFacsimileData.facsimiles.find(facs => facs.id === props.facs)
+	const facsimile = props.extractedFacsimileData.facsimiles.find((facs: ExtractedFacsimile) => facs.id === props.facs)
 	const thumbSource = facsimile.path.replace('/info.json', '/full/,32/0/default.jpg')
 	
 	return (
@@ -22,7 +21,7 @@ function pb(props: FacsThumbProps & { facs: string }) {
 	)
 }
 
-const components: DispilioComponents = {
+const components: any = {
 	lb,
 	add,
 	del,

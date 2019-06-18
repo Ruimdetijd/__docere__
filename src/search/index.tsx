@@ -1,7 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import HucFacetedSearch, { BooleanFacet, ListFacet, RangeFacet } from 'huc-faceted-search'
-import ResultBodyComponent from './result-body'
 import { DEFAULT_SPACING, TOP_OFFSET, ASIDE_HANDLE_WIDTH, ASIDE_WIDTH, Viewport } from '../constants'
 import { defaultMetadata } from 'docere-config'
 import { Tabs, Tab } from '../ui/tabs'
@@ -20,7 +19,7 @@ const Wrapper = styled.div`
 	});
 	transition: transform 300ms;
 	width: calc(100vw + ${ASIDE_HANDLE_WIDTH}px);
-	z-index: 1001;
+	z-index: 6000;
 `
 
 const FS = styled(HucFacetedSearch)`
@@ -50,7 +49,14 @@ const FS = styled(HucFacetedSearch)`
 	}}
 `
 
+function formatTitle(facetFields: MetaDataConfig) {
+	const title = facetFields.title || facetFields.id
+	return title.replace(/_/ug, ' ').toUpperCase()
+}
+
 interface State {
+	fields: MetaDataConfig[]
+	resultBody: React.FunctionComponent<ResultBodyProps>
 	request: any
 	searchResults: any
 }
@@ -58,6 +64,8 @@ export default class Search extends React.Component<AppState, State> {
 	private searchRef = React.createRef() as React.RefObject<HucFacetedSearch>
 
 	state: State = {
+		fields: [],
+		resultBody: null,
 		request: null,
 		searchResults: {
 			hits: [],
@@ -65,11 +73,24 @@ export default class Search extends React.Component<AppState, State> {
 		}
 	}
 
-	render() {
-		const fields = config.metadata
+	async componentDidMount() {
+		// Import the non-generic ResultBody component
+		const rbImport = await import(`../project-components/${this.props.config.slug}/result-body.tsx`)
+
+		// Prepare the facets definitions from the config
+		const fields = this.props.config.metadata
 			.map(m => ({ ...defaultMetadata, ...m }))
-			.filter(field => field.datatype !== 'null')
+			.filter(field => field.datatype !== EsDataType.null && field.datatype !== EsDataType.text )
 			.sort((f1, f2) => f1.order - f2.order)
+		
+		this.setState({
+			fields,
+			resultBody: rbImport.default
+		})
+	}
+
+	render() {
+		if (this.state.resultBody == null) return null
 
 		return (
 			<Wrapper viewport={this.props.viewport}>
@@ -77,37 +98,38 @@ export default class Search extends React.Component<AppState, State> {
 					backend="elasticsearch"
 					disableDefaultStyle={this.props.viewport === Viewport.Results}
 					onChange={this.handleChange}
-					onClickResult={result => this.props.setId(result.id)}
+					onClickResult={result => this.props.setEntryId(result.id)}
 					ref={this.searchRef}
-					resultBodyComponent={ResultBodyComponent}
+					resultBodyComponent={this.state.resultBody}
 					resultBodyProps={{
-						activeId: this.props.id,
+						activeId: this.props.entryId,
 						viewport: this.props.viewport,
 					}}
-					resultsPerPage={config.searchResultCount}
-					url={`/search/${config.slug}/_search`}
+					resultsPerPage={this.props.config.searchResultCount}
+					url={`/search/${this.props.config.slug}/_search`}
 				>
 					{
-						fields.map(field => 
-							field.datatype === 'boolean' ?
-								<BooleanFacet
-									field={field.id}
-									key={field.id}
-									labels={["Nee", "Ja"]}
-									title={field.title || field.id}
-								/> :
-								field.datatype === 'date' ?
-									<RangeFacet
+						this.state.fields
+							.map(field => 
+								field.datatype === 'boolean' ?
+									<BooleanFacet
 										field={field.id}
 										key={field.id}
-										title={field.title || field.id}
-										type="timestamp"
+										labels={["Nee", "Ja"]}
+										title={formatTitle(field)}
 									/> :
-									<ListFacet
-										field={field.id}
-										key={field.id}
-										title={field.title || field.id}
-									/>
+									field.datatype === 'date' ?
+										<RangeFacet
+											field={field.id}
+											key={field.id}
+											title={formatTitle(field)}
+											type="timestamp"
+										/> :
+										<ListFacet
+											field={field.id}
+											key={field.id}
+											title={formatTitle(field)}
+										/>
 						)
 					}
 				</FS>

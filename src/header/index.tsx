@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { ASIDE_HANDLE_WIDTH, MAINHEADER_HEIGHT, TOP_OFFSET, DEFAULT_SPACING } from './constants'
+import { ASIDE_HANDLE_WIDTH, MAINHEADER_HEIGHT, TOP_OFFSET, DEFAULT_SPACING } from '../constants'
+import PagesMenu from './pages'
 
 const Wrapper = styled.header`
 	background: linear-gradient(to right, #988258, #c7aa71);
@@ -9,12 +10,12 @@ const Wrapper = styled.header`
 	height: ${TOP_OFFSET}px;
 	position: sticky;
 	top: 0;
-	z-index: 1001;
+	z-index: 9999;
 `
 
 const TopMenu = styled.div`
 	display: grid;
-	grid-template-columns: 80% 20%;
+	grid-template-columns: 50% 50%;
 	height: ${DEFAULT_SPACING}px;
 	padding: 0 ${DEFAULT_SPACING}px;
 
@@ -71,10 +72,11 @@ export default class Header extends React.PureComponent<AppState> {
 			<Wrapper>
 				<TopMenu>
 					<H1
-						onClick={() => this.props.setId()}
+						onClick={() => this.props.setEntryId()}
 					>
-						{config.title}
+						{this.props.config.title}
 					</H1>
+					<PagesMenu {...this.props} />
 					{/* <Route
 						path="/:projectSlug/:xmlId"
 						render={() =>
