@@ -5,7 +5,7 @@ import Panels from './panels'
 import Aside from './aside'
 import Footer from './footer'
 
-export interface State {
+export interface EntryState {
 	activeFacsimilePath: string
 	activeId: string
 	activeListId: string
@@ -16,21 +16,39 @@ export interface State {
 	input: string
 	metadata: ExtractedMetadata
 	orientation: Orientation
+	togglePanel: (panelId: string) => void
 	wordwrap: boolean
 }
 
-export default class Entry extends React.PureComponent<AppState, State> {
-	state: State = {
+export default class Entry extends React.PureComponent<AppState, EntryState> {
+	state: EntryState = {
 		activeFacsimilePath: null,
 		activeId: null,
 		activeListId: this.props.config.textdata.length ? this.props.config.textdata[0].id : null,
-		activePanels: [],
+		activePanels: this.props.config.textlayers,
 		doc: null,
 		facsimiles: [],
 		hasScroll: false,
 		input: null,
 		metadata: {},
 		orientation: Orientation.Horizontal,
+		togglePanel: (panelId: string) => {
+			const activePanels = this.state.activePanels.map(ap =>
+				(ap.id === panelId) ?
+					({
+						...ap,
+						active: !ap.active,
+					}) :
+					ap
+			)
+			this.setState({ activePanels })
+
+
+		// 	if (activePanel == null) {
+
+		// 	}
+		// 	if (this.state.activePanels.)
+		},
 		wordwrap: false,
 	}
 
@@ -89,15 +107,18 @@ export default class Entry extends React.PureComponent<AppState, State> {
 		const facsimiles = this.props.extractFacsimiles(doc)
 		const metadata = this.props.extractMetadata(doc)
 		const activeFacsimilePath = facsimiles.length ? facsimiles[0].path : null
-
-		// TODO set active textlayers
-
-		this.setState({
+		const nextState: Partial<EntryState> = {
 			doc,
 			activeFacsimilePath, 
 			facsimiles,
 			metadata
-		})
+		}
+
+		// if (!this.state.activePanels.length) {
+		// 	nextState.activePanels = this.props.config.textlayers.filter(tl => tl.active)
+		// }
+
+		this.setState(nextState as any)
 
 		const hasScroll = window.innerHeight < document.documentElement.scrollHeight
 		if (hasScroll) this.setState({ hasScroll })

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { css } from '@emotion/core'
-import { TOP_OFFSET, TEXT_PANEL_WIDTH, DEFAULT_SPACING, ASIDE_WIDTH, Viewport, FOOTER_HEIGHT } from '../constants';
+import { TOP_OFFSET, TEXT_PANEL_WIDTH, DEFAULT_SPACING, ASIDE_WIDTH, Viewport, FOOTER_HEIGHT } from '../constants'
 
 	// height: calc(100vh - ${(props: MainProps) =>
 	// 	props.viewport === Viewport.PanelSelector ?
@@ -32,21 +32,30 @@ export const Main = styled.div`
 	transition: all 300ms;
 `
 
-interface LayersProps {
+interface PWProps {
+	activePanels: TextLayerConfig[]
 	orientation: Orientation
 }
 export const PanelsWrapper = styled.div`
 	display: grid;
 	height: 100%;
 	overflow-y: auto;
-	${(props: LayersProps) => {
-		if (props.orientation === Orientation.Horizontal) {
+	${(p: PWProps) => {
+		if (p.orientation === Orientation.Horizontal) {
+			const columns = p.activePanels
+				.map(ap =>
+					ap.type === TextLayerType.Facsimile ?
+						`minmax(${DEFAULT_SPACING * 10}px, auto)` :
+						`${TEXT_PANEL_WIDTH + (DEFAULT_SPACING * 6)}px`
+				)
+				.join(' ')
+
 			return `
-				grid-template-columns: auto ${TEXT_PANEL_WIDTH + (DEFAULT_SPACING * 6)}px;
+				grid-template-columns: ${columns};
 				grid-template-rows: 100% auto;
 			`
 		}
-		if (props.orientation === Orientation.Vertical) { 
+		if (p.orientation === Orientation.Vertical) { 
 			return `
 				grid-template-columns: 100%;
 				grid-template-rows: calc((100vh - ${TOP_OFFSET}px) / 2) calc((100vh - ${TOP_OFFSET}px) / 2) auto;
@@ -56,12 +65,15 @@ export const PanelsWrapper = styled.div`
 	width: 100%;
 `
 
+interface TWProps {
+	orientation: Orientation
+}
+	// grid-column: ${(props: TWProps) => props.orientation === Orientation.Horizontal ? 2 : 1};
+	// grid-row: ${(props: TWProps) => props.orientation === Orientation.Horizontal ? '1 / span 2' : '1 / span 3'};
 export const TextWrapper = styled.div`
 	display: grid;
-	grid-column: ${(props: LayersProps) => props.orientation === Orientation.Horizontal ? 2 : 1};
-	grid-row: ${(props: LayersProps) => props.orientation === Orientation.Horizontal ? '1 / span 2' : '1 / span 3'};
 	grid-template-rows: 64px auto;
-	${(props: LayersProps) =>
+	${(props: TWProps) =>
 		props.orientation === Orientation.Horizontal ?
 			`padding: 0 ${DEFAULT_SPACING * 2}px;` :
 			`padding-bottom: calc((100vh - ${TOP_OFFSET}px) / 2)`	

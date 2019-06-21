@@ -2,6 +2,7 @@ import * as React from 'react'
 import styled from '@emotion/styled'
 import ExtractedItems from "./extracted-items"
 import 'docere-config'
+import { EntryState } from '../../index'
 
 interface WProps { active: boolean }
 const Wrapper = styled.div`
@@ -17,6 +18,7 @@ const Wrapper = styled.div`
 interface Props extends WProps, Pick<AppState, 'config' | 'extractTextData'> {
 	activeId: string
 	activeListId: string
+	activePanels: EntryState['activePanels']
 	doc: XMLDocument
 	onItemClick: (activeListId: string, activeItemId: string) => void
 }
@@ -48,21 +50,23 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 				ref={this.wrapperRef}
 			>
 				{
-					textdata.map((data) => {
-						return (
-							<ExtractedItems
-								active={this.props.activeListId === data.id}
-								activeItemId={this.props.activeId}
-								config={this.props.config}
-								data={data}
-								containerHeight={this.state.containerHeight}
-								items={this.state.items[data.id]}
-								key={data.id}
-								onItemClick={this.props.onItemClick}
-								onListClick={() => this.props.onItemClick(data.id, null)}
-							/>
-						)
-					})
+					textdata
+						.filter(data => this.props.activePanels.findIndex(ap => ap.id === data.id) > -1)
+						.map((data) => {
+							return (
+								<ExtractedItems
+									active={this.props.activeListId === data.id}
+									activeItemId={this.props.activeId}
+									config={this.props.config}
+									data={data}
+									containerHeight={this.state.containerHeight}
+									items={this.state.items[data.id]}
+									key={data.id}
+									onItemClick={this.props.onItemClick}
+									onListClick={() => this.props.onItemClick(data.id, null)}
+								/>
+							)
+						})
 				}
 			</Wrapper>
 

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { State as EntryState } from '../index'
+import { EntryState } from '../index'
 // import { TOP_OFFSET } from '../../constants'
 
 // TODO change facsimile when user scroll past a <pb />
@@ -23,10 +23,10 @@ const Wrapper = styled.div`
 		`
 	}}
 	height: 100%;
-	grid-column: 1;
-	grid-row: ${(props: Props) => props.orientation === Orientation.Horizontal ? 1 : 2};
 	z-index: 1;
 `
+	// grid-column: 1;
+	// grid-row: ${(props: Props) => props.orientation === Orientation.Horizontal ? 1 : 2};
 
 type Props = Pick<EntryState, 'activeFacsimilePath' | 'orientation'>
 export default class Facsimile extends React.PureComponent<Props> {

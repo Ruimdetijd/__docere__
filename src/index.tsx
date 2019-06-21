@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 	if (pageId != null) viewport = Viewport.Page
 	else if (entryId != null) viewport = Viewport.Entry
 
-	viewport = Viewport.PanelSelector
+	// viewport = Viewport.PanelSelector
 	ReactDOM.render(
 		<App
 			{...defaultDocereConfigData}

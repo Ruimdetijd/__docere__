@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { State as EntryState } from '../index'
+import { EntryState } from '../index'
 import styled from '@emotion/styled';
 import { FOOTER_HEIGHT, Viewport, TabPosition, FOOTER_HANDLE_HEIGHT, DEFAULT_SPACING } from '../../constants';
 import Tabs from '../../ui/tabs';
@@ -10,9 +10,14 @@ const Wrapper = styled.footer`
 	grid-template-rows: ${FOOTER_HANDLE_HEIGHT}px auto;
 	height: ${FOOTER_HEIGHT + FOOTER_HANDLE_HEIGHT}px;
 	left: 0;
+	pointer-events: none;
 	position: absolute;
 	right: 0;
 	z-index: 6001;
+
+	& > * {
+		pointer-events: all;
+	}
 `
 
 const Body = styled.div`
@@ -25,7 +30,7 @@ const Body = styled.div`
 const PanelList = styled.ul`
 `
 const PanelItemWrapper = styled.li`
-	color: #444;
+	color: ${(p: PIWProps) => p.active ? '#EEE' : '#444'};
 	cursor: pointer;
     height: 100%;
     width: 100px;
@@ -35,7 +40,7 @@ const PanelItemWrapper = styled.li`
 	& > div:first-of-type {
 		align-content: center;
 		border-radius: 1rem;
-		border: 6px dashed #444;
+		border: 4px ${(p: PIWProps) => p.active ? 'solid #EEE' : 'dashed #444'};
 		box-sizing: border-box;
 		display: grid;
 		font-size: 2em;
@@ -52,9 +57,19 @@ const PanelItemWrapper = styled.li`
 	}
 `
 
-function PanelItem(props: { textLayer: TextLayerConfig }) {
+interface PIWProps {
+	active: boolean
+}
+interface PIProps {
+	textLayer: TextLayerConfig
+	togglePanel: EntryState['togglePanel']
+}
+function PanelItem(props: PIProps) {
 	return (
-		<PanelItemWrapper>
+		<PanelItemWrapper
+			active={props.textLayer.active}
+			onClick={() => props.togglePanel(props.textLayer.id)}
+		>
 			<div>{props.textLayer.title.slice(0, 1)}</div>
 			<div>{props.textLayer.title}</div>
 		</PanelItemWrapper>
@@ -75,10 +90,11 @@ class Footer extends React.PureComponent<Props> {
 				<Body>
 					<PanelList>
 						{
-							this.props.config.textlayers.map(tl =>
+							this.props.activePanels.map(tl =>
 								<PanelItem
 									key={tl.id}
 									textLayer={tl}
+									togglePanel={this.props.togglePanel}
 								/>
 							)
 						}

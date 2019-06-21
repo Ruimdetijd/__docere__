@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled';
-import { State as EntryState } from '../index'
+import { EntryState } from '../index'
 import MetadataAside from './metadata'
 import TextDataAside from './text-data'
 import { ASIDE_HANDLE_WIDTH, GRAY_DARK, ASIDE_WIDTH, TOP_OFFSET, Viewport } from '../../constants'
@@ -53,6 +53,7 @@ export default class Aside extends React.Component<Props> {
 						active={this.props.viewport === Viewport.TextData}
 						activeId={this.props.activeId}
 						activeListId={this.props.activeListId}
+						activePanels={this.props.activePanels}
 						config={this.props.config}
 						doc={this.props.doc}
 						extractTextData={this.props.extractTextData}
