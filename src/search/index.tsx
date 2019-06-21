@@ -6,15 +6,15 @@ import { defaultMetadata } from 'docere-config'
 import Tabs from '../ui/tabs';
 
 const Wrapper = styled.div`
+	bottom: 0;
 	display: grid;
 	grid-template-columns: 100vw ${ASIDE_HANDLE_WIDTH}px;
-	height: calc(100vh - ${TOP_OFFSET}px);
 	position: fixed;
 	top: ${TOP_OFFSET}px;
 	transform: translateX(${(props: { viewport: Viewport }) => props.viewport === Viewport.Search?
 		0 :
 		props.viewport === Viewport.Results ?
-			`calc(-100vw + ${ASIDE_WIDTH}px)` :
+			`calc(-100vw + ${ASIDE_WIDTH*2}px)` :
 			'-100vw'
 	});
 	transition: transform 300ms;
@@ -43,7 +43,7 @@ const FS = styled(HucFacetedSearch)`
 				}
 
 				& > section {
-					padding: 0 ${DEFAULT_SPACING}px;
+					padding: 0 ${DEFAULT_SPACING}px ${DEFAULT_SPACING * 2}px 0px;
 				}
 			`
 		}

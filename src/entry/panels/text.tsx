@@ -1,8 +1,7 @@
 import * as React from 'react'
 import DocereTextView from 'docere-text-view'
-import { TextWrapper, Menu, Text, WordWrapButton, OrientationButton } from '../index.components'
-import { TEXT_PANEL_WIDTH } from '../../constants'
-import { getEntryXmlPath, fetchPost } from '../../utils'
+import { TextWrapper, Text } from '../index.components'
+import { fetchPost } from '../../utils'
 import { PanelsProps, PanelsState } from './index'
 
 interface Props extends PanelsProps, PanelsState {
@@ -31,47 +30,21 @@ class TextPanel extends React.PureComponent<Props> {
 			this.props.doc
 
 		return (
-			<TextWrapper orientation={this.props.orientation}>
-				<Menu>
-					<div>
-						
-					</div>
-					<div>
-						<a
-							download="test.xml"
-							href={getEntryXmlPath(this.props.config.slug, this.props.entryId)}
-						>
-							<img src="https://tei-c.org/Vault/Logos/TEIlogo.svg" width="32px" />
-						</a>
-						{
-							this.props.components.hasOwnProperty('lb') &&
-							<WordWrapButton
-								onClick={this.props.toggleWordWrap}
-								wordwrap={this.props.wordwrap}
-							/>
-						}
-						<OrientationButton
-							onClick={this.props.togglePanelOrientation}
-							orientation={this.props.orientation}
-						/>
-					</div>
-				</Menu>
-				<div style={{ display: 'grid', gridTemplateColumns: `auto ${TEXT_PANEL_WIDTH}px auto` }}>
-					<Text 
-						hasLb={this.props.components.hasOwnProperty('lb')}
-						hasFacs={this.props.extractFacsimiles != null}
-						hasScroll={this.props.hasScroll}
-						ref={this.textRef}
-						wordwrap={this.props.wordwrap}
-					>
-						<DocereTextView
-							customProps={this.props.customProps}
-							components={this.props.components}
-							node={node}
-							highlight={this.props.highlight}
-						/>
-					</Text>
-				</div>
+			<TextWrapper>
+				<Text 
+					hasLb={this.props.components.hasOwnProperty('lb')}
+					hasFacs={this.props.extractFacsimiles != null}
+					hasScroll={this.props.hasScroll}
+					ref={this.textRef}
+					wordwrap={this.props.wordwrap}
+				>
+					<DocereTextView
+						customProps={this.props.customProps}
+						components={this.props.components}
+						node={node}
+						highlight={this.props.highlight}
+					/>
+				</Text>
 			</TextWrapper>
 		)
 	}
@@ -119,3 +92,28 @@ class TextPanel extends React.PureComponent<Props> {
 }
 
 export default TextPanel
+
+				// <Menu>
+				// 	<div>
+						
+				// 	</div>
+				// 	<div>
+				// 		<a
+				// 			download="test.xml"
+				// 			href={getEntryXmlPath(this.props.config.slug, this.props.entryId)}
+				// 		>
+				// 			<img src="https://tei-c.org/Vault/Logos/TEIlogo.svg" width="32px" />
+				// 		</a>
+				// 		{
+				// 			this.props.components.hasOwnProperty('lb') &&
+				// 			<WordWrapButton
+				// 				onClick={this.props.toggleWordWrap}
+				// 				wordwrap={this.props.wordwrap}
+				// 			/>
+				// 		}
+				// 		<OrientationButton
+				// 			onClick={this.props.togglePanelOrientation}
+				// 			orientation={this.props.orientation}
+				// 		/>
+				// 	</div>
+				// </Menu>

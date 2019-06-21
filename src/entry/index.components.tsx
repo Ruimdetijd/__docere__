@@ -65,19 +65,9 @@ export const PanelsWrapper = styled.div`
 	width: 100%;
 `
 
-interface TWProps {
-	orientation: Orientation
-}
-	// grid-column: ${(props: TWProps) => props.orientation === Orientation.Horizontal ? 2 : 1};
-	// grid-row: ${(props: TWProps) => props.orientation === Orientation.Horizontal ? '1 / span 2' : '1 / span 3'};
 export const TextWrapper = styled.div`
 	display: grid;
-	grid-template-rows: 64px auto;
-	${(props: TWProps) =>
-		props.orientation === Orientation.Horizontal ?
-			`padding: 0 ${DEFAULT_SPACING * 2}px;` :
-			`padding-bottom: calc((100vh - ${TOP_OFFSET}px) / 2)`	
-	}
+	grid-template-columns: auto ${TEXT_PANEL_WIDTH}px auto;
 `
 
 export const Menu = styled.div`
