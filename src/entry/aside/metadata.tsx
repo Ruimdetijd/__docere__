@@ -4,20 +4,27 @@ import { defaultMetadata } from 'docere-config'
 import { DEFAULT_SPACING, TOP_OFFSET } from '../../constants';
 import { MetadataItem } from '../index.components'
 
+interface WProps { active: boolean }
 const Wrapper = styled.ul`
 	box-sizing: border-box;
 	height: calc(100vh - ${TOP_OFFSET}px);
 	overflow-y: auto;
 	padding: ${DEFAULT_SPACING}px;
+	position: absolute;
+	z-index: ${(p: WProps) => p.active ? 1 : -1}
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
 `
 
-interface Props {
+interface Props extends WProps {
 	config: AppState['config']
 	metadata: ExtractedMetadata
 }
 export default function MetadataAside(props: Props) {
 	return (
-		<Wrapper>
+		<Wrapper active={props.active}>
 			{
 				Object.keys(props.metadata)
 					.map(id => {

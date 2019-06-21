@@ -4,6 +4,10 @@ export const ASIDE_WIDTH = DEFAULT_SPACING * 15
 export const ASIDE_HANDLE_HEIGHT = DEFAULT_SPACING * 1.5
 export const ASIDE_HANDLE_WIDTH = DEFAULT_SPACING
 
+export const FOOTER_HEIGHT = DEFAULT_SPACING * 5
+export const FOOTER_HANDLE_HEIGHT = ASIDE_HANDLE_WIDTH
+
+
 export const TOPMENU_HEIGHT = DEFAULT_SPACING
 export const MAINHEADER_HEIGHT = DEFAULT_SPACING * 2
 export const TOP_OFFSET = MAINHEADER_HEIGHT + TOPMENU_HEIGHT
@@ -22,5 +26,10 @@ export enum Viewport {
 	Entry = 'Entry',
 	Metadata = 'Metadata',
 	TextData = 'TextData',
-	Page = 'Page'
+	Page = 'Page',
+	PanelSelector = 'PanelSelector',
+}
+
+export enum TabPosition {
+	Left, Right, Bottom
 }

@@ -3,8 +3,8 @@ import styled from '@emotion/styled';
 import { State as EntryState } from '../index'
 import MetadataAside from './metadata'
 import TextDataAside from './text-data'
-import { ASIDE_HANDLE_WIDTH, GRAY_DARK, ASIDE_WIDTH, DEFAULT_SPACING, TOP_OFFSET, Viewport } from '../../constants'
-import { Tabs, Tab } from '../../ui/tabs'
+import { ASIDE_HANDLE_WIDTH, GRAY_DARK, ASIDE_WIDTH, TOP_OFFSET, Viewport } from '../../constants'
+import Tabs from '../../ui/tabs';
 
 const Wrapper = styled.aside`
 	bottom: 0;
@@ -15,7 +15,7 @@ const Wrapper = styled.aside`
 	position: absolute;
 	top: 0;
 	right: -${ASIDE_WIDTH}px;
-	width: ${ASIDE_WIDTH + DEFAULT_SPACING}px;
+	width: ${ASIDE_WIDTH + ASIDE_HANDLE_WIDTH}px;
 	z-index: 6000;
 
 	& > * {
@@ -27,6 +27,7 @@ const Body = styled.div`
 	background-color: ${GRAY_DARK};
 	box-sizing: border-box;
 	color: #EEE;
+	position: relative;
 `
 
 interface AsideProps {
@@ -37,43 +38,26 @@ export default class Aside extends React.Component<Props> {
 	render() {
 		return (
 			<Wrapper>
-				<Tabs>
-					{
-						Object.keys(Viewport)
-							.filter(tab => tab === Viewport.Metadata || tab === Viewport.TextData)
-							.map((tab) =>
-								<Tab
-									active={this.props.viewport === tab}
-									key={tab}
-									onClick={() => {
-										if (this.props.viewport === tab) tab = Viewport.Entry
-										this.props.setAppState('viewport', tab)
-									}}
-								>
-									{tab.slice(0, 1)}
-								</Tab>
-							)
-					}
-				</Tabs>
+				<Tabs
+					tabs={[Viewport.Metadata, Viewport.TextData]}
+					viewport={this.props.viewport}
+					setAppState={this.props.setAppState}
+				/>
 				<Body>
-					{
-						this.props.viewport === Viewport.Metadata &&
-						<MetadataAside
-							config={this.props.config}
-							metadata={this.props.metadata}
-						/>
-					}
-					{
-						this.props.viewport === Viewport.TextData &&
-						<TextDataAside
-							activeId={this.props.activeId}
-							activeListId={this.props.activeListId}
-							config={this.props.config}
-							doc={this.props.doc}
-							extractTextData={this.props.extractTextData}
-							onItemClick={this.props.setActiveId}
-						/>
-					}
+					<MetadataAside
+						active={this.props.viewport === Viewport.Metadata}
+						config={this.props.config}
+						metadata={this.props.metadata}
+					/>
+					<TextDataAside
+						active={this.props.viewport === Viewport.TextData}
+						activeId={this.props.activeId}
+						activeListId={this.props.activeListId}
+						config={this.props.config}
+						doc={this.props.doc}
+						extractTextData={this.props.extractTextData}
+						onItemClick={this.props.setActiveId}
+					/>
 				</Body>
 			</Wrapper>
 		)

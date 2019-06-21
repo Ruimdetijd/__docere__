@@ -18,6 +18,7 @@ export const Main = styled('div')`
 
 // BUGS
 // TODO fix faceted search Reset button
+// TODO fix padding-bottom when text view scrolls
 
 // Asides
 // TODO results and metadata show at same time
@@ -57,10 +58,6 @@ export const Main = styled('div')`
 // TODO index and create facet for background pages
 // TODO create a test runner for the configuration to check if the config is OK and all the XML is valid
 
-// interface Props extends DocereConfigData {
-// 	entryId: AppState['entryId']
-// 	pageId: AppState['pageId']
-// }
 type Props = Pick<AppState, 'config' | 'entryId' | 'extractFacsimiles' | 'extractMetadata' | 'extractTextData' | 'pageId' | 'prepareDocument' | 'viewport'>
 
 class App extends React.Component<Props, AppState> {
@@ -119,6 +116,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 	if (pageId != null) viewport = Viewport.Page
 	else if (entryId != null) viewport = Viewport.Entry
 
+	viewport = Viewport.PanelSelector
 	ReactDOM.render(
 		<App
 			{...defaultDocereConfigData}

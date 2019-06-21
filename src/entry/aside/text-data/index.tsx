@@ -3,11 +3,18 @@ import styled from '@emotion/styled'
 import ExtractedItems from "./extracted-items"
 import 'docere-config'
 
+interface WProps { active: boolean }
 const Wrapper = styled.div`
 	height: 100%;
+	position: absolute;
+	z-index: ${(p: WProps) => p.active ? 1 : -1};
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
 `
 
-interface Props extends Pick<AppState, 'config' | 'extractTextData'> {
+interface Props extends WProps, Pick<AppState, 'config' | 'extractTextData'> {
 	activeId: string
 	activeListId: string
 	doc: XMLDocument
@@ -36,7 +43,10 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 		const textdata = (!Array.isArray(this.props.config.textdata) || this.state.items == null) ? [] : this.props.config.textdata
 
 		return (
-			<Wrapper ref={this.wrapperRef}>
+			<Wrapper
+				active={this.props.active}
+				ref={this.wrapperRef}
+			>
 				{
 					textdata.map((data) => {
 						return (

@@ -1,9 +1,9 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import HucFacetedSearch, { BooleanFacet, ListFacet, RangeFacet } from 'huc-faceted-search'
-import { DEFAULT_SPACING, TOP_OFFSET, ASIDE_HANDLE_WIDTH, ASIDE_WIDTH, Viewport } from '../constants'
+import { DEFAULT_SPACING, TOP_OFFSET, ASIDE_HANDLE_WIDTH, ASIDE_WIDTH, Viewport, TabPosition } from '../constants'
 import { defaultMetadata } from 'docere-config'
-import { Tabs, Tab } from '../ui/tabs'
+import Tabs from '../ui/tabs';
 
 const Wrapper = styled.div`
 	display: grid;
@@ -23,6 +23,7 @@ const Wrapper = styled.div`
 `
 
 const FS = styled(HucFacetedSearch)`
+	background: white;
 	box-sizing: border-box;
 	height: calc(100vh - ${TOP_OFFSET}px);
 	overflow-y: auto;
@@ -57,8 +58,6 @@ function formatTitle(facetFields: MetaDataConfig) {
 interface State {
 	fields: MetaDataConfig[]
 	resultBody: React.FunctionComponent<ResultBodyProps>
-	request: any
-	searchResults: any
 }
 export default class Search extends React.Component<AppState, State> {
 	private searchRef = React.createRef() as React.RefObject<HucFacetedSearch>
@@ -66,11 +65,6 @@ export default class Search extends React.Component<AppState, State> {
 	state: State = {
 		fields: [],
 		resultBody: null,
-		request: null,
-		searchResults: {
-			hits: [],
-			total: 0
-		}
 	}
 
 	async componentDidMount() {
@@ -89,6 +83,21 @@ export default class Search extends React.Component<AppState, State> {
 		})
 	}
 
+	shouldComponentUpdate(nextProps: AppState, nextState: State) {
+		// Update when the resultBody is loaded
+		if (this.state.resultBody == null && nextState.resultBody != null) return true
+
+		// Don't update when the search is not involved in the view
+		if (
+			this.props.viewport !== Viewport.Search &&
+			this.props.viewport !== Viewport.Results &&
+			nextProps.viewport !== Viewport.Search &&
+			nextProps.viewport !== Viewport.Results
+		) return false
+
+		return true
+	}
+
 	render() {
 		if (this.state.resultBody == null) return null
 
@@ -97,7 +106,6 @@ export default class Search extends React.Component<AppState, State> {
 				<FS
 					backend="elasticsearch"
 					disableDefaultStyle={this.props.viewport === Viewport.Results}
-					onChange={this.handleChange}
 					onClickResult={result => this.props.setEntryId(result.id)}
 					ref={this.searchRef}
 					resultBodyComponent={this.state.resultBody}
@@ -133,30 +141,13 @@ export default class Search extends React.Component<AppState, State> {
 						)
 					}
 				</FS>
-				<Tabs right>
-					{
-						Object.keys(Viewport)
-							.filter(tab => tab === Viewport.Search || tab === Viewport.Results)
-							.map((tab) =>
-								<Tab
-									active={tab === this.props.viewport}
-									key={tab}
-									onClick={() => {
-										if (tab === Viewport.Results && this.props.viewport === Viewport.Results) tab = Viewport.Entry
-										this.props.setAppState('viewport', tab)
-									}}
-								>
-									{tab.slice(0, 1)}
-								</Tab>
-							)
-					}
-				</Tabs>
+				<Tabs
+					position={TabPosition.Left}
+					setAppState={this.props.setAppState}
+					tabs={[Viewport.Search, Viewport.Results]}
+					viewport={this.props.viewport}
+				/>
 			</Wrapper>
 		)
-	}
-
-	private handleChange = (changeResponse: OnChangeResponse) => {
-		if (changeResponse.query.length) this.props.setAppState('searchQuery', changeResponse.query)
-		this.setState({ request: changeResponse.request, searchResults: changeResponse.response })
 	}
 }

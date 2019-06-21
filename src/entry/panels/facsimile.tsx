@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { State as EntryState } from './index'
-import { TOP_OFFSET } from '../constants'
+import { State as EntryState } from '../index'
+// import { TOP_OFFSET } from '../../constants'
 
 // TODO change facsimile when user scroll past a <pb />
 
@@ -12,17 +12,17 @@ const Wrapper = styled.div`
 	${(props: Props) => {
 		if (props.orientation === Orientation.Horizontal) {
 			return `
-				height: calc(100vh - ${TOP_OFFSET}px);
 				top: 0;
 			`
 		}
 
 		return `
 			box-shadow: 0px -16px 24px white;
-			height: calc((100vh - ${TOP_OFFSET}px) / 2);
-			top: calc((100vh - ${TOP_OFFSET}px) / 2);
+			height: 50%;
+			top: 50%;
 		`
 	}}
+	height: 100%;
 	grid-column: 1;
 	grid-row: ${(props: Props) => props.orientation === Orientation.Horizontal ? 1 : 2};
 	z-index: 1;

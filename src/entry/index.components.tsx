@@ -1,25 +1,33 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { css } from '@emotion/core'
-import { TOP_OFFSET, TEXT_PANEL_WIDTH, DEFAULT_SPACING, ASIDE_WIDTH, Viewport } from '../constants';
+import { TOP_OFFSET, TEXT_PANEL_WIDTH, DEFAULT_SPACING, ASIDE_WIDTH, Viewport, FOOTER_HEIGHT } from '../constants';
 
+	// height: calc(100vh - ${(props: MainProps) =>
+	// 	props.viewport === Viewport.PanelSelector ?
+	// 		TOP_OFFSET + FOOTER_HEIGHT :
+	// 		TOP_OFFSET
+	// }px);
+	// width: ${(props: MainProps) =>
+	// 	props.viewport === Viewport.Results ||
+	// 	props.viewport === Viewport.Metadata ||
+	// 	props.viewport === Viewport.TextData ?
+	// 	`calc(100vw - ${ASIDE_WIDTH}px)` :
+	// 	'100vw'
+	// };
+	// transform: translateX(${(props: MainProps) =>
+	// 	props.viewport === Viewport.Search ?
+	// 		'100vw' :
+	// 		props.viewport === Viewport.Results ?
+	// 			`${ASIDE_WIDTH}px` :
+	// 			0
+	// });
 interface MainProps { viewport: Viewport }
 export const Main = styled.div`
-	width: ${(props: MainProps) =>
-		props.viewport === Viewport.Results ||
-		props.viewport === Viewport.Metadata ||
-		props.viewport === Viewport.TextData ?
-		`calc(100vw - ${ASIDE_WIDTH}px)` :
-		'100vw'
-	};
+	bottom: ${(props: MainProps) => props.viewport === Viewport.PanelSelector ? `${FOOTER_HEIGHT}px` : 0};
+	left: ${(props: MainProps) => props.viewport === Viewport.Results ? `${ASIDE_WIDTH}px` : 0};
 	position: fixed;
-	transform: translateX(${(props: MainProps) =>
-		props.viewport === Viewport.Search ?
-			'100vw' :
-			props.viewport === Viewport.Results ?
-				`${ASIDE_WIDTH}px` :
-				0
-	});
+	right: ${(props: MainProps) => props.viewport === Viewport.Metadata || props.viewport === Viewport.TextData ? `${ASIDE_WIDTH}px` : 0};
 	top: ${TOP_OFFSET}px;
 	transition: all 300ms;
 `
@@ -27,9 +35,9 @@ export const Main = styled.div`
 interface LayersProps {
 	orientation: Orientation
 }
-export const Panels = styled.div`
+export const PanelsWrapper = styled.div`
 	display: grid;
-	height: calc(100vh - ${TOP_OFFSET}px);
+	height: 100%;
 	overflow-y: auto;
 	${(props: LayersProps) => {
 		if (props.orientation === Orientation.Horizontal) {
@@ -45,6 +53,7 @@ export const Panels = styled.div`
 			`
 		}
 	}}
+	width: 100%;
 `
 
 export const TextWrapper = styled.div`
