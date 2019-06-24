@@ -14,7 +14,7 @@ const Wrapper = styled.div`
 	transform: translateX(${(props: { viewport: Viewport }) => props.viewport === Viewport.Search?
 		0 :
 		props.viewport === Viewport.Results ?
-			`calc(-100vw + ${ASIDE_WIDTH*2}px)` :
+			`calc(-100vw + ${ASIDE_WIDTH}px)` :
 			'-100vw'
 	});
 	transition: transform 300ms;
@@ -43,7 +43,7 @@ const FS = styled(HucFacetedSearch)`
 				}
 
 				& > section {
-					padding: 0 ${DEFAULT_SPACING}px ${DEFAULT_SPACING * 2}px 0px;
+					padding: 0 ${DEFAULT_SPACING}px ${DEFAULT_SPACING * 2}px ${DEFAULT_SPACING}px;
 				}
 			`
 		}

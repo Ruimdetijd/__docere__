@@ -3,25 +3,6 @@ import styled from '@emotion/styled'
 import { css } from '@emotion/core'
 import { TOP_OFFSET, TEXT_PANEL_WIDTH, DEFAULT_SPACING, ASIDE_WIDTH, Viewport, FOOTER_HEIGHT } from '../constants'
 
-	// height: calc(100vh - ${(props: MainProps) =>
-	// 	props.viewport === Viewport.PanelSelector ?
-	// 		TOP_OFFSET + FOOTER_HEIGHT :
-	// 		TOP_OFFSET
-	// }px);
-	// width: ${(props: MainProps) =>
-	// 	props.viewport === Viewport.Results ||
-	// 	props.viewport === Viewport.Metadata ||
-	// 	props.viewport === Viewport.TextData ?
-	// 	`calc(100vw - ${ASIDE_WIDTH}px)` :
-	// 	'100vw'
-	// };
-	// transform: translateX(${(props: MainProps) =>
-	// 	props.viewport === Viewport.Search ?
-	// 		'100vw' :
-	// 		props.viewport === Viewport.Results ?
-	// 			`${ASIDE_WIDTH}px` :
-	// 			0
-	// });
 interface MainProps { viewport: Viewport }
 export const Main = styled.div`
 	bottom: ${(props: MainProps) => props.viewport === Viewport.PanelSelector ? `${FOOTER_HEIGHT}px` : 0};
@@ -42,14 +23,20 @@ export const PanelsWrapper = styled.div`
 	overflow-y: auto;
 	${(p: PWProps) => {
 		if (p.orientation === Orientation.Horizontal) {
-			const columns = p.activePanels
+			const textPanelSpace = TEXT_PANEL_WIDTH + (DEFAULT_SPACING * 6)
+			let columns = p.activePanels
 				.map(ap =>
 					ap.type === TextLayerType.Facsimile ?
 						`minmax(${DEFAULT_SPACING * 10}px, auto)` :
-						`${TEXT_PANEL_WIDTH + (DEFAULT_SPACING * 6)}px`
+						`${textPanelSpace}px`
 				)
 				.join(' ')
 
+			// If there is no facsimile active, the text panels should fill the available
+			// space (1fr)
+			if (!p.activePanels.some(ap => ap.type === TextLayerType.Facsimile)) {
+				columns = p.activePanels.map(() => `minmax(${textPanelSpace}px, 1fr)`).join(' ')
+			}
 			return `
 				grid-template-columns: ${columns};
 				grid-template-rows: 100% auto;

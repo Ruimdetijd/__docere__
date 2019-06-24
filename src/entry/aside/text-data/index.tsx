@@ -3,16 +3,18 @@ import styled from '@emotion/styled'
 import ExtractedItems from "./extracted-items"
 import 'docere-config'
 import { EntryState } from '../../index'
+import { GRAY_DARK } from '../../../constants';
 
 interface WProps { active: boolean }
 const Wrapper = styled.div`
-	height: 100%;
-	position: absolute;
-	z-index: ${(p: WProps) => p.active ? 1 : -1};
-	top: 0;
+	background: ${GRAY_DARK};
 	bottom: 0;
-	right: 0;
+	height: 100%;
 	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: ${(p: WProps) => p.active ? 1 : -1};
 `
 
 interface Props extends WProps, Pick<AppState, 'config' | 'extractTextData'> {
@@ -42,7 +44,14 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 	}
 
 	render() {
-		const textdata = (!Array.isArray(this.props.config.textdata) || this.state.items == null) ? [] : this.props.config.textdata
+		const textData = (!Array.isArray(this.props.config.textdata) || this.state.items == null) ? [] : this.props.config.textdata
+
+		const activeTextData =	textData.filter(td =>
+			td.hasOwnProperty('textLayers') &&
+			td.textLayers.some(tl => this.props.activePanels.findIndex(ap => ap.active && ap.id === tl) > -1)
+		)
+
+		// TODO if active text data is empty, show layers which contain data
 
 		return (
 			<Wrapper
@@ -50,8 +59,7 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 				ref={this.wrapperRef}
 			>
 				{
-					textdata
-						.filter(data => this.props.activePanels.findIndex(ap => ap.id === data.id) > -1)
+					activeTextData
 						.map((data) => {
 							return (
 								<ExtractedItems
