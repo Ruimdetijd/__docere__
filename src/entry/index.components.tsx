@@ -8,7 +8,11 @@ export const Main = styled.div`
 	bottom: ${(props: MainProps) => props.viewport === Viewport.PanelSelector ? `${FOOTER_HEIGHT}px` : 0};
 	left: ${(props: MainProps) => props.viewport === Viewport.Results ? `${ASIDE_WIDTH}px` : 0};
 	position: fixed;
-	right: ${(props: MainProps) => props.viewport === Viewport.Metadata || props.viewport === Viewport.TextData ? `${ASIDE_WIDTH}px` : 0};
+	right: ${(props: MainProps) =>
+		props.viewport === Viewport.Metadata ||
+		props.viewport === Viewport.TextData ||
+		props.viewport === Viewport.Notes ?
+		`${ASIDE_WIDTH}px` : 0};
 	top: ${TOP_OFFSET}px;
 	transition: all 300ms;
 `

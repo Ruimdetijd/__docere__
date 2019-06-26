@@ -25,6 +25,7 @@ export enum Viewport {
 	Results = 'Results',
 	Entry = 'Entry',
 	Metadata = 'Metadata',
+	Notes = 'Notes',
 	TextData = 'TextData',
 	Page = 'Page',
 	PanelSelector = 'PanelSelector',

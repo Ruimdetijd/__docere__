@@ -2,7 +2,6 @@ import * as React from 'react'
 import styled from '@emotion/styled'
 import HucFacetedSearch, { BooleanFacet, ListFacet, RangeFacet } from 'huc-faceted-search'
 import { DEFAULT_SPACING, TOP_OFFSET, ASIDE_HANDLE_WIDTH, ASIDE_WIDTH, Viewport, TabPosition } from '../constants'
-import { defaultMetadata } from 'docere-config'
 import Tabs from '../ui/tabs';
 
 const Wrapper = styled.div`
@@ -73,7 +72,6 @@ export default class Search extends React.Component<AppState, State> {
 
 		// Prepare the facets definitions from the config
 		const fields = this.props.config.metadata
-			.map(m => ({ ...defaultMetadata, ...m }))
 			.filter(field => field.datatype !== EsDataType.null && field.datatype !== EsDataType.text )
 			.sort((f1, f2) => f1.order - f2.order)
 		

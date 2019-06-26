@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import styled from '@emotion/styled'
-import defaultDocereConfigData from 'docere-config'
+import defaultDocereFunctions from 'docere-config'
 import Header from './header'
 import Entry from './entry'
 import PageView from './page'
@@ -68,7 +68,7 @@ class App extends React.Component<Props, AppState> {
 		searchQuery: null,
 		setAppState: (key, value) => this.setState({ [key]: value } as any),
 		setEntryId: (entryId: string) => this.setEntryId(entryId),
-		setPage: (page: Page) => this.setPage(page),
+		setPage: (page: PageConfig) => this.setPage(page),
 	}
 
 	render() {
@@ -82,7 +82,7 @@ class App extends React.Component<Props, AppState> {
 		)
 	}
 
-	private setPage(page: Page) {
+	private setPage(page: PageConfig) {
 		if (page == null) {
 			this.setEntryId(this.lastEntryId)
 			return
@@ -116,12 +116,12 @@ document.addEventListener('DOMContentLoaded', async function() {
 	if (pageId != null) viewport = Viewport.Page
 	else if (entryId != null) viewport = Viewport.Entry
 
-	// viewport = Viewport.PanelSelector
+	viewport = Viewport.Notes
 	ReactDOM.render(
 		<App
-			{...defaultDocereConfigData}
+			{...defaultDocereFunctions}
 			{...dcdImport.default}
-			config={{...defaultDocereConfigData.config, ...dcdImport.default.config}}
+			config={dcdImport.default.config}
 			entryId={entryId}
 			pageId={pageId}
 			viewport={viewport}

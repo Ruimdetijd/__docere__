@@ -42,7 +42,7 @@ const Close = styled.div`
 `
 
 export default class PageView extends React.PureComponent<AppState> {
-	flatPages: Page[]
+	flatPages: PageConfig[]
 
 	constructor(props: AppState) {
 		super(props)

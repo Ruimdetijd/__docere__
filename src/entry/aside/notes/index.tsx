@@ -17,61 +17,52 @@ const Wrapper = styled.div`
 	z-index: ${(p: WProps) => p.active ? 1 : -1};
 `
 
-interface Props extends WProps, Pick<AppState, 'config' | 'extractTextData'> {
+interface Props extends WProps, Pick<AppState, 'config'> {
 	activeId: string
 	activeListId: string
 	activePanels: EntryState['activePanels']
 	doc: XMLDocument
+	items: Record<string, any>
+	itemsConfig: any[]
 	onItemClick: (activeListId: string, activeItemId: string) => void
 }
 interface State {
 	containerHeight: number
-	items: ExtractedTextData
 }
 export default class TextDataAside extends React.PureComponent<Props, State> {
 	private wrapperRef = React.createRef() as React.RefObject<HTMLDivElement>
 
 	state: State = {
 		containerHeight: null,
-		items: null,
 	}
 
 	componentDidMount() {
 		this.setState({
 			containerHeight: this.wrapperRef.current.getBoundingClientRect().height,
-			items: this.props.extractTextData(this.props.doc, this.props.config)
 		})
 	}
 
 	render() {
-		const textData = (!Array.isArray(this.props.config.textdata) || this.state.items == null) ? [] : this.props.config.textdata
-
-		const activeTextData =	textData.filter(td =>
-			td.hasOwnProperty('textLayers') &&
-			td.textLayers.some(tl => this.props.activePanels.findIndex(ap => ap.active && ap.id === tl) > -1)
-		)
-
-		// TODO if active text data is empty, show layers which contain data
-
 		return (
 			<Wrapper
 				active={this.props.active}
 				ref={this.wrapperRef}
 			>
 				{
-					activeTextData
-						.map((data) => {
+					this.props.itemsConfig
+						.map((itemConfig) => {
 							return (
 								<ExtractedItems
-									active={this.props.activeListId === data.id}
+									active={this.props.activeListId === itemConfig.id}
 									activeItemId={this.props.activeId}
 									config={this.props.config}
-									data={data}
+									itemConfig={itemConfig}
+									itemsConfig={this.props.itemsConfig}
 									containerHeight={this.state.containerHeight}
-									items={this.state.items[data.id]}
-									key={data.id}
+									items={this.props.items[itemConfig.id]}
+									key={itemConfig.id}
 									onItemClick={this.props.onItemClick}
-									onListClick={() => this.props.onItemClick(data.id, null)}
+									onListClick={() => this.props.onItemClick(itemConfig.id, null)}
 								/>
 							)
 						})

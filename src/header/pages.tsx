@@ -60,7 +60,7 @@ const Link = styled.button`
 	}
 `
 
-function Page(props: { page: Page, setPage: AppState['setPage']}) {
+function Page(props: { page: PageConfig, setPage: AppState['setPage']}) {
 	return (
 		<li>
 			<Link
