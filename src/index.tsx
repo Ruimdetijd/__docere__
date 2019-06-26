@@ -116,7 +116,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 	if (pageId != null) viewport = Viewport.Page
 	else if (entryId != null) viewport = Viewport.Entry
 
-	viewport = Viewport.Notes
+	// viewport = Viewport.Notes
+	console.log(viewport)
 	ReactDOM.render(
 		<App
 			{...defaultDocereFunctions}

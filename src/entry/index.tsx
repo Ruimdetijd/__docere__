@@ -15,7 +15,9 @@ export interface EntryState {
 	hasScroll: boolean
 	input: string
 	metadata: ExtractedMetadata
+	notes: ExtractedNotes
 	orientation: Orientation
+	textData: ExtractedTextData
 	togglePanel: (panelId: string) => void
 	wordwrap: boolean
 }
@@ -31,23 +33,14 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 		hasScroll: false,
 		input: null,
 		metadata: {},
+		notes: {},
 		orientation: Orientation.Horizontal,
+		textData: {},
 		togglePanel: (panelId: string) => {
 			const activePanels = this.state.activePanels.map(ap =>
-				(ap.id === panelId) ?
-					({
-						...ap,
-						active: !ap.active,
-					}) :
-					ap
+				(ap.id === panelId) ? ({ ...ap, active: !ap.active }) : ap
 			)
 			this.setState({ activePanels })
-
-
-		// 	if (activePanel == null) {
-
-		// 	}
-		// 	if (this.state.activePanels.)
 		},
 		wordwrap: false,
 	}
@@ -106,19 +99,18 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 
 		const facsimiles = this.props.extractFacsimiles(doc)
 		const metadata = this.props.extractMetadata(doc)
+		const notes = this.props.extractNotes(doc)
+		const textData = this.props.extractTextData(doc, this.props.config)
 		const activeFacsimilePath = facsimiles.length ? facsimiles[0].path : null
-		const nextState: Partial<EntryState> = {
+
+		this.setState({
 			doc,
 			activeFacsimilePath, 
 			facsimiles,
-			metadata
-		}
-
-		// if (!this.state.activePanels.length) {
-		// 	nextState.activePanels = this.props.config.textlayers.filter(tl => tl.active)
-		// }
-
-		this.setState(nextState as any)
+			metadata,
+			notes,
+			textData,
+		})
 
 		const hasScroll = window.innerHeight < document.documentElement.scrollHeight
 		if (hasScroll) this.setState({ hasScroll })

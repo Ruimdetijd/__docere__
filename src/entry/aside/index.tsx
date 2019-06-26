@@ -31,47 +31,68 @@ const Body = styled.div`
 	position: relative;
 `
 
+function isEmpty(obj: Object) {
+	return Object.keys(obj).length === 0
+}
+
 interface AsideProps {
 	setActiveId: (activeListId: string, activeItemId: string) => void
 }
 type Props = AppState & EntryState & AsideProps
-export default class Aside extends React.Component<Props> {
+export default class Aside extends React.PureComponent<Props> {
 	render() {
-		const notes: ExtractedNotes = this.props.extractNotes(this.props.doc)
+		const hasMetadata = !isEmpty(this.props.metadata)
+		const hasTextData = !isEmpty(this.props.textData)
+		const hasNotes = !isEmpty(this.props.notes)
+
+		const tabs = []
+		if (hasMetadata) tabs.push(Viewport.Metadata)
+		if (hasTextData) tabs.push(Viewport.TextData)
+		if (hasNotes) tabs.push(Viewport.Notes)
+
 		return (
 			<Wrapper>
 				<Tabs
-					tabs={[Viewport.Metadata, Viewport.TextData, Viewport.Notes]}
+					tabs={tabs}
 					viewport={this.props.viewport}
 					setAppState={this.props.setAppState}
 				/>
 				<Body>
-					<MetadataAside
-						active={this.props.viewport === Viewport.Metadata}
-						config={this.props.config}
-						metadata={this.props.metadata}
-					/>
-					<TextDataAside
-						active={this.props.viewport === Viewport.TextData}
-						activeId={this.props.activeId}
-						activeListId={this.props.activeListId}
-						activePanels={this.props.activePanels}
-						config={this.props.config}
-						doc={this.props.doc}
-						extractTextData={this.props.extractTextData}
-						onItemClick={this.props.setActiveId}
-					/>
-					<Notes
-						active={this.props.viewport === Viewport.Notes}
-						activeId={this.props.activeId}
-						activeListId={this.props.activeListId}
-						activePanels={this.props.activePanels}
-						config={this.props.config}
-						doc={this.props.doc}
-						items={notes}
-						itemsConfig={this.props.config.notes}
-						onItemClick={this.props.setActiveId}
-					/>
+					{
+						hasMetadata &&
+						<MetadataAside
+							active={this.props.viewport === Viewport.Metadata}
+							config={this.props.config}
+							metadata={this.props.metadata}
+						/>
+					}
+					{
+						hasTextData &&
+						<TextDataAside
+							active={this.props.viewport === Viewport.TextData}
+							activeId={this.props.activeId}
+							activeListId={this.props.activeListId}
+							activePanels={this.props.activePanels}
+							config={this.props.config}
+							doc={this.props.doc}
+							extractTextData={this.props.extractTextData}
+							onItemClick={this.props.setActiveId}
+						/>
+					}
+					{
+						hasNotes &&
+						<Notes
+							active={this.props.viewport === Viewport.Notes}
+							activeId={this.props.activeId}
+							activeListId={this.props.activeListId}
+							activePanels={this.props.activePanels}
+							config={this.props.config}
+							doc={this.props.doc}
+							items={this.props.notes}
+							itemsConfig={this.props.config.notes}
+							onItemClick={this.props.setActiveId}
+						/>
+					}
 				</Body>
 			</Wrapper>
 		)
