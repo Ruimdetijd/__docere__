@@ -6,17 +6,17 @@
   "types": "build/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "dist": "webpack --config webpack.config.prod.js",
+    "dist": "webpack && webpack --config webpack.config.prod.js",
     "dev": "webpack-dev-server --mode=development",
     "watch": "tsc -w"
   },
   "author": "",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@emotion/core": "^10.0.5",
-    "@emotion/styled": "^10.0.5",
+    "@emotion/core": "^10.0.7",
+    "@emotion/styled": "^10.0.7",
     "docere-text-view": "^1.4.0",
-    "emotion": "^10.0.5",
+    "emotion": "^10.0.7",
     "huc-faceted-search": "^1.5.0",
     "openseadragon": "^2.4.0",
     "react": "^16.7.0",
