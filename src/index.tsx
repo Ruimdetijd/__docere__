@@ -116,8 +116,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 	if (pageId != null) viewport = Viewport.Page
 	else if (entryId != null) viewport = Viewport.Entry
 
-	// viewport = Viewport.Notes
-	console.log(viewport)
+	document.title = dcdImport.default.config.title
+
 	ReactDOM.render(
 		<App
 			{...defaultDocereFunctions}
