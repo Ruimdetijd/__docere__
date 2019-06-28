@@ -59,6 +59,8 @@ export const PanelsWrapper = styled.div`
 export const TextWrapper = styled.div`
 	display: grid;
 	grid-template-columns: auto ${TEXT_PANEL_WIDTH}px auto;
+	height: 100%;
+	overflow-y: auto;
 `
 
 export const Menu = styled.div`

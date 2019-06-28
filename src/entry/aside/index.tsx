@@ -76,6 +76,7 @@ export default class Aside extends React.PureComponent<Props> {
 							config={this.props.config}
 							doc={this.props.doc}
 							extractTextData={this.props.extractTextData}
+							items={this.props.textData}
 							onItemClick={this.props.setActiveId}
 						/>
 					}

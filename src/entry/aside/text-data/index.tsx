@@ -22,29 +22,27 @@ interface Props extends WProps, Pick<AppState, 'config' | 'extractTextData'> {
 	activeListId: string
 	activePanels: EntryState['activePanels']
 	doc: XMLDocument
+	items: any
 	onItemClick: (activeListId: string, activeItemId: string) => void
 }
 interface State {
 	containerHeight: number
-	items: ExtractedTextData
 }
 export default class TextDataAside extends React.PureComponent<Props, State> {
 	private wrapperRef = React.createRef() as React.RefObject<HTMLDivElement>
 
 	state: State = {
 		containerHeight: null,
-		items: null,
 	}
 
 	componentDidMount() {
 		this.setState({
 			containerHeight: this.wrapperRef.current.getBoundingClientRect().height,
-			items: this.props.extractTextData(this.props.doc, this.props.config)
 		})
 	}
 
 	render() {
-		const textData = (!Array.isArray(this.props.config.textdata) || this.state.items == null) ? [] : this.props.config.textdata
+		const textData = (!Array.isArray(this.props.config.textdata) || this.props.items == null) ? [] : this.props.config.textdata
 
 		const activeTextData =	textData.filter(td =>
 			td.hasOwnProperty('textLayers') &&
@@ -68,7 +66,7 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 									config={this.props.config}
 									data={data}
 									containerHeight={this.state.containerHeight}
-									items={this.state.items[data.id]}
+									items={this.props.items[data.id]}
 									key={data.id}
 									onItemClick={this.props.onItemClick}
 									onListClick={() => this.props.onItemClick(data.id, null)}

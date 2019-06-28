@@ -39,7 +39,6 @@ const getComponents: FunctionTypes['getComponents'] = function(config) {
 		pb,
 		'rs[type="pers"]': rsPerson(personConfig),
 		anchor: (props: DocereComponentProps & { n: string }) => {
-			console.log(props)
 			return (
 				<NoteAnchor
 					active={props.n === props.activeId}

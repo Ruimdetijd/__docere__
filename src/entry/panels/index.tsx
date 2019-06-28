@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { EntryState } from '../index'
-import Facsimile from './facsimile'
+import FacsimilePanel from './facsimile'
 
 import { PanelsWrapper } from '../index.components'
 import TextPanel from './text'
+import XmlPanel from './xml'
 import { Viewport } from '../../constants'
 
 export type PanelsProps = AppState & EntryState & {
@@ -56,18 +57,23 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 				{
 					activePanels.map(ap =>
 						ap.type === TextLayerType.Facsimile ?
-							<Facsimile
+							<FacsimilePanel
 								activeFacsimilePath={this.props.activeFacsimilePath}
 								key={ap.id}
 								orientation={this.props.orientation}
 							/> :
-							<TextPanel
-								{...this.props}
-								{...this.state}
-								customProps={customProps}
-								key={ap.id}
-								textLayerConfig={ap}
-							/>
+							ap.type === TextLayerType.TextLayer ?
+								<TextPanel
+									{...this.props}
+									{...this.state}
+									customProps={customProps}
+									key={ap.id}
+									textLayerConfig={ap}
+								/> :
+								<XmlPanel
+									key={ap.id}
+									doc={this.props.doc}
+								/>
 					)
 				}
 			</PanelsWrapper>
