@@ -46,7 +46,7 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 	}
 
 	async componentDidMount() {
-		await this.loadDoc()
+		if (this.props.entryId != null) await this.loadDoc()
 	}
 
 	componentDidUpdate(prevProps: AppState) {
