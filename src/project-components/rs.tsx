@@ -44,7 +44,7 @@ function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessCompo
 		let firstWord
 		let restOfFirstChild
 		if (props.children.length && typeof props.children[0] === 'string') {
-			const [fw, ...rofc] = props.children[0].split(/\s/us)
+			const [fw, ...rofc] = props.children[0].split(/\s/)
 			firstWord = fw
 			restOfFirstChild = ' '.concat(rofc.join(' '))
 		}
