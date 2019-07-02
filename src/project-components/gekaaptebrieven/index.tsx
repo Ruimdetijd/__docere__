@@ -60,7 +60,7 @@ const getComponents: FunctionTypes['getComponents'] = function(config) {
 						{...props}
 						active={props.activeListId === td.id && props.activeId === props.children[0]}
 						color={td.color}
-						onClick={() => props.viewport === Viewport.TextData ? props.setActiveId(td.id, props.children[0]) : null}
+						onClick={() => props.setActiveId(props.children[0], td.id, Viewport.TextData)}
 					/>
 				)
 			}
