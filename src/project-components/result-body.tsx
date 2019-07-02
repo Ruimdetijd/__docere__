@@ -115,7 +115,7 @@ export interface ResultBodyProps {
 const getResultBody = (MetadataItems: React.FunctionComponent<ResultBodyProps>) => (props: ResultBodyProps) =>
 	<Wrapper
 		active={props.result.id === props.activeId}
-		hasFacsimile={props.result.hasOwnProperty('facsimiles') && props.result.facsimiles.length}
+		hasFacsimile={props.result.hasOwnProperty('facsimiles') && props.result.facsimiles.length > 0}
 		small={props.viewport === Viewport.Results}
 	>
 		<FacsimileThumbs

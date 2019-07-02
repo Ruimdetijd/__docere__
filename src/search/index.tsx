@@ -121,7 +121,7 @@ export default class Search extends React.Component<AppState, State> {
 									<BooleanFacet
 										field={field.id}
 										key={field.id}
-										labels={["Nee", "Ja"]}
+										labels={{ false: "Nee", true: "Ja" }}
 										title={formatTitle(field)}
 									/> :
 									field.datatype === 'date' ?
