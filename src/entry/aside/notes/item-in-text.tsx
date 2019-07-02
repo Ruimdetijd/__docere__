@@ -1,11 +1,11 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 
-interface IITProps {
+interface P {
 	active: boolean
 }
 const Li = styled.li`
-	color: #CCC;
+	color: ${(props: P) => props.active ? '#FFF' : '#BBB' };
 	cursor: pointer;
 	display: grid;
 	grid-template-columns: 1fr 9fr;
@@ -15,7 +15,7 @@ const Li = styled.li`
 	position: relative;
 `
 
-export default function Note(props: IITProps & { children: any, onClick: () => void }) {
+export default function Note(props: P & { children: any, onClick: () => void }) {
 	return <Li {...props}>
 		{props.children}
 	</Li>

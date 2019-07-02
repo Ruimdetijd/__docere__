@@ -90,7 +90,6 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 	}
 
 	private setActiveId: SetActiveId = (activeId: string, activeListId: string, viewport: Viewport) => {
-		console.log(activeId, activeListId, viewport)
 		if (activeListId === this.state.activeListId && activeId === this.state.activeId) activeId = null
 		if (viewport != null && this.props.viewport !== viewport) {
 			this.props.setAppState('viewport', viewport, () => {
