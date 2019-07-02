@@ -66,7 +66,9 @@ class App extends React.Component<Props, AppState> {
 	state: AppState = {
 		...this.props,
 		searchQuery: null,
-		setAppState: (key, value) => this.setState({ [key]: value } as any),
+		setAppState: (key, value, done) => this.setState({ [key]: value } as any, () => {
+			if (done != null) done()
+		}),
 		setEntryId: (entryId: string) => this.setEntryId(entryId),
 		setPage: (page: PageConfig) => this.setPage(page),
 	}

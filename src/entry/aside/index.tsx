@@ -36,7 +36,7 @@ function isEmpty(obj: Object) {
 }
 
 interface AsideProps {
-	setActiveId: (activeListId: string, activeItemId: string) => void
+	setActiveId: SetActiveId
 }
 type Props = AppState & EntryState & AsideProps
 export default class Aside extends React.PureComponent<Props> {
@@ -75,7 +75,6 @@ export default class Aside extends React.PureComponent<Props> {
 							activePanels={this.props.activePanels}
 							config={this.props.config}
 							doc={this.props.doc}
-							extractTextData={this.props.extractTextData}
 							items={this.props.textData}
 							onItemClick={this.props.setActiveId}
 						/>

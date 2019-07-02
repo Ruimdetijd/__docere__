@@ -17,13 +17,13 @@ const Wrapper = styled.div`
 	z-index: ${(p: WProps) => p.active ? 1 : -1};
 `
 
-interface Props extends WProps, Pick<AppState, 'config' | 'extractTextData'> {
+interface Props extends WProps, Pick<AppState, 'config'> {
 	activeId: string
 	activeListId: string
 	activePanels: EntryState['activePanels']
 	doc: XMLDocument
 	items: any
-	onItemClick: (activeListId: string, activeItemId: string) => void
+	onItemClick: SetActiveId
 }
 interface State {
 	containerHeight: number
@@ -58,10 +58,10 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 			>
 				{
 					activeTextData
-						.map((data) => {
+						.map((data, index) => {
 							return (
 								<ExtractedItems
-									active={this.props.activeListId === data.id}
+									active={this.props.activeListId === data.id || (this.props.activeListId == null && index === 0)}
 									activeItemId={this.props.activeId}
 									config={this.props.config}
 									data={data}
@@ -69,7 +69,7 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 									items={this.props.items[data.id]}
 									key={data.id}
 									onItemClick={this.props.onItemClick}
-									onListClick={() => this.props.onItemClick(data.id, null)}
+									onListClick={() => this.props.onItemClick(null, data.id, null)}
 								/>
 							)
 						})

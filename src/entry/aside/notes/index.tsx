@@ -24,7 +24,7 @@ interface Props extends WProps, Pick<AppState, 'config'> {
 	doc: XMLDocument
 	items: Record<string, any>
 	itemsConfig: any[]
-	onItemClick: (activeListId: string, activeItemId: string) => void
+	onItemClick: SetActiveId
 }
 interface State {
 	containerHeight: number
@@ -50,10 +50,10 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 			>
 				{
 					this.props.itemsConfig
-						.map((itemConfig) => {
+						.map((itemConfig, index) => {
 							return (
 								<ExtractedItems
-									active={this.props.activeListId === itemConfig.id}
+									active={this.props.activeListId === itemConfig.id || (this.props.activeListId == null && index === 0)}
 									activeItemId={this.props.activeId}
 									config={this.props.config}
 									itemConfig={itemConfig}
@@ -62,7 +62,7 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 									items={this.props.items[itemConfig.id]}
 									key={itemConfig.id}
 									onItemClick={this.props.onItemClick}
-									onListClick={() => this.props.onItemClick(itemConfig.id, null)}
+									onListClick={() => this.props.onItemClick(null, itemConfig.id, null)}
 								/>
 							)
 						})

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { rsPerson } from '../rs';
-import { Viewport, BROWN_DARK } from '../../constants'
+import { BROWN_DARK, Viewport } from '../../constants'
 
 const Img = styled.img`
 	position: absolute;
@@ -16,17 +16,19 @@ function pb(props: any) {
 	)
 }
 
-interface NAProps { active: boolean, visible: boolean }
+interface NAProps { active: boolean }
 const NoteAnchor = styled.span`
 	background-color: ${(props: NAProps) => props.active ? BROWN_DARK : 'white' };
 	border-radius: 1em;
-	border: 1px solid ${BROWN_DARK};
+	border: 2px solid ${BROWN_DARK};
 	color: ${props => props.active ? 'white' : BROWN_DARK };
 	cursor: pointer;
-	display: ${props => props.visible ? 'inline-block' : 'none' };
-	font-size: .85em;
+	display: inline-block;
+	font-family: monospace;
+	font-size: .8em;
+	font-weight: bold;
 	height: 1.2em;
-	line-height: 1em;
+	line-height: 1.2em;
 	margin: 0 .25em;
 	text-align: center;
 	transition: all 150ms;
@@ -39,11 +41,11 @@ const getComponents: FunctionTypes['getComponents'] = function(config) {
 		pb,
 		'rs[type="pers"]': rsPerson(personConfig),
 		anchor: (props: DocereComponentProps & { n: string }) => {
+			console.log(props)
 			return (
 				<NoteAnchor
 					active={props.n === props.activeId}
-					onClick={() => props.setActiveId(props.activeListId, props.n)}
-					visible={props.viewport === Viewport.Notes}
+					onClick={() => props.setActiveId(props.n, 'editorNotes', Viewport.Notes)}
 				>
 					{props.n}
 				</NoteAnchor>

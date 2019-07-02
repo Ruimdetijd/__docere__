@@ -79,7 +79,7 @@ interface Props {
 	itemsConfig: any[]
 	containerHeight: number
 	items: any[]
-	onItemClick: (activeListId: string, activeId: string) => void
+	onItemClick: SetActiveId
 	onListClick: (listId: string) => void
 }
 export default class ExtractedItems extends React.Component<Props> {
@@ -103,7 +103,7 @@ export default class ExtractedItems extends React.Component<Props> {
 								<Note
 									active={item.n === this.props.activeItemId}
 									key={i}
-									onClick={() => this.props.onItemClick(this.props.itemConfig.id, item.n)}
+									onClick={() => this.props.onItemClick(item.n, this.props.itemConfig.id, null)}
 								>
 									<ActiveIndicator
 										active={item.n === this.props.activeItemId}

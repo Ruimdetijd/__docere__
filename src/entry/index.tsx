@@ -4,6 +4,7 @@ import { Main } from './index.components'
 import Panels from './panels'
 import Aside from './aside'
 import Footer from './footer'
+import { Viewport } from '../constants';
 
 export interface EntryState {
 	activeFacsimilePath: string
@@ -26,7 +27,7 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 	state: EntryState = {
 		activeFacsimilePath: null,
 		activeId: null,
-		activeListId: this.props.config.textdata.length ? this.props.config.textdata[0].id : null,
+		activeListId: null,
 		activePanels: this.props.config.textlayers,
 		doc: null,
 		facsimiles: [],
@@ -88,9 +89,16 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 		)
 	}
 
-	private setActiveId = (activeListId: string, activeId: string) => {
+	private setActiveId: SetActiveId = (activeId: string, activeListId: string, viewport: Viewport) => {
+		console.log(activeId, activeListId, viewport)
 		if (activeListId === this.state.activeListId && activeId === this.state.activeId) activeId = null
-		this.setState({ activeId, activeListId })
+		if (viewport != null && this.props.viewport !== viewport) {
+			this.props.setAppState('viewport', viewport, () => {
+				this.setState({ activeId, activeListId })
+			})
+		} else {
+			this.setState({ activeId, activeListId })
+		}
 	}
 
 	private async loadDoc() {

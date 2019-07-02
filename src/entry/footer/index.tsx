@@ -32,10 +32,11 @@ const PanelList = styled.ul`
 const PanelItemWrapper = styled.li`
 	color: ${(p: PIWProps) => p.active ? '#EEE' : '#444'};
 	cursor: pointer;
+	margin-right: 1em;
+	white-space: nowrap;
+    display: inline-block;
     height: 100%;
     width: 100px;
-    display: inline-block;
-    margin-right: 1em;
 	
 	& > div:first-of-type {
 		align-content: center;

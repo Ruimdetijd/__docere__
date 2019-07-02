@@ -8,7 +8,7 @@ import XmlPanel from './xml'
 import { Viewport } from '../../constants'
 
 export type PanelsProps = AppState & EntryState & {
-	setActiveId: (activeListId: string, activeId: string) => void
+	setActiveId: SetActiveId
 	setActiveFacsimile: (path: string) => void
 	togglePanelOrientation: () => void
 	toggleWordWrap: () => void
@@ -71,6 +71,7 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 									textLayerConfig={ap}
 								/> :
 								<XmlPanel
+									config={ap}
 									key={ap.id}
 									doc={this.props.doc}
 								/>

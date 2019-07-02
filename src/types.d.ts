@@ -19,12 +19,13 @@ interface AppState extends DocereConfigData {
 	entryId: string
 	pageId: string
 	searchQuery: string
-	setAppState: (key: keyof AppState, value: any) => void
+	setAppState: (key: keyof AppState, value: any, done?: () => void) => void
 	setEntryId: (id?: string) => void
 	setPage: (page?: PageConfig) => void
 	viewport: import('./constants').Viewport
 }
 
+type SetActiveId = (id: string, listId: string, viewport: import('./constants').Viewport) => void
 
 interface DocereComponentProps {
 	activeFacsimilePath: string
@@ -33,7 +34,7 @@ interface DocereComponentProps {
 	children?: any
 	config: DocereConfig
 	setActiveFacsimile: (activeFacsimilePath: string) => void
-	setActiveId: (activeListId: string, activeId: string) => void
+	setActiveId: SetActiveId
 	viewport: AppState['viewport']
 }
 // interface ContextState {

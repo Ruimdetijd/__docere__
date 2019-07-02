@@ -54,16 +54,13 @@ function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessCompo
 				{...props}
 				active={active}
 				color={rsConfig.color}
-				onClick={() => props.viewport === Viewport.TextData ? props.setActiveId(rsConfig.id, props.children[0]) : null}
+				onClick={() => props.setActiveId(props.children[0], rsConfig.id, Viewport.TextData)}
 			>
 				<NoWrap>
-					{
-						props.viewport === Viewport.TextData &&
-						<SvgComponent
-							active={active}
-							color={rsConfig.color}
-						/>
-					}
+					<SvgComponent
+						active={active}
+						color={rsConfig.color}
+					/>
 					{firstWord}
 				</NoWrap>
 				{restOfFirstChild}
@@ -78,17 +75,17 @@ const Rs = styled.span`
 	background-color: ${(props: RsProps) => {
 		return props.active ? props.color : 'rgba(0, 0, 0, 0)'
 	}};
-	color: ${(props: RsProps) =>
-		props.active ? 'white' : 'inherit'
-	};
-	cursor: ${(props: RsProps) =>
-		props.viewport === Viewport.TextData ? 'pointer' : 'default'
-	};
+	color: ${props => props.active ? 'white' : 'inherit'};
+	cursor: pointer;
 	transition: all 300ms;
 	
-	border-bottom: ${(props: RsProps) => props.viewport === Viewport.TextData && !props.active ? `3px solid ${props.color}` : '0 solid rgba(0, 0, 0, 0)'};
-	${(props: RsProps) => props.active ? 'padding: .1em .25em;' : 'padding: 0 .25em;'}
+	border-bottom: 3px solid ${props => props.color};
+	${props => props.active ? 'padding: .1em .25em;' : 'padding: 0 .25em;'}
 `
+	// border-bottom: ${(props: RsProps) => props.viewport === Viewport.TextData && !props.active ? `3px solid ${props.color}` : '0 solid rgba(0, 0, 0, 0)'};
+	// cursor: ${(props: RsProps) =>
+	// 	props.viewport === Viewport.TextData ? 'pointer' : 'default'
+	// };
 
 
 export const rsPerson = (rsConfig: TextDataConfig) => rsWithIcon(rsConfig, PersonSvg)

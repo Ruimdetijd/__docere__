@@ -16,6 +16,7 @@ const Wrapper = styled.div`
 `
 
 interface Props {
+	config: TextLayerConfig
 	doc: XMLDocument
 }
 export default class XmlPanel extends React.PureComponent<Props> {
@@ -28,11 +29,15 @@ export default class XmlPanel extends React.PureComponent<Props> {
 	}
 
 	render() {
+		let root = this.props.doc.documentElement
+		if (this.props.config.hasOwnProperty('selector')) {
+			root = this.props.doc.querySelector(this.props.config.selector)
+		}
 		return (
 			<Wrapper>
 				<pre>
 					<code className="language-xml">
-						{this.props.doc.documentElement.outerHTML}
+						{root.outerHTML}
 					</code>
 				</pre>
 			</Wrapper>

@@ -75,7 +75,7 @@ interface Props {
 	data: TextDataConfig
 	containerHeight: number
 	items: TextDataValue[]
-	onItemClick: (activeListId: string, activeId: string) => void
+	onItemClick: SetActiveId
 	onListClick: (listId: string) => void
 }
 export default class ExtractedItems extends React.Component<Props> {
@@ -104,7 +104,7 @@ export default class ExtractedItems extends React.Component<Props> {
 									active={item.key === this.props.activeItemId}
 									count={item.count}
 									key={item.key + i}
-									onClick={() => this.props.onItemClick(this.props.data.id, item.key)}
+									onClick={() => this.props.onItemClick(item.key, this.props.data.id, null)}
 								>
 									{item.value}
 								</ItemInText>
