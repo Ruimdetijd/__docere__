@@ -1,3 +1,6 @@
+/// <reference path="../../node_modules/docere-config/types.d.ts" />
+/// <reference path="../../node_modules/huc-faceted-search/src/types.d.ts" />
+
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { DEFAULT_SPACING, Viewport, BROWN_LIGHT } from '../constants'
@@ -80,12 +83,12 @@ function FacsimileThumbs(props: { facsimiles: ExtractedFacsimile[], small: boole
 	if (props.facsimiles == null || !props.facsimiles.length) return null
 	const thumbWidth = props.small ? 64 : 128
 	return props.facsimiles.length === 1 ?
-		<img src={props.facsimiles[0].path.replace('info.json', `full/${thumbWidth},/0/default.jpg`)} /> :
+		<img src={props.facsimiles[0].path[0].replace('info.json', `full/${thumbWidth},/0/default.jpg`)} /> :
 		<FacsimileThumbList small={props.small}>
 			{
 				props.facsimiles.map(facs => 
 					<li key={facs.id}>
-						<img src={facs.path.replace('info.json', `full/${(thumbWidth - 8)/2},/0/default.jpg`)} />
+						<img src={facs.path[0].replace('info.json', `full/${(thumbWidth - 8)/2},/0/default.jpg`)} />
 					</li>
 				)
 			}
@@ -116,11 +119,11 @@ const getResultBody = (MetadataItems: React.FunctionComponent<ResultBodyProps>) 
 	<Wrapper
 		active={props.result.id === props.activeId}
 		hasFacsimile={props.result.hasOwnProperty('facsimiles') && props.result.facsimiles.length > 0}
-		small={props.viewport === Viewport.Results}
+		small={props.viewport === Viewport.Entry}
 	>
 		<FacsimileThumbs
 			facsimiles={props.result.facsimiles}
-			small={props.viewport === Viewport.Results}
+			small={props.viewport === Viewport.Entry}
 		/>
 		<Metadata>
 			<MetadataItems {...props} />

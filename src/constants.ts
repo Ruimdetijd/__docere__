@@ -22,13 +22,23 @@ export const BROWN_DARK = '#988258'
 
 export enum Viewport {
 	Search = 'Search',
-	Results = 'Results',
 	Entry = 'Entry',
+	Page = 'Page',
+}
+
+export enum AsideTab {
 	Metadata = 'Metadata',
 	Notes = 'Notes',
 	TextData = 'TextData',
-	Page = 'Page',
-	PanelSelector = 'PanelSelector',
+}
+
+export enum FooterTab {
+	PanelSelector = 'PanelSelector'
+}
+
+export enum SearchTab {
+	Search = 'Search',
+	Results = 'Results'
 }
 
 export enum TabPosition {

@@ -1,18 +1,14 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { css } from '@emotion/core'
-import { TOP_OFFSET, TEXT_PANEL_WIDTH, DEFAULT_SPACING, ASIDE_WIDTH, Viewport, FOOTER_HEIGHT } from '../constants'
+import { TOP_OFFSET, TEXT_PANEL_WIDTH, DEFAULT_SPACING, ASIDE_WIDTH, FOOTER_HEIGHT, FooterTab, SearchTab } from '../constants'
 
-interface MainProps { viewport: Viewport }
+interface MainProps { asideTab: AsideTab, footerTab: FooterTab, searchTab: SearchTab }
 export const Main = styled.div`
-	bottom: ${(props: MainProps) => props.viewport === Viewport.PanelSelector ? `${FOOTER_HEIGHT}px` : 0};
-	left: ${(props: MainProps) => props.viewport === Viewport.Results ? `${ASIDE_WIDTH}px` : 0};
+	bottom: ${(props: MainProps) => props.footerTab === FooterTab.PanelSelector ? `${FOOTER_HEIGHT}px` : 0};
+	left: ${props => props.searchTab === SearchTab.Results ? `${ASIDE_WIDTH}px` : 0};
 	position: fixed;
-	right: ${(props: MainProps) =>
-		props.viewport === Viewport.Metadata ||
-		props.viewport === Viewport.TextData ||
-		props.viewport === Viewport.Notes ?
-		`${ASIDE_WIDTH}px` : 0};
+	right: ${props => props.asideTab != null ? `${ASIDE_WIDTH}px` : 0};
 	top: ${TOP_OFFSET}px;
 	transition: all 300ms;
 `

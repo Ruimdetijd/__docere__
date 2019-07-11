@@ -3,5 +3,5 @@
 ## DEV
 Start server (webpack-dev-server)
 ```
-$ npm run start:dev
+$ npm run dev
 ```

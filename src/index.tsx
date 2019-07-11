@@ -17,14 +17,12 @@ export const Main = styled('div')`
 `
 
 // BUGS
-// TODO fix faceted search Reset button
 // TODO fix padding-bottom when text view scrolls
 
 // Asides
 // TODO results and metadata show at same time
 // TODO replace first letter of tab with icon + tooltip text
 // TODO create media aside
-// TODO create notes aside
 
 // Navigation
 // TODO use popstate for detecting back-button
@@ -33,7 +31,6 @@ export const Main = styled('div')`
 
 // Footer menu
 // TODO move portrait/landscape button and TEI download button to footer menu
-// TODO add panels/layers
 
 // Links
 // TODO link to search result
@@ -66,7 +63,8 @@ class App extends React.Component<Props, AppState> {
 	state: AppState = {
 		...this.props,
 		searchQuery: null,
-		setAppState: (key, value, done) => this.setState({ [key]: value } as any, () => {
+		searchTab: null,
+		setAppState: (nextState, done) => this.setState(nextState as any, () => {
 			if (done != null) done()
 		}),
 		setEntryId: (entryId: string) => this.setEntryId(entryId),
@@ -100,9 +98,7 @@ class App extends React.Component<Props, AppState> {
 		let url = `/${this.props.config.slug}`
 		if (entryId != null) url += `/${entryId}`
 
-		let viewport = Viewport.Entry
-		if (entryId == null) viewport = Viewport.Search
-		else if (this.state.viewport === Viewport.Results) viewport = Viewport.Results
+		const viewport = (entryId == null) ? Viewport.Search : Viewport.Entry
 
 		this.setState({ entryId, viewport, pageId: null })
 		history.pushState({}, this.props.config.title, url)

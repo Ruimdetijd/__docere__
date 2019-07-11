@@ -3,7 +3,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import 'docere-config'
-import { BROWN_LIGHT, Viewport } from '../../constants'
+import { BROWN_LIGHT, AsideTab } from '../../constants'
 import Rs, { rsPlace, rsPerson } from '../rs';
 
 const Img = styled.img`
@@ -40,7 +40,7 @@ function pb(props: { activeFacsimilePath: string, facs: string, setActiveFacsimi
 
 
 
-const getComponents: FunctionTypes['getComponents'] = function(config) {
+const getComponents: GetComponents = function(config) {
 	const placeConfig = config.textdata.find(td => td.id === 'loc')
 	const personConfig = config.textdata.find(td => td.id === 'person')
 
@@ -60,7 +60,7 @@ const getComponents: FunctionTypes['getComponents'] = function(config) {
 						{...props}
 						active={props.activeListId === td.id && props.activeId === props.children[0]}
 						color={td.color}
-						onClick={() => props.setActiveId(props.children[0], td.id, Viewport.TextData)}
+						onClick={() => props.setActiveId(props.children[0], td.id, AsideTab.TextData)}
 					/>
 				)
 			}

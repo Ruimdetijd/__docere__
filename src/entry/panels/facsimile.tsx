@@ -28,7 +28,7 @@ const Wrapper = styled.div`
 	// grid-column: 1;
 	// grid-row: ${(props: Props) => props.orientation === Orientation.Horizontal ? 1 : 2};
 
-type Props = Pick<EntryState, 'activeFacsimilePath' | 'orientation'>
+type Props = Pick<EntryState, 'activeFacsimilePath' | 'orientation' | 'facsimiles'>
 export default class Facsimile extends React.PureComponent<Props> {
 	private osd: any
 
@@ -65,7 +65,9 @@ export default class Facsimile extends React.PureComponent<Props> {
 				id: "openseadragon",
 				navigatorPosition: 'BOTTOM_LEFT',
 				prefixUrl: "/node_modules/openseadragon/build/openseadragon/images/",
+				sequenceMode: true,
 				showHomeControl: false,
+				showReferenceStrip: true,
 				showRotationControl: true,
 				showZoomControl: false,
 				showNavigator: true,
@@ -73,6 +75,7 @@ export default class Facsimile extends React.PureComponent<Props> {
 			})
 		}
 
-		this.osd.open(this.props.activeFacsimilePath)
+		console.log(this.props.facsimiles.map(f => f.path))
+		this.osd.open(this.props.facsimiles.map(f => f.path))
 	}
 }

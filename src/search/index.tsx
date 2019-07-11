@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import HucFacetedSearch, { BooleanFacet, ListFacet, RangeFacet } from 'huc-faceted-search'
-import { DEFAULT_SPACING, TOP_OFFSET, ASIDE_HANDLE_WIDTH, ASIDE_WIDTH, Viewport, TabPosition } from '../constants'
+import { DEFAULT_SPACING, TOP_OFFSET, ASIDE_HANDLE_WIDTH, ASIDE_WIDTH, Viewport, TabPosition, SearchTab } from '../constants'
 import Tabs from '../ui/tabs';
 
 const Wrapper = styled.div`
@@ -10,9 +10,9 @@ const Wrapper = styled.div`
 	grid-template-columns: 100vw ${ASIDE_HANDLE_WIDTH}px;
 	position: fixed;
 	top: ${TOP_OFFSET}px;
-	transform: translateX(${(props: { viewport: Viewport }) => props.viewport === Viewport.Search?
+	transform: translateX(${(props: { searchTab: SearchTab, viewport: Viewport }) => props.viewport === Viewport.Search ?
 		0 :
-		props.viewport === Viewport.Results ?
+		props.searchTab === SearchTab.Results ?
 			`calc(-100vw + ${ASIDE_WIDTH}px)` :
 			'-100vw'
 	});
@@ -88,9 +88,9 @@ export default class Search extends React.Component<AppState, State> {
 		// Don't update when the search is not involved in the view
 		if (
 			this.props.viewport !== Viewport.Search &&
-			this.props.viewport !== Viewport.Results &&
+			this.props.searchTab !== SearchTab.Results &&
 			nextProps.viewport !== Viewport.Search &&
-			nextProps.viewport !== Viewport.Results
+			nextProps.searchTab !== SearchTab.Results
 		) return false
 
 		return true
@@ -100,10 +100,13 @@ export default class Search extends React.Component<AppState, State> {
 		if (this.state.resultBody == null) return null
 
 		return (
-			<Wrapper viewport={this.props.viewport}>
+			<Wrapper
+				searchTab={this.props.searchTab}
+				viewport={this.props.viewport}
+			>
 				<FS
 					backend="elasticsearch"
-					disableDefaultStyle={this.props.viewport === Viewport.Results}
+					disableDefaultStyle={this.props.searchTab === SearchTab.Results}
 					onClickResult={result => this.props.setEntryId(result.id)}
 					ref={this.searchRef}
 					resultBodyComponent={this.state.resultBody}
@@ -140,10 +143,13 @@ export default class Search extends React.Component<AppState, State> {
 					}
 				</FS>
 				<Tabs
+					onClick={(tab: SearchTab) => {
+						if (tab === SearchTab.Results) this.props.setAppState({ searchTab: tab })
+						else if (tab === SearchTab.Search) this.props.setAppState({ searchTab: null, viewport: Viewport.Search })
+					}}
 					position={TabPosition.Left}
-					setAppState={this.props.setAppState}
-					tabs={[Viewport.Search, Viewport.Results]}
-					viewport={this.props.viewport}
+					tab={this.props.searchTab}
+					tabs={[SearchTab.Search, SearchTab.Results]}
 				/>
 			</Wrapper>
 		)

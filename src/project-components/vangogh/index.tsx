@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { rsPerson } from '../rs';
-import { BROWN_DARK, Viewport } from '../../constants'
+import { BROWN_DARK, AsideTab } from '../../constants'
 
 const Img = styled.img`
 	position: absolute;
@@ -35,7 +35,7 @@ const NoteAnchor = styled.span`
 	width: 1.2em;
 `
 
-const getComponents: FunctionTypes['getComponents'] = function(config) {
+const getComponents: GetComponents = function(config) {
 	const personConfig = config.textdata.find(td => td.id === 'person')
 	return {
 		pb,
@@ -44,7 +44,7 @@ const getComponents: FunctionTypes['getComponents'] = function(config) {
 			return (
 				<NoteAnchor
 					active={props.n === props.activeId}
-					onClick={() => props.setActiveId(props.n, 'editorNotes', Viewport.Notes)}
+					onClick={() => props.setActiveId(props.n, 'editorNotes', AsideTab.Notes)}
 				>
 					{props.n}
 				</NoteAnchor>

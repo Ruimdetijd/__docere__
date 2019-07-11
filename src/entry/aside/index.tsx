@@ -4,7 +4,7 @@ import { EntryState } from '../index'
 import MetadataAside from './metadata'
 import Notes from './notes'
 import TextDataAside from './text-data'
-import { ASIDE_HANDLE_WIDTH, GRAY_DARK, ASIDE_WIDTH, TOP_OFFSET, Viewport } from '../../constants'
+import { ASIDE_HANDLE_WIDTH, GRAY_DARK, ASIDE_WIDTH, TOP_OFFSET, AsideTab } from '../../constants'
 import Tabs from '../../ui/tabs';
 
 const Wrapper = styled.aside`
@@ -46,22 +46,22 @@ export default class Aside extends React.PureComponent<Props> {
 		const hasNotes = !isEmpty(this.props.notes)
 
 		const tabs = []
-		if (hasMetadata) tabs.push(Viewport.Metadata)
-		if (hasTextData) tabs.push(Viewport.TextData)
-		if (hasNotes) tabs.push(Viewport.Notes)
+		if (hasMetadata) tabs.push(AsideTab.Metadata)
+		if (hasTextData) tabs.push(AsideTab.TextData)
+		if (hasNotes) tabs.push(AsideTab.Notes)
 
 		return (
 			<Wrapper>
 				<Tabs
+					onClick={(tab: AsideTab) => this.props.setAsideTab(tab)}
+					tab={this.props.asideTab}
 					tabs={tabs}
-					viewport={this.props.viewport}
-					setAppState={this.props.setAppState}
 				/>
 				<Body>
 					{
 						hasMetadata &&
 						<MetadataAside
-							active={this.props.viewport === Viewport.Metadata}
+							active={this.props.asideTab === AsideTab.Metadata}
 							config={this.props.config}
 							metadata={this.props.metadata}
 						/>
@@ -69,7 +69,7 @@ export default class Aside extends React.PureComponent<Props> {
 					{
 						hasTextData &&
 						<TextDataAside
-							active={this.props.viewport === Viewport.TextData}
+							active={this.props.asideTab === AsideTab.TextData}
 							activeId={this.props.activeId}
 							activeListId={this.props.activeListId}
 							activePanels={this.props.activePanels}
@@ -82,7 +82,7 @@ export default class Aside extends React.PureComponent<Props> {
 					{
 						hasNotes &&
 						<Notes
-							active={this.props.viewport === Viewport.Notes}
+							active={this.props.asideTab === AsideTab.Notes}
 							activeId={this.props.activeId}
 							activeListId={this.props.activeListId}
 							activePanels={this.props.activePanels}

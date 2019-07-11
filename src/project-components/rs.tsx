@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { Viewport } from '../constants'
+import { AsideTab } from '../constants'
 
 interface SvgProps { active: boolean, color: string }
 type RsProps = DocereComponentProps & SvgProps
@@ -54,7 +54,7 @@ function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessCompo
 				{...props}
 				active={active}
 				color={rsConfig.color}
-				onClick={() => props.setActiveId(props.children[0], rsConfig.id, Viewport.TextData)}
+				onClick={() => props.setActiveId(props.children[0], rsConfig.id, AsideTab.TextData)}
 			>
 				<NoWrap>
 					<SvgComponent

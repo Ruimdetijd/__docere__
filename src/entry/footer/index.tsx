@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { EntryState } from '../index'
-import styled from '@emotion/styled';
-import { FOOTER_HEIGHT, Viewport, TabPosition, FOOTER_HANDLE_HEIGHT, DEFAULT_SPACING } from '../../constants';
-import Tabs from '../../ui/tabs';
+import styled from '@emotion/styled'
+import { FOOTER_HEIGHT, TabPosition, FOOTER_HANDLE_HEIGHT, DEFAULT_SPACING, FooterTab } from '../../constants'
+import Tabs from '../../ui/tabs'
 
 const Wrapper = styled.footer`
 	bottom: -${FOOTER_HEIGHT}px;
@@ -83,10 +83,10 @@ class Footer extends React.PureComponent<Props> {
 		return (
 			<Wrapper>
 				<Tabs
+					onClick={(tab: FooterTab) => this.props.setFooterTab(tab)}
 					position={TabPosition.Bottom}
-					setAppState={this.props.setAppState}
-					tabs={[Viewport.PanelSelector]}
-					viewport={this.props.viewport}
+					tab={this.props.footerTab}
+					tabs={[FooterTab.PanelSelector]}
 				/>
 				<Body>
 					<PanelList>

@@ -4,20 +4,24 @@ import { Main } from './index.components'
 import Panels from './panels'
 import Aside from './aside'
 import Footer from './footer'
-import { Viewport } from '../constants';
+import { FooterTab } from '../constants';
 
 export interface EntryState {
 	activeFacsimilePath: string
 	activeId: string
 	activeListId: string
 	activePanels: TextLayerConfig[]
+	asideTab: AsideTab
 	doc: XMLDocument
 	facsimiles: ExtractedFacsimile[]
+	footerTab: FooterTab
 	hasScroll: boolean
 	input: string
 	metadata: ExtractedMetadata
 	notes: ExtractedNotes
 	orientation: Orientation
+	setAsideTab: (asideTab: AsideTab) => void
+	setFooterTab: (footerTab: FooterTab) => void
 	textData: ExtractedTextData
 	togglePanel: (panelId: string) => void
 	wordwrap: boolean
@@ -29,13 +33,23 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 		activeId: null,
 		activeListId: null,
 		activePanels: this.props.config.textlayers,
+		asideTab: null,
 		doc: null,
 		facsimiles: [],
+		footerTab: null,
 		hasScroll: false,
 		input: null,
 		metadata: {},
 		notes: {},
 		orientation: Orientation.Horizontal,
+		setAsideTab: (asideTab: AsideTab) => {
+			if (this.state.asideTab === asideTab) asideTab = null
+			this.setState({ asideTab })
+		},
+		setFooterTab: (footerTab: FooterTab) => {
+			if (this.state.footerTab === footerTab) footerTab = null
+			this.setState({ footerTab })
+		},
 		textData: {},
 		togglePanel: (panelId: string) => {
 			const activePanels = this.state.activePanels.map(ap =>
@@ -60,7 +74,9 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 
 		return (
 			<Main
-				viewport={this.props.viewport}
+				asideTab={this.state.asideTab}
+				footerTab={this.state.footerTab}
+				searchTab={this.props.searchTab}
 			>
 				<Panels
 					{...this.props}
@@ -89,15 +105,11 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 		)
 	}
 
-	private setActiveId: SetActiveId = (activeId: string, activeListId: string, viewport: Viewport) => {
+	private setActiveId: SetActiveId = (activeId: string, activeListId: string, asideTab: AsideTab) => {
 		if (activeListId === this.state.activeListId && activeId === this.state.activeId) activeId = null
-		if (viewport != null && this.props.viewport !== viewport) {
-			this.props.setAppState('viewport', viewport, () => {
-				this.setState({ activeId, activeListId })
-			})
-		} else {
-			this.setState({ activeId, activeListId })
-		}
+		const nextState: Partial<EntryState> = { activeId, activeListId }
+		if (asideTab != null && this.state.asideTab !== asideTab) nextState.asideTab = asideTab
+		this.setState(nextState as any)
 	}
 
 	private async loadDoc() {
@@ -108,7 +120,7 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 		const metadata = this.props.extractMetadata(doc)
 		const notes = this.props.extractNotes(doc)
 		const textData = this.props.extractTextData(doc, this.props.config)
-		const activeFacsimilePath = facsimiles.length ? facsimiles[0].path : null
+		const activeFacsimilePath = facsimiles.length ? facsimiles[0].path[0] : null
 
 		this.setState({
 			doc,

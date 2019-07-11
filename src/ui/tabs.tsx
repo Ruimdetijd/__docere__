@@ -1,18 +1,18 @@
 import * as React from 'react'
 import styled from "@emotion/styled";
-import { ASIDE_HANDLE_HEIGHT, TabPosition, ASIDE_HANDLE_WIDTH, Viewport, GRAY_LIGHT } from "../constants";
+import { ASIDE_HANDLE_HEIGHT, TabPosition, ASIDE_HANDLE_WIDTH, GRAY_LIGHT, FooterTab } from "../constants";
 
 export const Wrapper = styled.ul`
 	align-self: center;
 	justify-self: center;
 	cursor: pointer;
-	line-height: ${(props: Props) => props.position === TabPosition.Bottom ? ASIDE_HANDLE_WIDTH : ASIDE_HANDLE_HEIGHT}px;
+	line-height: ${(props: WProps) => props.position === TabPosition.Bottom ? ASIDE_HANDLE_WIDTH : ASIDE_HANDLE_HEIGHT}px;
 	text-align: center;
 	user-select: none;
-	width: ${(props: Props) => props.position === TabPosition.Bottom ? ASIDE_HANDLE_HEIGHT : ASIDE_HANDLE_WIDTH}px;
+	width: ${props => props.position === TabPosition.Bottom ? ASIDE_HANDLE_HEIGHT : ASIDE_HANDLE_WIDTH}px;
 
 	& > li {
-		${(props: Props) => {
+		${props => {
 			if (props.position === TabPosition.Right) {
 				return `
 					border-top-left-radius: 8px;
@@ -74,9 +74,13 @@ export const Tab = styled.li`
 	}}
 `
 
-interface Props extends Pick<AppState, 'viewport' | 'setAppState'> {
+interface WProps {
 	position?: TabPosition
-	tabs: Viewport[]
+}
+interface Props extends WProps {
+	onClick: (tab: SearchTab | FooterTab | AsideTab) => void
+	tab: SearchTab | FooterTab | AsideTab
+	tabs: (SearchTab | FooterTab | AsideTab)[]
 }
 export default class Tabs extends React.PureComponent<Props> {
 	static defaultProps = {
@@ -85,17 +89,14 @@ export default class Tabs extends React.PureComponent<Props> {
 
 	render() {
 		return (
-			<Wrapper {...this.props}>
+			<Wrapper position={this.props.position}>
 				{
 					this.props.tabs
 						.map((tab) =>
 							<Tab
-								active={this.props.viewport === tab}
+								active={this.props.tab === tab}
 								key={tab}
-								onClick={() => {
-									if (this.props.viewport === tab) tab = Viewport.Entry
-									this.props.setAppState('viewport', tab)
-								}}
+								onClick={() => this.props.onClick(tab)}
 								position={this.props.position}
 							>
 								{tab.slice(0, 1)}

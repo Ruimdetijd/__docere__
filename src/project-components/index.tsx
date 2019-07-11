@@ -16,25 +16,20 @@ export const del = styled.span`
 	text-decoration: line-through;
 `
 
-type WWProps = Pick<any, 'wordwrap'>
 export const lb = styled.span`
-	display: ${(props: WWProps) => props.wordwrap ? 'block' : 'inline' };
+	display: block;
 
-	${(props: WWProps) =>
-		(props.wordwrap) ?
-			`&:before {
-				box-sizing: border-box;
-				color: #666;
-				content: counter(linenumber);
-				counter-increment: linenumber;
-				font-size: .8em;
-				position: absolute;
-				text-align: right;
-				width: 42px;
-				margin-left: -42px;
-				padding-right: 8px;
-			}` :
-			''
+	&:before {
+		box-sizing: border-box;
+		color: #666;
+		content: counter(linenumber);
+		counter-increment: linenumber;
+		font-size: .8em;
+		position: absolute;
+		text-align: right;
+		width: 42px;
+		margin-left: -48px;
+		padding-right: 8px;
 	}
 `
 

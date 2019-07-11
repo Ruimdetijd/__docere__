@@ -1,3 +1,7 @@
+type Viewport = import('./constants').Viewport
+type AsideTab = import('./constants').AsideTab
+type SearchTab = import('./constants').SearchTab
+
 declare const enum Orientation {
 	Horizontal,
 	Vertical
@@ -11,21 +15,20 @@ declare interface FormProps<T> {
 
 // TODO type props
 type DocereComponents = Record<string, (props: any) => JSX.Element>
-interface FunctionTypes {
-	getComponents: (config: DocereConfig) => DocereComponents
-}
+type GetComponents = (config: DocereConfig) => DocereComponents
 
 interface AppState extends DocereConfigData {
+	searchTab: SearchTab
 	entryId: string
 	pageId: string
 	searchQuery: string
-	setAppState: (key: keyof AppState, value: any, done?: () => void) => void
+	setAppState: (nextState: { [key in keyof AppState]?: any }, done?: () => void) => void
 	setEntryId: (id?: string) => void
 	setPage: (page?: PageConfig) => void
-	viewport: import('./constants').Viewport
+	viewport: Viewport
 }
 
-type SetActiveId = (id: string, listId: string, viewport: import('./constants').Viewport) => void
+type SetActiveId = (id: string, listId: string, asideTab: AsideTab) => void
 
 interface DocereComponentProps {
 	activeFacsimilePath: string
@@ -35,7 +38,7 @@ interface DocereComponentProps {
 	config: DocereConfig
 	setActiveFacsimile: (activeFacsimilePath: string) => void
 	setActiveId: SetActiveId
-	viewport: AppState['viewport']
+	viewport: Viewport
 }
 // interface ContextState {
 // 	activeId: string
