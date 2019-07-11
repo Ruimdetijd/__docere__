@@ -1,0 +1,38 @@
+version: "3.6"
+
+services:
+  pg:
+    environment:
+      - POSTGRES_PASSWORD=postgis
+    image: mdillon/postgis:10-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - docere_db:/var/lib/postgresql/data
+      - ./:/data
+
+  es:
+    image: elasticsearch:5.6-alpine
+    environment:
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    healthcheck:
+      test: "nc localhost 9200 < /dev/null"
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    ports:
+      - "9200:9200"
+    volumes:
+      - docere_es:/usr/share/elasticsearch/data
+
+  iiif:
+    image: lorisimageserver/loris
+    ports:
+      - 5004:5004
+    volumes:
+      - ./public/facsimile:/opt/loris/tests/img
+      - /home/gijs/Projects/docere-config/projects/archimedes-palimpsest/facsimiles:/opt/loris/tests/img/archimedes-palimpsest
+
+volumes:
+  docere_db:
+  docere_es:

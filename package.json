@@ -5,6 +5,7 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
+    "backend": "./npm-run-backend.sh",
     "build": "tsc",
     "dist": "webpack && webpack --config webpack.config.prod.js",
     "dev": "webpack-dev-server --mode=development",
