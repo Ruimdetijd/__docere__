@@ -6,7 +6,7 @@ import 'docere-config'
 import { BROWN_LIGHT, AsideTab } from '../../constants'
 import Rs, { rsPlace, rsPerson } from '../rs';
 
-const Img = styled.img`
+export const Img = styled.img`
 	position: absolute;
 	left: 0;
 	margin-top: 6px;
@@ -37,8 +37,6 @@ function pb(props: { activeFacsimilePath: string, facs: string, setActiveFacsimi
 		</span>
 	)
 }
-
-
 
 const getComponents: GetComponents = function(config) {
 	const placeConfig = config.textdata.find(td => td.id === 'loc')
