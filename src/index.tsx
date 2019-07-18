@@ -20,7 +20,6 @@ export const Main = styled('div')`
 // TODO fix padding-bottom when text view scrolls
 
 // Asides
-// TODO results and metadata show at same time
 // TODO replace first letter of tab with icon + tooltip text
 // TODO create media aside
 

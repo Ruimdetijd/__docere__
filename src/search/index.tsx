@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import HucFacetedSearch, { BooleanFacet, ListFacet, RangeFacet } from 'huc-faceted-search'
 import { DEFAULT_SPACING, TOP_OFFSET, ASIDE_HANDLE_WIDTH, ASIDE_WIDTH, Viewport, TabPosition, SearchTab } from '../constants'
 import Tabs from '../ui/tabs';
+import { defaultMetadata } from 'docere-config';
 
 const Wrapper = styled.div`
 	bottom: 0;
@@ -67,11 +68,39 @@ export default class Search extends React.Component<AppState, State> {
 	}
 
 	async componentDidMount() {
-		// Import the non-generic ResultBody component
-		const rbImport = await import(`../project-components/${this.props.config.slug}/result-body.tsx`)
+		let rbImport
+
+		try {
+			// Import the non-generic ResultBody component
+			rbImport = await import(`../project-components/${this.props.config.slug}/result-body.tsx`)
+		} catch (err) {
+			rbImport = await import('../project-components/generic-result-body')
+		}
+
+		let tmpfields
+		try {
+			const result = await fetch(`/search/${this.props.config.slug}/_mapping`)
+			const json = await result.json()
+			const { properties } = json[this.props.config.slug].mappings.doc
+			tmpfields = Object.keys(properties)
+				.filter(key => key !== 'text' && key !== 'facsimiles' && key !== 'id')
+				.map(key => {
+					let config = this.props.config.metadata.find(md => md.id === key)
+					if (config == null) this.props.config.textdata.find(td => td.id === key)
+					if (config == null) config = {
+						...defaultMetadata,
+						id: key
+					}
+
+					return config
+				})
+			console.log(tmpfields)
+		} catch (err) {
+			console.log(err)
+		}
 
 		// Prepare the facets definitions from the config
-		const fields = this.props.config.metadata
+		const fields = tmpfields
 			.filter(field => field.datatype !== EsDataType.null && field.datatype !== EsDataType.text )
 			.sort((f1, f2) => f1.order - f2.order)
 		
