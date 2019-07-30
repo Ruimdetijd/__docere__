@@ -172,10 +172,7 @@ export default class Search extends React.Component<AppState, State> {
 					}
 				</FS>
 				<Tabs
-					onClick={(tab: SearchTab) => {
-						if (tab === SearchTab.Results) this.props.setAppState({ searchTab: tab })
-						else if (tab === SearchTab.Search) this.props.setAppState({ searchTab: null, viewport: Viewport.Search })
-					}}
+					onClick={this.props.setSearchTab}
 					position={TabPosition.Left}
 					tab={this.props.searchTab}
 					tabs={[SearchTab.Search, SearchTab.Results]}

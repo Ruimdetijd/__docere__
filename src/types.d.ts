@@ -22,9 +22,9 @@ interface AppState extends DocereConfigData {
 	entryId: string
 	pageId: string
 	searchQuery: string
-	setAppState: (nextState: { [key in keyof AppState]?: any }, done?: () => void) => void
 	setEntryId: (id?: string) => void
 	setPage: (page?: PageConfig) => void
+	setSearchTab: (tab: SearchTab) => void
 	viewport: Viewport
 }
 

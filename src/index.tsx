@@ -6,7 +6,7 @@ import Header from './header'
 import Entry from './entry'
 import PageView from './page'
 import Search from './search'
-import { TOP_OFFSET, Viewport } from './constants'
+import { TOP_OFFSET, Viewport, SearchTab } from './constants'
 
 export const Main = styled('div')`
 	background-color: white;
@@ -63,11 +63,9 @@ class App extends React.Component<Props, AppState> {
 		...this.props,
 		searchQuery: null,
 		searchTab: null,
-		setAppState: (nextState, done) => this.setState(nextState as any, () => {
-			if (done != null) done()
-		}),
 		setEntryId: (entryId: string) => this.setEntryId(entryId),
 		setPage: (page: PageConfig) => this.setPage(page),
+		setSearchTab: (tab: SearchTab) => this.setSearchTab(tab)
 	}
 
 	render() {
@@ -81,6 +79,27 @@ class App extends React.Component<Props, AppState> {
 		)
 	}
 
+	private setEntryId(entryId?: string) {
+		this.lastEntryId = entryId
+
+		const nextState: Partial<AppState> = {
+			entryId,
+			pageId: null,
+			viewport: Viewport.Entry,
+		}
+
+		if (entryId == null) {
+			nextState.viewport = Viewport.Search
+			nextState.searchTab = null
+		}
+
+		this.setState(nextState as any)
+
+		let url = `/${this.props.config.slug}`
+		if (entryId != null) url += `/${entryId}`
+		history.pushState({}, this.props.config.title, url)
+	}
+
 	private setPage(page: PageConfig) {
 		if (page == null) {
 			this.setEntryId(this.lastEntryId)
@@ -91,16 +110,9 @@ class App extends React.Component<Props, AppState> {
 		history.pushState({}, page.title, `/${this.props.config.slug}/pages/${page.id}`)
 	}
 
-	private setEntryId(entryId?: string) {
-		this.lastEntryId = entryId
-
-		let url = `/${this.props.config.slug}`
-		if (entryId != null) url += `/${entryId}`
-
-		const viewport = (entryId == null) ? Viewport.Search : Viewport.Entry
-
-		this.setState({ entryId, viewport, pageId: null })
-		history.pushState({}, this.props.config.title, url)
+	setSearchTab(searchTab: SearchTab) {
+		if (searchTab === SearchTab.Results) this.setState({ searchTab })
+		else if (searchTab === SearchTab.Search) this.setEntryId()
 	}
 }
 
