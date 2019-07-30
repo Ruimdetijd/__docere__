@@ -44,6 +44,7 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 			config: this.props.config,
 			setActiveFacsimile: this.props.setActiveFacsimile,
 			setActiveId: this.props.setActiveId,
+			textLayer: null,
 			viewport: this.props.viewport,
 		}
 

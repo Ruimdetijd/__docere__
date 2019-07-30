@@ -94,7 +94,6 @@ export default class Search extends React.Component<AppState, State> {
 
 					return config
 				})
-			console.log(tmpfields)
 		} catch (err) {
 			console.log(err)
 		}
@@ -166,6 +165,7 @@ export default class Search extends React.Component<AppState, State> {
 										<ListFacet
 											field={field.id}
 											key={field.id}
+											size={field.size}
 											title={formatTitle(field)}
 										/>
 						)

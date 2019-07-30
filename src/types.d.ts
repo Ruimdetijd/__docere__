@@ -38,6 +38,7 @@ interface DocereComponentProps {
 	config: DocereConfig
 	setActiveFacsimile: (activeFacsimilePath: string) => void
 	setActiveId: SetActiveId
+	textLayer: string
 	viewport: Viewport
 }
 // interface ContextState {

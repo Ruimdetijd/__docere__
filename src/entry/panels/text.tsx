@@ -39,7 +39,7 @@ class TextPanel extends React.PureComponent<Props> {
 					wordwrap={this.props.wordwrap}
 				>
 					<DocereTextView
-						customProps={this.props.customProps}
+						customProps={{...this.props.customProps, textLayer: this.props.textLayerConfig.id}}
 						components={this.props.components}
 						node={node}
 						highlight={this.props.highlight}
