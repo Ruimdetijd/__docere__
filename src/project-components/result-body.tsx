@@ -1,5 +1,5 @@
-/// <reference path="../../node_modules/docere-config/types.d.ts" />
-/// <reference path="../../node_modules/huc-faceted-search/src/types.d.ts" />
+/// <reference types="docere-config" />
+/// <reference types="huc-faceted-search" />
 
 import * as React from 'react'
 import styled from '@emotion/styled'

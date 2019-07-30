@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "incremental": true,
     "importHelpers": true,
     "jsx": "react",
     "module": "commonjs",
