@@ -24,7 +24,6 @@ export const Main = styled('div')`
 // TODO create media aside
 
 // Navigation
-// TODO use popstate for detecting back-button
 // TODO add link to search in header and change link in h1 to ${config.slug}/home
 // TODO every project has a home
 
@@ -68,6 +67,15 @@ class App extends React.Component<Props, AppState> {
 		setSearchTab: (tab: SearchTab) => this.setSearchTab(tab)
 	}
 
+	componentDidMount() {
+		window.addEventListener('popstate', () => {
+			const [, ,entryId, pageId] = document.location.pathname.split('/')
+			if (entryId == null && this.state.entryId != null) this.setEntryId(null, false)
+			else if (entryId === 'pages' && pageId != null) this.setPage(this.props.config.pages.find(p => p.id === pageId), false)
+			else if (entryId != null) this.setEntryId(entryId, false)
+		})
+	}
+
 	render() {
 		return (
 			<Main>
@@ -79,7 +87,7 @@ class App extends React.Component<Props, AppState> {
 		)
 	}
 
-	private setEntryId(entryId?: string) {
+	private setEntryId(entryId?: string, push = true) {
 		this.lastEntryId = entryId
 
 		const nextState: Partial<AppState> = {
@@ -96,18 +104,23 @@ class App extends React.Component<Props, AppState> {
 		this.setState(nextState as any)
 
 		let url = `/${this.props.config.slug}`
-		if (entryId != null) url += `/${entryId}`
-		history.pushState({}, this.props.config.title, url)
+		let title = this.props.config.title
+		if (entryId != null) {
+			url += `/${entryId}`
+			title = `${title} - ${entryId}`
+		}
+		if (push) history.pushState({}, title, url)
+		document.title = title
 	}
 
-	private setPage(page: PageConfig) {
+	private setPage(page: PageConfig, push = true) {
 		if (page == null) {
 			this.setEntryId(this.lastEntryId)
 			return
 		}
 
 		this.setState({ entryId: 'pages', pageId: page.id })
-		history.pushState({}, page.title, `/${this.props.config.slug}/pages/${page.id}`)
+		if (push) history.pushState({}, page.title, `/${this.props.config.slug}/pages/${page.id}`)
 	}
 
 	setSearchTab(searchTab: SearchTab) {
@@ -119,13 +132,22 @@ class App extends React.Component<Props, AppState> {
 document.addEventListener('DOMContentLoaded', async function() {
 	const [, projectSlug, entryId, pageId] = window.location.pathname.split('/')
 	const dcdImport: { default: DocereConfigData } = await import(`docere-config/projects/${projectSlug}/index.js`)
+	const { config } = dcdImport.default
 	const container = document.getElementById('container')
 
 	let viewport = Viewport.Search
-	if (pageId != null) viewport = Viewport.Page
-	else if (entryId != null) viewport = Viewport.Entry
+	let title = config.title
+	if (pageId != null) {
+		viewport = Viewport.Page
+		const page = config.pages.find(p => p.id === pageId)
+		title = `${title} - ${page.title}`
+	}
+	else if (entryId != null) {
+		viewport = Viewport.Entry
+		title = `${title} - ${entryId}`
+	}
 
-	document.title = dcdImport.default.config.title
+	document.title = title
 
 	ReactDOM.render(
 		<App
