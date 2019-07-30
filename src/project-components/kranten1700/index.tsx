@@ -2,12 +2,20 @@ import * as React from 'react'
 import styled from '@emotion/styled'
 import { AsideTab } from '../../constants';
 
+/* Active when NER ID in text data aside is selected */
+/* Active when word in text is clicked */
 const W = styled.span`
 	cursor: pointer;
 	position: relative;
+	 
+	${props => colorByType.hasOwnProperty(props.type) ?
+		`border-bottom: 3px solid ${colorByType[props.type]};` : ''
+	}
 
 	&:hover {
-		border-bottom: 3px solid ${props => colorByType[props.type] || '#222'};
+		${props => !colorByType.hasOwnProperty(props.type) ?
+			`border-bottom: 2px solid #888;` : ''
+		}
 
 		& > div {
 			display: block;
@@ -25,6 +33,7 @@ const Tooltip = styled.div`
 	border-radius: .2em;
 	color: white;
 	display: none;
+	font-weight: normal;
 	left: -150px;
 	padding: 1em;
 	position: absolute;
@@ -52,6 +61,7 @@ const colorByType: Record<string, string> = {
 	loc: '#8080ff',
 }
 
+/* Active when PoS tagging ID in text data aside is selected */
 const Rs = styled.span`
 	background-color: ${(props: { active: boolean }) => {
 		return props.active ? '#fd7a7a' : 'rgba(0, 0, 0, 0)'
@@ -157,13 +167,19 @@ function w(props: DocereComponentProps & WProps) {
 
 const getComponents: GetComponents = function(_config) {
 	const components: DocereComponents = {
-		w,
-		s: styled.div`
-			margin-bottom: 1em;
+		head: styled.h3`
+			font-size: 1.2em;
+			margin: 0;
 		`,
 		p: styled.div`
 			margin-bottom: 1em;
+
+			${(props: any) => props._class === 'subheader' ?
+				'font-size: 1.1em;' : ''
+			}
 		`,
+		s: styled.div``,
+		w,
 	}
 	return components
 }

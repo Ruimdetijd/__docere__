@@ -124,7 +124,8 @@ class App extends React.Component<Props, AppState> {
 	}
 
 	setSearchTab(searchTab: SearchTab) {
-		if (searchTab === SearchTab.Results) this.setState({ searchTab })
+		if (searchTab === SearchTab.Results && this.state.searchTab === SearchTab.Results) this.setState({ searchTab: null })
+		else if (searchTab === SearchTab.Results) this.setState({ searchTab })
 		else if (searchTab === SearchTab.Search) this.setEntryId()
 	}
 }
