@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from '@emotion/styled'
 import getResultBody, { ResultBodyProps } from './result-body'
 
-const Label = styled.div`
+export const Label = styled.div`
 	color: #888;
 	font-size: .85em;
 	text-transform: uppercase;

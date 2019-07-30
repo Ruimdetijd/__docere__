@@ -55,7 +55,11 @@ const Wrapper = styled.div`
 
 const Metadata = styled.div`
 	& > div {
-		margin-bottom: 1em;
+		margin-bottom: .5em;
+
+		&:last-of-type {
+			margin-bottom: 0;
+		}
 	}
 `
 
@@ -95,21 +99,6 @@ function FacsimileThumbs(props: { facsimiles: ExtractedFacsimile[], small: boole
 		</FacsimileThumbList>
 }
 
-// const Label = styled.div`
-// 	color: #888;
-// 	font-size: .85em;
-// 	text-transform: uppercase;
-// `
-
-// function MetadataItem(props: { label: string, body: JSX.Element }) {
-// 	return (
-// 		<div>
-// 			<Label>{props.label}</Label>
-// 			{props.body}
-// 		</div>
-// 	)
-// }
-
 export interface ResultBodyProps {
 	activeId: string
 	result: Hit
@@ -128,11 +117,14 @@ const getResultBody = (MetadataItems: React.FunctionComponent<ResultBodyProps>) 
 		<Metadata>
 			<MetadataItems {...props} />
 		</Metadata>
-		<Snippets>
-			{props.result.snippets.map((snippet, index) =>
-				<li dangerouslySetInnerHTML={{ __html: `...${snippet}...` }}  key={index} />
-			)}
-		</Snippets>
+		{
+			props.result.snippets.length > 0 &&
+			<Snippets>
+				{props.result.snippets.map((snippet, index) =>
+					<li dangerouslySetInnerHTML={{ __html: `...${snippet}...` }}  key={index} />
+				)}
+			</Snippets>
+		}
 	</Wrapper>
 
 export default getResultBody
