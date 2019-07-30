@@ -17,21 +17,27 @@ module.exports = {
 			}
 		}
 	},
-  entry: './src/index.tsx',
-  output: {
-		filename: 'bundle.js',
-		path: __dirname + '/build',
-		publicPath: '/build/',
-  },
-  mode: 'development',
-  module: {
-    rules: [
-			// All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
-			{
-				test: /\.tsx?$/,
-				loader: "ts-loader",
-			}
+	entry: './src/index.tsx',
+	output: {
+			filename: 'bundle.js',
+			chunkFilename: '[name].bundle.js',
+			path: __dirname + '/build',
+			publicPath: '/build/',
+	},
+	mode: 'development',
+	module: {
+		rules: [
+				// All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
+				{
+					test: /\.tsx?$/,
+					loader: "ts-loader",
+				}
 		]
+	},
+	optimization: {
+		splitChunks: {
+			chunks: 'all'
+		}
 	},
 	resolve: {
 		// Add '.ts' and '.tsx' as resolvable extensions.
