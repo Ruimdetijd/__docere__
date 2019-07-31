@@ -33,6 +33,7 @@ const Tooltip = styled.div`
 	border-radius: .2em;
 	color: white;
 	display: none;
+	font-family: sans-serif;
 	font-weight: normal;
 	left: -150px;
 	padding: 1em;

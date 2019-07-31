@@ -7,8 +7,9 @@
   "scripts": {
     "backend": "./npm-run-backend.sh",
     "build": "tsc",
+    "dev": "webpack-dev-server",
     "dist": "webpack && webpack --config webpack.config.prod.js",
-    "dev": "webpack-dev-server --mode=development",
+    "prod": "webpack-dev-server --config webpack.config.prod.js",
     "watch": "tsc -w"
   },
   "author": "",

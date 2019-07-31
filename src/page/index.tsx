@@ -9,7 +9,7 @@ const Wrapper = styled.div`
 	bottom: 0;
 	color: #222;
 	display: grid;
-	font-family: 'Merriweather', serif;
+	font-family: serif;
 	font-size: 1.1rem;
 	grid-template-columns: auto ${DEFAULT_SPACING * 20}px auto ${DEFAULT_SPACING * 2}px;
 	left: 0;
