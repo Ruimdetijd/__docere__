@@ -4,7 +4,7 @@ import { Main } from './index.components'
 import Panels from './panels'
 import Aside from './aside'
 import Footer from './footer'
-import { FooterTab } from '../constants';
+import { FooterTab } from '../constants'
 
 export interface EntryState {
 	activeFacsimilePath: string
@@ -71,6 +71,8 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 
 	render() {
 		if (this.state.doc == null) return null
+
+		console.log(this.state.activeId)
 
 		return (
 			<Main

@@ -34,15 +34,19 @@ const NoWrap = styled.span`
 `
 
 function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessComponent<SvgProps>) {
-	return function (props: DocereComponentProps) {
+	return function (props: DocereComponentProps & { [key: string]: any }) {
+		const activeId: string = rsConfig.extractor.extractionType === TextDataExtractionType.Attribute ?
+			props[rsConfig.extractor.idAttribute] :
+			props.children[0]
+
 		// The RS is active when the text data list (defined by the ID), for example: person, place, theme, etc
 		// and the ID match. Only the ID is not sufficient, because two lists could have matching IDs.
-		const active = props.activeListId === rsConfig.id && props.activeId === props.children[0]
+		const active = props.activeListId === rsConfig.id && props.activeId === activeId
 
 		// To prevent a wrap between the icon and the first word the first word is extracted.
 		// The icon and the first word are placed inside a span with white-space: nowrap.
-		let firstWord
-		let restOfFirstChild
+		let firstWord: string
+		let restOfFirstChild: string
 		if (props.children.length && typeof props.children[0] === 'string') {
 			const [fw, ...rofc] = props.children[0].split(/\s/)
 			firstWord = fw
@@ -54,15 +58,19 @@ function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessCompo
 				{...props}
 				active={active}
 				color={rsConfig.color}
-				onClick={() => props.setActiveId(props.children[0], rsConfig.id, AsideTab.TextData)}
+				onClick={() => props.setActiveId(activeId, rsConfig.id, AsideTab.TextData)}
 			>
-				<NoWrap>
-					<SvgComponent
-						active={active}
-						color={rsConfig.color}
-					/>
-					{firstWord}
-				</NoWrap>
+				{
+					props.insideNote ?
+						firstWord :
+						<NoWrap>
+							<SvgComponent
+								active={active}
+								color={rsConfig.color}
+							/>
+							{firstWord}
+						</NoWrap>
+				}
 				{restOfFirstChild}
 				{props.children.slice(1)}
 			</Rs>
@@ -75,18 +83,19 @@ const Rs = styled.span`
 	background-color: ${(props: RsProps) => {
 		return props.active ? props.color : 'rgba(0, 0, 0, 0)'
 	}};
+	border-bottom: ${props => props.insideNote ? 1 : 3}px solid ${props => props.color};
 	color: ${props => props.active ? 'white' : 'inherit'};
 	cursor: pointer;
+	padding: ${props => props.active ? '.1em .25em' : '0 .25em'};
 	transition: all 300ms;
-	
-	border-bottom: 3px solid ${props => props.color};
-	${props => props.active ? 'padding: .1em .25em;' : 'padding: 0 .25em;'}
-`
-	// border-bottom: ${(props: RsProps) => props.viewport === Viewport.TextData && !props.active ? `3px solid ${props.color}` : '0 solid rgba(0, 0, 0, 0)'};
-	// cursor: ${(props: RsProps) =>
-	// 	props.viewport === Viewport.TextData ? 'pointer' : 'default'
-	// };
 
+	${props => props.insideNote ? `&:hover {
+		border-bottom: 3px solid ${props.color};
+		color: white;
+	};` : ''}
+	
+
+`
 
 export const rsPerson = (rsConfig: TextDataConfig) => rsWithIcon(rsConfig, PersonSvg)
 export const rsPlace = (rsConfig: TextDataConfig) => rsWithIcon(rsConfig, PlaceSvg)

@@ -38,8 +38,8 @@ export default class Facsimile extends React.PureComponent<Props> {
 
 	componentDidUpdate(prevProps: Props) {
 		if (prevProps.activeFacsimilePath !== this.props.activeFacsimilePath) {
-			if (this.osd) this.osd.open(this.props.activeFacsimilePath)
-			else this.init()
+		// 	if (this.osd) this.osd.open(this.props.activeFacsimilePath)
+			this.init()
 		}
 	}
 
@@ -56,7 +56,7 @@ export default class Facsimile extends React.PureComponent<Props> {
 	}
 
 	private async init() {
-		const OpenSeaDragon = await import('openseadragon' as any)
+		const { default: OpenSeaDragon } = await import('openseadragon')
 		if (this.osd == null) {
 			this.osd = OpenSeaDragon({
 				constrainDuringPan: true,
@@ -75,7 +75,16 @@ export default class Facsimile extends React.PureComponent<Props> {
 			})
 		}
 
-		console.log(this.props.facsimiles.map(f => f.path))
-		this.osd.open(this.props.facsimiles.map(f => f.path))
+		// const facsimile = this.props.facsimiles.find(f => f.id === this.props.activeFacsimilePath)
+		// TODO acativeFacsimilePath should be activeFacsimileID
+		// TODO find the paths in this.props.facsimiles with activeFacsimileID
+		let path = this.props.activeFacsimilePath as any
+		
+		const [,projectSlug] = document.location.pathname.split('/')
+		if (projectSlug === 'vangogh') {
+			path = { tileSource: { type: 'image', url: path.slice(0, -5).concat('f.png'), buildPyramid: false } }
+		}
+		
+		this.osd.open(path)
 	}
 }

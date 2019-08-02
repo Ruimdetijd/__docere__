@@ -27,17 +27,22 @@ interface Props extends WProps, Pick<AppState, 'config'> {
 	onItemClick: SetActiveId
 }
 interface State {
+	components: DocereComponents
 	containerHeight: number
 }
 export default class TextDataAside extends React.PureComponent<Props, State> {
 	private wrapperRef = React.createRef() as React.RefObject<HTMLDivElement>
 
 	state: State = {
+		components: {},
 		containerHeight: null,
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
+		const { default: getComponents } = await import(`../../../project-components/${this.props.config.slug}`) as { default : GetComponents }
+		const components = getComponents(this.props.config)
 		this.setState({
+			components,
 			containerHeight: this.wrapperRef.current.getBoundingClientRect().height,
 		})
 	}
@@ -55,6 +60,7 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 								<ExtractedItems
 									active={this.props.activeListId === itemConfig.id || (this.props.activeListId == null && index === 0)}
 									activeItemId={this.props.activeId}
+									components={this.state.components}
 									config={this.props.config}
 									itemConfig={itemConfig}
 									itemsConfig={this.props.itemsConfig}

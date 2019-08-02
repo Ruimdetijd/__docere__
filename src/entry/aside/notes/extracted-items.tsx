@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import Note from './item-in-text'
+import Note from './note'
 import { small } from '../../index.components';
 import { GRAY_LIGHT, GRAY_DARK, BROWN_LIGHT } from '../../../constants';
 import DocereTextView from 'docere-text-view';
@@ -74,6 +74,7 @@ const ActiveIndicator = styled.div`
 interface Props {
 	active: boolean
 	activeItemId: string
+	components: DocereComponents
 	config: AppState['config']
 	itemConfig: any
 	itemsConfig: any[]
@@ -105,13 +106,19 @@ export default class ExtractedItems extends React.Component<Props> {
 									key={i}
 									onClick={() => this.props.onItemClick(item.n, this.props.itemConfig.id, null)}
 								>
+									<div>{item.n}</div>
+									<div>
+										<DocereTextView
+											components={this.props.components}
+											customProps={{
+												insideNote: true
+											}}
+											node={item.el}
+										/>
+									</div>
 									<ActiveIndicator
 										active={item.n === this.props.activeItemId}
 										color={BROWN_LIGHT}
-									/>
-									<div>{item.n}</div>
-									<DocereTextView
-										node={item.el}
 									/>
 								</Note>
 							)

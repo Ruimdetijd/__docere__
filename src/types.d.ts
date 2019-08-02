@@ -1,3 +1,5 @@
+declare module 'openseadragon'
+
 type Viewport = import('./constants').Viewport
 type AsideTab = import('./constants').AsideTab
 type SearchTab = import('./constants').SearchTab
@@ -36,8 +38,11 @@ interface DocereComponentProps {
 	activeListId: string
 	children?: any
 	config: DocereConfig
+	facsimiles: ExtractedFacsimile[]
+	insideNote: boolean
 	setActiveFacsimile: (activeFacsimilePath: string) => void
 	setActiveId: SetActiveId
+	setEntryId: AppState['setEntryId']
 	textLayer: string
 	viewport: Viewport
 }

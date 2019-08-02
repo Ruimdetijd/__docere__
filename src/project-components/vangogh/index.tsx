@@ -1,3 +1,5 @@
+/// <reference path="../../types.d.ts" />
+
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { rsPerson } from '../rs';
@@ -8,10 +10,12 @@ const Img = styled.img`
 	left: 0;
 	width: 32px;
 `
-function pb(props: any) {
+function pb(props: DocereComponentProps & { facs: string }) {
+	const facsimile = props.facsimiles.find(f => f.id === props.facs.slice(1))
+	if (facsimile == null) return null
 	return (
-		<span onClick={props.onClick}>
-			<Img src={`/api/facsimile/${props.config.slug}/${props.facs.slice(0, -4)}_files/5/0_0.jpeg`} />
+		<span onClick={() => props.setActiveFacsimile(facsimile.path[0])}>
+			<Img src={facsimile.path[0]} />
 		</span>
 	)
 }
@@ -25,19 +29,34 @@ const NoteAnchor = styled.span`
 	cursor: pointer;
 	display: inline-block;
 	font-family: monospace;
-	font-size: .8em;
+	font-size: .8rem;
 	font-weight: bold;
-	height: 1.2em;
-	line-height: 1.2em;
+	height: 1.4em;
+	line-height: 1.4em;
 	margin: 0 .25em;
 	text-align: center;
 	transition: all 150ms;
-	width: 1.2em;
+	width: 1.6em;
 `
+
+const Ref = styled.span`border-bottom: 1px solid green;`
+const ref = function(props: DocereComponentProps & { target: string }) {
+	return (
+		<Ref
+			onClick={(ev: React.MouseEvent<HTMLSpanElement>) => {
+				ev.stopPropagation()
+				props.setEntryId(props.target.slice(0, -4))
+			}}
+		>
+			{props.children}
+		</Ref>
+	)
+}
 
 const getComponents: GetComponents = function(config) {
 	const personConfig = config.textdata.find(td => td.id === 'person')
 	return {
+		ref,
 		pb,
 		'rs[type="pers"]': rsPerson(personConfig),
 		anchor: (props: DocereComponentProps & { n: string }) => {
