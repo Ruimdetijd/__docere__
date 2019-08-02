@@ -76,12 +76,13 @@ interface Props {
 	activeItemId: string
 	components: DocereComponents
 	config: AppState['config']
-	itemConfig: any
-	itemsConfig: any[]
 	containerHeight: number
+	itemConfig: any
 	items: any[]
+	itemsConfig: any[]
 	onItemClick: SetActiveId
 	onListClick: (listId: string) => void
+	setEntryId: AppState['setEntryId']
 }
 export default class ExtractedItems extends React.Component<Props> {
 	render() {
@@ -111,7 +112,8 @@ export default class ExtractedItems extends React.Component<Props> {
 										<DocereTextView
 											components={this.props.components}
 											customProps={{
-												insideNote: true
+												insideNote: true,
+												setEntryId: this.props.setEntryId,
 											}}
 											node={item.el}
 										/>

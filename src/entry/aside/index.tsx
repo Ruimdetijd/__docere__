@@ -91,6 +91,7 @@ export default class Aside extends React.PureComponent<Props> {
 							items={this.props.notes}
 							itemsConfig={this.props.config.notes}
 							onItemClick={this.props.setActiveId}
+							setEntryId={this.props.setEntryId}
 						/>
 					}
 				</Body>

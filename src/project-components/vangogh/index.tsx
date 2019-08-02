@@ -43,9 +43,11 @@ const Ref = styled.span`border-bottom: 1px solid green;`
 const ref = function(props: DocereComponentProps & { target: string }) {
 	return (
 		<Ref
-			onClick={(ev: React.MouseEvent<HTMLSpanElement>) => {
-				ev.stopPropagation()
-				props.setEntryId(props.target.slice(0, -4))
+			onClick={(_ev: React.MouseEvent<HTMLSpanElement>) => {
+				_ev.stopPropagation()
+				const [entryFilename, noteId] = props.target.split('#')
+				if (noteId != null && noteId.length) console.log(`[WARNING] Note ID "${noteId}" is not used`)
+				props.setEntryId(entryFilename.slice(0, -4))
 			}}
 		>
 			{props.children}

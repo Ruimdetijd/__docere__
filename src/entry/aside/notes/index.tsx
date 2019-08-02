@@ -25,6 +25,7 @@ interface Props extends WProps, Pick<AppState, 'config'> {
 	items: Record<string, any>
 	itemsConfig: any[]
 	onItemClick: SetActiveId
+	setEntryId: AppState['setEntryId']
 }
 interface State {
 	components: DocereComponents
@@ -62,13 +63,14 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 									activeItemId={this.props.activeId}
 									components={this.state.components}
 									config={this.props.config}
-									itemConfig={itemConfig}
-									itemsConfig={this.props.itemsConfig}
 									containerHeight={this.state.containerHeight}
+									itemConfig={itemConfig}
 									items={this.props.items[itemConfig.id]}
+									itemsConfig={this.props.itemsConfig}
 									key={itemConfig.id}
 									onItemClick={this.props.onItemClick}
 									onListClick={() => this.props.onItemClick(null, itemConfig.id, null)}
+									setEntryId={this.props.setEntryId}
 								/>
 							)
 						})
