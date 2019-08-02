@@ -150,22 +150,6 @@ function w(props: DocereComponentProps & WProps) {
 	)
 }
 
-// function t(props: any) {
-// 	if (
-// 		(props.textLayer === 'Contemporain' && props.hasOwnProperty('_class') && props._class === 'contemporary') ||
-// 		(props.textLayer === 'Origineel' && !props.hasOwnProperty('_class'))
-// 	) {
-// 		return (
-// 			<span>
-// 				{props.children}
-// 			</span>
-// 		)
-// 	}
-
-// 	return null
-// }
-
-
 const getComponents: GetComponents = function(_config) {
 	const components: DocereComponents = {
 		head: styled.h3`

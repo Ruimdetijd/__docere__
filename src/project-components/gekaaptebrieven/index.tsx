@@ -1,42 +1,10 @@
 /// <reference path="../../types.d.ts" />
 
 import * as React from 'react'
-import styled from '@emotion/styled'
 import 'docere-config'
-import { BROWN_LIGHT, AsideTab } from '../../constants'
-import Rs, { rsPlace, rsPerson } from '../rs';
-
-export const Img = styled.img`
-	position: absolute;
-	left: 0;
-	margin-top: 6px;
-	padding-bottom: 6px;
-	width: 32px;
-
-	${(props: { active: boolean}) => props.active ?
-		`border-bottom: 6px solid ${BROWN_LIGHT};` :
-		`cursor: pointer;
-
-		&:hover {
-			border-bottom: 6px solid ${BROWN_LIGHT};
-		}`
-	}}
-`
-
-function pb(props: { activeFacsimilePath: string, facs: string, setActiveFacsimile: (a: string) => void }) {
-	const baseUrl = `https://images.huygens.knaw.nl/iiif/${props.facs.slice(0, -4)}.tif`
-	const active = props.activeFacsimilePath === `${baseUrl}/info.json`
-	return (
-		<span
-			onClick={() => !active ? props.setActiveFacsimile(`${baseUrl}/info.json`) : null}
-		>
-			<Img
-				active={active}
-				src={`${baseUrl}/full/,32/0/native.jpg`}
-			/>
-		</span>
-	)
-}
+import { AsideTab } from '../../constants'
+import Rs, { rsPlace, rsPerson } from '../rs'
+import getPb from '../pb';
 
 const getComponents: GetComponents = function(config) {
 	const placeConfig = config.textdata.find(td => td.id === 'loc')
@@ -45,7 +13,7 @@ const getComponents: GetComponents = function(config) {
 	const components: DocereComponents = {
 		'ner[type="loc"]': rsPlace(placeConfig),
 		'ner[type="per"]': rsPerson(personConfig),
-		pb,
+		pb: getPb((props) => props.facs),
 	}
 
 	// Map all the text data configs to components. Person and Loc are overwritten later

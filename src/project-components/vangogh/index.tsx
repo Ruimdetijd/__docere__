@@ -4,21 +4,7 @@ import * as React from 'react'
 import styled from '@emotion/styled'
 import { rsPerson } from '../rs';
 import { BROWN_DARK, AsideTab } from '../../constants'
-
-const Img = styled.img`
-	position: absolute;
-	left: 0;
-	width: 32px;
-`
-function pb(props: DocereComponentProps & { facs: string }) {
-	const facsimile = props.facsimiles.find(f => f.id === props.facs.slice(1))
-	if (facsimile == null) return null
-	return (
-		<span onClick={() => props.setActiveFacsimile(facsimile.path[0])}>
-			<Img src={facsimile.path[0]} />
-		</span>
-	)
-}
+import getPb from '../pb';
 
 interface NAProps { active: boolean }
 const NoteAnchor = styled.span`
@@ -59,7 +45,7 @@ const getComponents: GetComponents = function(config) {
 	const personConfig = config.textdata.find(td => td.id === 'person')
 	return {
 		ref,
-		pb,
+		pb: getPb((props) => props.facs.slice(1)),
 		'rs[type="pers"]': rsPerson(personConfig),
 		anchor: (props: DocereComponentProps & { n: string }) => {
 			return (

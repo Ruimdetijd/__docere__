@@ -45,6 +45,7 @@ interface DocereComponentProps {
 	setEntryId: AppState['setEntryId']
 	textLayer: string
 	viewport: Viewport
+	[key: string]: any
 }
 // interface ContextState {
 // 	activeId: string
