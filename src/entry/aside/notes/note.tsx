@@ -15,6 +15,7 @@ const Li = styled.li`
 	position: relative;
 `
 
+// TODO if active scrollIntoView()
 export default function Note(props: P & { children: any, onClick: () => void }) {
 	return <Li {...props}>
 		{props.children}

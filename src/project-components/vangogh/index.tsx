@@ -41,7 +41,7 @@ const ref = function(props: DocereComponentProps & { target: string }) {
 	)
 }
 
-const getComponents: GetComponents = function(config) {
+const getComponents: GetComponents = function(config: DocereConfig) {
 	const personConfig = config.textdata.find(td => td.id === 'person')
 	return {
 		ref,

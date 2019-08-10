@@ -15,8 +15,9 @@
   "author": "",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@emotion/core": "^10.0.14",
-    "@emotion/styled": "^10.0.14",
+    "@emotion/core": "^10.0.15",
+    "@emotion/styled": "^10.0.15",
+    "docere-config": "file:../docere-config",
     "docere-text-view": "^1.4.0",
     "emotion": "^10.0.14",
     "huc-faceted-search": "^1.5.2",
@@ -26,12 +27,12 @@
     "react-emotion": "^10.0.0"
   },
   "devDependencies": {
-    "@types/react": "^16.8.23",
+    "@types/react": "^16.8.24",
     "@types/react-dom": "^16.8.5",
     "ts-loader": "^6.0.4",
     "tslib": "^1.10.0",
     "typescript": "^3.5.3",
-    "webpack": "^4.38.0",
+    "webpack": "^4.39.1",
     "webpack-cli": "^3.3.6",
     "webpack-dev-server": "^3.7.2"
   }

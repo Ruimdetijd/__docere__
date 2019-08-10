@@ -15,8 +15,7 @@ declare interface FormProps<T> {
 	handler: T
 }
 
-// TODO type props
-type DocereComponents = Record<string, (props: any) => JSX.Element>
+type DocereComponents = Record<string, (props: DocereComponentProps) => JSX.Element>
 type GetComponents = (config: DocereConfig) => DocereComponents
 
 interface AppState extends DocereConfigData {

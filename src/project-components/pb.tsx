@@ -1,3 +1,5 @@
+/// <reference path="../types.d.ts" />
+
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { BROWN_LIGHT } from '../constants';
@@ -27,7 +29,6 @@ export default function getPb(extractPbId: (props: DocereComponentProps) => stri
 		let src = facsimile.path[0]
 		const active = props.activeFacsimilePath === src
 
-		console.log(src, props.activeFacsimilePath)
 		return (
 			<span onClick={() => {
 				if (!active) props.setActiveFacsimile(src)
