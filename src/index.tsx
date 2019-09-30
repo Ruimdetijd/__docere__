@@ -1,3 +1,4 @@
+/// <reference path="./types.d.ts" />
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import styled from '@emotion/styled'
@@ -8,7 +9,9 @@ import PageView from './page'
 import Search from './search'
 import { TOP_OFFSET, Viewport, SearchTab } from './constants'
 
-export const Main = styled('div')`
+export { Entry }
+
+const Main = styled('div')`
 	background-color: white;
 	box-sizing: border-box;
 	display: grid;

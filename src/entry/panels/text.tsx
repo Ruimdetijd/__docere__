@@ -24,10 +24,13 @@ class TextPanel extends React.PureComponent<Props> {
 		if (prevProps.searchQuery !== this.props.searchQuery) this.setHighlight()
 	}
 
-	public render() {
-		const node = (this.props.textLayerConfig.selector != null) ?
-			this.props.doc.querySelector(this.props.textLayerConfig.selector) :
-			this.props.doc
+	render() {
+		let node = this.props.doc as XMLDocument | Element
+		if (this.props.textLayerConfig.selector != null) {
+			node = this.props.doc.querySelector(this.props.textLayerConfig.selector)
+		} else if (this.props.textLayers.hasOwnProperty(this.props.textLayerConfig.id)) {
+			node = this.props.textLayers[this.props.textLayerConfig.id]
+		}
 
 		return (
 			<TextWrapper>

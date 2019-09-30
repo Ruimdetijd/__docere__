@@ -23,6 +23,7 @@ export interface EntryState {
 	setAsideTab: (asideTab: AsideTab) => void
 	setFooterTab: (footerTab: FooterTab) => void
 	textData: ExtractedTextData
+	textLayers: ExtractedTextLayers
 	togglePanel: (panelId: string) => void
 	wordwrap: boolean
 }
@@ -51,6 +52,7 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 			this.setState({ footerTab })
 		},
 		textData: {},
+		textLayers: {},
 		togglePanel: (panelId: string) => {
 			const activePanels = this.state.activePanels.map(ap =>
 				(ap.id === panelId) ? ({ ...ap, active: !ap.active }) : ap
@@ -71,8 +73,6 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 
 	render() {
 		if (this.state.doc == null) return null
-
-		console.log(this.state.activeId)
 
 		return (
 			<Main
@@ -122,6 +122,7 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 		const metadata = this.props.extractMetadata(doc)
 		const notes = this.props.extractNotes(doc)
 		const textData = this.props.extractTextData(doc, this.props.config)
+		const textLayers = this.props.extractTextLayers(doc, this.props.config)
 		const activeFacsimilePath = facsimiles.length ? facsimiles[0].path[0] : null
 
 		this.setState({
@@ -131,6 +132,7 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 			metadata,
 			notes,
 			textData,
+			textLayers
 		})
 
 		const hasScroll = window.innerHeight < document.documentElement.scrollHeight

@@ -11,7 +11,6 @@ const Label = styled.div`
 function MetadataItems(props: ResultBodyProps) {
 	return (
 		<>
-			{console.log(props.result)}
 			<div>
 				<Label>ID</Label>
 				<div>{props.result.id}</div>

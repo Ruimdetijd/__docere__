@@ -81,7 +81,7 @@ export default class Search extends React.Component<AppState, State> {
 		try {
 			const result = await fetch(`/search/${this.props.config.slug}/_mapping`)
 			const json = await result.json()
-			const { properties } = json[this.props.config.slug].mappings.doc
+			const { properties } = json[this.props.config.slug].mappings
 			tmpfields = Object.keys(properties)
 				.filter(key => key !== 'text' && key !== 'facsimiles' && key !== 'id')
 				.map(key => {

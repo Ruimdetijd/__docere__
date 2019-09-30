@@ -24,8 +24,13 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 	}
 
 	async componentDidMount() {
-		const { default: getComponents } = await import(`../../project-components/${this.props.config.slug}`) as { default : GetComponents }
-		const components = getComponents(this.props.config)
+		let components: DocereComponents = {}
+		try {
+			const { default: getComponents } = await import(`../../project-components/${this.props.config.slug}`) as { default : GetComponents }
+			components = getComponents(this.props.config)
+		} catch (err) {
+			console.error(`No components found for project ${this.props.config.slug}`)	
+		}
 		this.setState({ components })
 	}
 

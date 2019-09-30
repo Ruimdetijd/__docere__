@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "declaration": true,
     "incremental": true,
     "importHelpers": true,
     "jsx": "react",

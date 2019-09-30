@@ -35,7 +35,7 @@ export default function getPb(extractPbId: (props: DocereComponentProps) => stri
 			}}>
 				<Img
 					active={active}
-					src={src.slice(-10) === '/info.json' ? src.replace('/info.json', '/full/,32/0/native.jpg') : src}
+					src={src.slice(-10) === '/info.json' ? src.replace('/info.json', '/full/,32/0/default.jpg') : src}
 				/>
 			</span>
 		)
