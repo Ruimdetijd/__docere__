@@ -58,6 +58,9 @@ const Main = styled('div')`
 type Props = Pick<AppState, 'config' | 'entryId' | 'extractFacsimiles' | 'extractMetadata' | 'extractTextData' | 'pageId' | 'prepareDocument' | 'viewport'>
 
 class App extends React.Component<Props, AppState> {
+	// Remember the last entry. When user closes a Page, we can return
+	// to the last viewed entry
+	// TODO use history api?
 	private lastEntryId: string
 
 	state: AppState = {
@@ -125,7 +128,7 @@ class App extends React.Component<Props, AppState> {
 		if (push) history.pushState({}, page.title, `/${this.props.config.slug}/pages/${page.id}`)
 	}
 
-	setSearchTab(searchTab: SearchTab) {
+	private setSearchTab(searchTab: SearchTab) {
 		if (searchTab === SearchTab.Results && this.state.searchTab === SearchTab.Results) this.setState({ searchTab: null })
 		else if (searchTab === SearchTab.Results) this.setState({ searchTab })
 		else if (searchTab === SearchTab.Search) this.setEntryId()
