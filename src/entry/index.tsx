@@ -28,7 +28,8 @@ export interface EntryState {
 	wordwrap: boolean
 }
 
-export default class Entry extends React.PureComponent<AppState, EntryState> {
+export type EntryProps = DocereConfigData & Pick<AppState, 'entryId' | 'viewport' | 'searchTab' | 'searchQuery' | 'setEntryId'> & { xml?: string }
+export default class Entry extends React.PureComponent<EntryProps, EntryState> {
 	state: EntryState = {
 		activeFacsimilePath: null,
 		activeId: null,
@@ -63,11 +64,11 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 	}
 
 	async componentDidMount() {
-		if (this.props.entryId != null) await this.loadDoc()
+		if (this.props.entryId != null || this.props.xml != null) await this.loadDoc()
 	}
 
-	componentDidUpdate(prevProps: AppState) {
-		if (prevProps.entryId !== this.props.entryId) this.loadDoc()
+	componentDidUpdate(prevProps: EntryProps) {
+		if (prevProps.entryId !== this.props.entryId || prevProps.xml !== this.props.xml) this.loadDoc()
 		if (prevProps.viewport !== this.props.viewport) this.setState({ activeId: null })
 	}
 
@@ -115,8 +116,21 @@ export default class Entry extends React.PureComponent<AppState, EntryState> {
 	}
 
 	private async loadDoc() {
-		let doc = await fetchEntryXml(this.props.config.slug, this.props.entryId)
+		if (this.props.entryId == null && this.props.xml == null) return
+
+		let doc
+		if (this.props.entryId != null) {
+			doc = await fetchEntryXml(this.props.config.slug, this.props.entryId)
+		} else if (this.props.xml != null) {
+			const domParser = new DOMParser()
+			doc = domParser.parseFromString(this.props.xml, 'application/xml')
+		}
+
+		// console.log(this.props.prepareDocument)
+
 		doc = this.props.prepareDocument(doc, this.props.config)
+		// console.log(this.props.prepareDocument, 'DONE')
+		// return
 
 		const facsimiles = this.props.extractFacsimiles(doc)
 		const metadata = this.props.extractMetadata(doc)

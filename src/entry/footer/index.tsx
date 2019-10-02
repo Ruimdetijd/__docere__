@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { EntryState } from '../index'
+import { EntryState, EntryProps } from '../index'
 import styled from '@emotion/styled'
 import { FOOTER_HEIGHT, TabPosition, FOOTER_HANDLE_HEIGHT, DEFAULT_SPACING, FooterTab } from '../../constants'
 import Tabs from '../../ui/tabs'
@@ -77,7 +77,7 @@ function PanelItem(props: PIProps) {
 	)
 }
 
-type Props = AppState & EntryState
+type Props = EntryProps & EntryState
 class Footer extends React.PureComponent<Props> {
 	render() {
 		return (

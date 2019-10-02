@@ -1,15 +1,14 @@
 /// <reference path="./types.d.ts" />
+
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import styled from '@emotion/styled'
-import defaultDocereFunctions from 'docere-config'
+import defaultDocereFunctions, { extendConfig } from 'docere-config'
 import Header from './header'
 import Entry from './entry'
 import PageView from './page'
 import Search from './search'
 import { TOP_OFFSET, Viewport, SearchTab } from './constants'
-
-export { Entry }
 
 const Main = styled('div')`
 	background-color: white;
@@ -136,7 +135,7 @@ class App extends React.Component<Props, AppState> {
 document.addEventListener('DOMContentLoaded', async function() {
 	const [, projectSlug, entryId, pageId] = window.location.pathname.split('/')
 	const dcdImport: { default: DocereConfigData } = await import(`docere-config/projects/${projectSlug}/index.js`)
-	const { config } = dcdImport.default
+	const config = extendConfig(dcdImport.default.config)
 	const container = document.getElementById('container')
 
 	let viewport = Viewport.Search
@@ -157,7 +156,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 		<App
 			{...defaultDocereFunctions}
 			{...dcdImport.default}
-			config={dcdImport.default.config}
+			config={config}
 			entryId={entryId}
 			pageId={pageId}
 			viewport={viewport}

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled';
-import { EntryState } from '../index'
+import { EntryState, EntryProps } from '../index'
 import MetadataAside from './metadata'
 import Notes from './notes'
 import TextDataAside from './text-data'
@@ -38,7 +38,7 @@ function isEmpty(obj: Object) {
 interface AsideProps {
 	setActiveId: SetActiveId
 }
-type Props = AppState & EntryState & AsideProps
+type Props = EntryProps & EntryState & AsideProps
 export default class Aside extends React.PureComponent<Props> {
 	render() {
 		const hasMetadata = !isEmpty(this.props.metadata)

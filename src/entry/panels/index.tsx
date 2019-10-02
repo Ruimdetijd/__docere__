@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { EntryState } from '../index'
+import { EntryState, EntryProps } from '../index'
 import FacsimilePanel from './facsimile'
 
 import { PanelsWrapper } from '../index.components'
@@ -7,7 +7,7 @@ import TextPanel from './text'
 import XmlPanel from './xml'
 import { AsideTab } from '../../constants'
 
-export type PanelsProps = AppState & EntryState & {
+export type PanelsProps = EntryProps & EntryState & {
 	setActiveId: SetActiveId
 	setActiveFacsimile: (path: string) => void
 	togglePanelOrientation: () => void
