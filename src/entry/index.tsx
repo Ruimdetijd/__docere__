@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { fetchEntryXml } from '../utils'
+// import { fetchEntryXml } from '../utils'
 import { Main } from './index.components'
 import Panels from './panels'
 import Aside from './aside'
@@ -16,7 +16,7 @@ export interface EntryState {
 	facsimiles: ExtractedFacsimile[]
 	footerTab: FooterTab
 	hasScroll: boolean
-	input: string
+	// input: string
 	metadata: ExtractedMetadata
 	notes: ExtractedNotes
 	orientation: Orientation
@@ -28,19 +28,19 @@ export interface EntryState {
 	wordwrap: boolean
 }
 
-export type EntryProps = DocereConfigData & Pick<AppState, 'entryId' | 'viewport' | 'searchTab' | 'searchQuery' | 'setEntryId'> & { xml?: string }
+export type EntryProps = Pick<AppState, 'configData' | 'entryId' | 'getEntryDoc' | 'viewport' | 'searchTab' | 'searchQuery' | 'setEntryId'>
 export default class Entry extends React.PureComponent<EntryProps, EntryState> {
 	state: EntryState = {
 		activeFacsimilePath: null,
 		activeId: null,
 		activeListId: null,
-		activePanels: this.props.config.textlayers,
+		activePanels: this.props.configData.config.textlayers,
 		asideTab: null,
 		doc: null,
 		facsimiles: [],
 		footerTab: null,
 		hasScroll: false,
-		input: null,
+		// input: null,
 		metadata: {},
 		notes: {},
 		orientation: Orientation.Horizontal,
@@ -64,11 +64,11 @@ export default class Entry extends React.PureComponent<EntryProps, EntryState> {
 	}
 
 	async componentDidMount() {
-		if (this.props.entryId != null || this.props.xml != null) await this.loadDoc()
+		if (this.props.entryId != null) await this.loadDoc()
 	}
 
 	componentDidUpdate(prevProps: EntryProps) {
-		if (prevProps.entryId !== this.props.entryId || prevProps.xml !== this.props.xml) this.loadDoc()
+		if (prevProps.entryId !== this.props.entryId) this.loadDoc()
 		if (prevProps.viewport !== this.props.viewport) this.setState({ activeId: null })
 	}
 
@@ -116,27 +116,27 @@ export default class Entry extends React.PureComponent<EntryProps, EntryState> {
 	}
 
 	private async loadDoc() {
-		if (this.props.entryId == null && this.props.xml == null) return
+		if (this.props.entryId == null) return
 
-		let doc
-		if (this.props.entryId != null) {
-			doc = await fetchEntryXml(this.props.config.slug, this.props.entryId)
-		} else if (this.props.xml != null) {
-			const domParser = new DOMParser()
-			doc = domParser.parseFromString(this.props.xml, 'application/xml')
-		}
+		let doc = await this.props.getEntryDoc()
+		// if (this.props.entryId != null) {
+		// 	doc = await fetchEntryXml(this.props.configData.config.slug, this.props.entryId)
+		// } else if (this.props.xml != null) {
+		// 	const domParser = new DOMParser()
+		// 	doc = domParser.parseFromString(this.props.xml, 'application/xml')
+		// }
 
 		// console.log(this.props.prepareDocument)
 
-		doc = this.props.prepareDocument(doc, this.props.config)
+		doc = this.props.configData.prepareDocument(doc, this.props.configData.config)
 		// console.log(this.props.prepareDocument, 'DONE')
 		// return
 
-		const facsimiles = this.props.extractFacsimiles(doc)
-		const metadata = this.props.extractMetadata(doc)
-		const notes = this.props.extractNotes(doc)
-		const textData = this.props.extractTextData(doc, this.props.config)
-		const textLayers = this.props.extractTextLayers(doc, this.props.config)
+		const facsimiles = this.props.configData.extractFacsimiles(doc)
+		const metadata = this.props.configData.extractMetadata(doc)
+		const notes = this.props.configData.extractNotes(doc)
+		const textData = this.props.configData.extractTextData(doc, this.props.configData.config)
+		const textLayers = this.props.configData.extractTextLayers(doc, this.props.configData.config)
 		const activeFacsimilePath = facsimiles.length ? facsimiles[0].path[0] : null
 
 		this.setState({

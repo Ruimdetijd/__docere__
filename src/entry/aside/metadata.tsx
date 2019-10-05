@@ -1,8 +1,8 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { defaultMetadata } from 'docere-config'
-import { DEFAULT_SPACING, TOP_OFFSET } from '../../constants';
+import { DEFAULT_SPACING, TOP_OFFSET } from '../../constants'
 import { MetadataItem } from '../index.components'
+import { defaultMetadata } from '../../export/extend-config-data'
 
 interface WProps { active: boolean }
 const Wrapper = styled.ul`
@@ -19,7 +19,7 @@ const Wrapper = styled.ul`
 `
 
 interface Props extends WProps {
-	config: AppState['config']
+	config: DocereConfig
 	metadata: ExtractedMetadata
 }
 export default function MetadataAside(props: Props) {

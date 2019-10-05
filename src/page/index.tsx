@@ -41,10 +41,11 @@ const Close = styled.div`
 	top: ${DEFAULT_SPACING}px;
 `
 
-export default class PageView extends React.PureComponent<AppState> {
+type Props = Pick<DocereConfigData, 'config'> & Pick<AppState, 'entryId' | 'pageId' | 'setPage'>
+export default class PageView extends React.PureComponent<Props> {
 	flatPages: PageConfig[]
 
-	constructor(props: AppState) {
+	constructor(props: Props) {
 		super(props)
 		this.flatPages = props.config.pages.reduce((prev, curr) => {
 			prev.push(curr)

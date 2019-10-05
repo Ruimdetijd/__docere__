@@ -62,7 +62,7 @@ export default class Aside extends React.PureComponent<Props> {
 						hasMetadata &&
 						<MetadataAside
 							active={this.props.asideTab === AsideTab.Metadata}
-							config={this.props.config}
+							config={this.props.configData.config}
 							metadata={this.props.metadata}
 						/>
 					}
@@ -73,7 +73,7 @@ export default class Aside extends React.PureComponent<Props> {
 							activeId={this.props.activeId}
 							activeListId={this.props.activeListId}
 							activePanels={this.props.activePanels}
-							config={this.props.config}
+							config={this.props.configData.config}
 							doc={this.props.doc}
 							items={this.props.textData}
 							onItemClick={this.props.setActiveId}
@@ -86,10 +86,10 @@ export default class Aside extends React.PureComponent<Props> {
 							activeId={this.props.activeId}
 							activeListId={this.props.activeListId}
 							activePanels={this.props.activePanels}
-							config={this.props.config}
+							configData={this.props.configData}
 							doc={this.props.doc}
 							items={this.props.notes}
-							itemsConfig={this.props.config.notes}
+							// itemsConfig={this.props.config.notes}
 							onItemClick={this.props.setActiveId}
 							setEntryId={this.props.setEntryId}
 						/>

@@ -1,22 +1,42 @@
-/// <reference path="./types.d.ts" />
+/// <reference path="./types/index.d.ts" />
 
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import styled from '@emotion/styled'
-import defaultDocereFunctions, { extendConfig } from 'docere-config'
-import Header from './header'
-import Entry from './entry'
-import PageView from './page'
-import Search from './search'
-import { TOP_OFFSET, Viewport, SearchTab } from './constants'
+import BrowserApp from './browser-app'
+import { Viewport } from './constants';
+import EntrySelector from './entry-selector';
 
-const Main = styled('div')`
-	background-color: white;
-	box-sizing: border-box;
-	display: grid;
-	grid-template-rows: ${TOP_OFFSET}px auto;
-	width: 100%;
-`
+document.addEventListener('DOMContentLoaded', async function() {
+	const [, projectSlug, entryId, pageId] = window.location.pathname.split('/')
+	const dcdImport: { default: DocereConfigData } = await import(`docere-config/projects/${projectSlug}/index.js`)
+	const configData = dcdImport.default
+
+	let viewport = Viewport.Search
+	let title = configData.config.title
+	if (pageId != null) {
+		viewport = Viewport.Page
+		const page = configData.config.pages.find(p => p.id === pageId)
+		title = `${title} - ${page.title}`
+	}
+	else if (entryId != null) {
+		viewport = Viewport.Entry
+		title = `${title} - ${entryId}`
+	}
+
+	document.title = title
+
+	ReactDOM.render(
+		<BrowserApp
+			configData={configData}
+			entryId={entryId}
+			pageId={pageId}
+			EntrySelector={EntrySelector}
+			viewport={viewport}
+		/>
+		,
+		document.getElementById('container')
+	)
+})
 
 // BUGS
 // TODO fix padding-bottom when text view scrolls
@@ -54,116 +74,3 @@ const Main = styled('div')`
 // TODO dedup @emotion from docere, huc-faceted-search, docere-text-view
 // TODO index and create facet for background pages
 // TODO create a test runner for the configuration to check if the config is OK and all the XML is valid
-
-type Props = Pick<AppState, 'config' | 'entryId' | 'extractFacsimiles' | 'extractMetadata' | 'extractTextData' | 'pageId' | 'prepareDocument' | 'viewport'>
-
-class App extends React.Component<Props, AppState> {
-	// Remember the last entry. When user closes a Page, we can return
-	// to the last viewed entry
-	// TODO use history api?
-	private lastEntryId: string
-
-	state: AppState = {
-		...this.props,
-		searchQuery: null,
-		searchTab: null,
-		setEntryId: (entryId: string) => this.setEntryId(entryId),
-		setPage: (page: PageConfig) => this.setPage(page),
-		setSearchTab: (tab: SearchTab) => this.setSearchTab(tab)
-	}
-
-	componentDidMount() {
-		window.addEventListener('popstate', () => {
-			const [, ,entryId, pageId] = document.location.pathname.split('/')
-			if (entryId == null && this.state.entryId != null) this.setEntryId(null, false)
-			else if (entryId === 'pages' && pageId != null) this.setPage(this.props.config.pages.find(p => p.id === pageId), false)
-			else if (entryId != null) this.setEntryId(entryId, false)
-		})
-	}
-
-	render() {
-		return (
-			<Main>
-				<Header {...this.state}/>
-				<PageView {...this.state}/>
-				<Search {...this.state}/>
-				<Entry {...this.state}/>
-			</Main>
-		)
-	}
-
-	private setEntryId(entryId?: string, push = true) {
-		this.lastEntryId = entryId
-
-		const nextState: Partial<AppState> = {
-			entryId,
-			pageId: null,
-			viewport: Viewport.Entry,
-		}
-
-		if (entryId == null) {
-			nextState.viewport = Viewport.Search
-			nextState.searchTab = null
-		}
-
-		this.setState(nextState as any)
-
-		let url = `/${this.props.config.slug}`
-		let title = this.props.config.title
-		if (entryId != null) {
-			url += `/${entryId}`
-			title = `${title} - ${entryId}`
-		}
-		if (push) history.pushState({}, title, url)
-		document.title = title
-	}
-
-	private setPage(page: PageConfig, push = true) {
-		if (page == null) {
-			this.setEntryId(this.lastEntryId)
-			return
-		}
-
-		this.setState({ entryId: 'pages', pageId: page.id })
-		if (push) history.pushState({}, page.title, `/${this.props.config.slug}/pages/${page.id}`)
-	}
-
-	private setSearchTab(searchTab: SearchTab) {
-		if (searchTab === SearchTab.Results && this.state.searchTab === SearchTab.Results) this.setState({ searchTab: null })
-		else if (searchTab === SearchTab.Results) this.setState({ searchTab })
-		else if (searchTab === SearchTab.Search) this.setEntryId()
-	}
-}
-
-document.addEventListener('DOMContentLoaded', async function() {
-	const [, projectSlug, entryId, pageId] = window.location.pathname.split('/')
-	const dcdImport: { default: DocereConfigData } = await import(`docere-config/projects/${projectSlug}/index.js`)
-	const config = extendConfig(dcdImport.default.config)
-	const container = document.getElementById('container')
-
-	let viewport = Viewport.Search
-	let title = config.title
-	if (pageId != null) {
-		viewport = Viewport.Page
-		const page = config.pages.find(p => p.id === pageId)
-		title = `${title} - ${page.title}`
-	}
-	else if (entryId != null) {
-		viewport = Viewport.Entry
-		title = `${title} - ${entryId}`
-	}
-
-	document.title = title
-
-	ReactDOM.render(
-		<App
-			{...defaultDocereFunctions}
-			{...dcdImport.default}
-			config={config}
-			entryId={entryId}
-			pageId={pageId}
-			viewport={viewport}
-		/>,
-		container
-	)
-})

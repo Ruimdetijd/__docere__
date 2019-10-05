@@ -75,7 +75,7 @@ interface Props {
 	active: boolean
 	activeItemId: string
 	components: DocereComponents
-	config: AppState['config']
+	config: DocereConfig
 	containerHeight: number
 	itemConfig: any
 	items: any[]

@@ -72,7 +72,8 @@ function Page(props: { page: PageConfig, setPage: AppState['setPage']}) {
 	)
 }
 
-export default function PagesMenu(props: AppState) {
+type Props = { config: DocereConfig } & Pick<AppState, 'setPage'>
+export default function PagesMenu(props: Props) {
 	return (
 		<Wrapper>
 			{

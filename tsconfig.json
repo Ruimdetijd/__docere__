@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "declaration": true,
     "incremental": true,
     "importHelpers": true,
@@ -16,5 +15,9 @@
     "target": "es6"
   },
   "exclude": [ "node_modules" ],
-  "files": [ "src/index.tsx", "src/export.ts", "src/types.d.ts" ]
+  "files": [
+    "src/index.tsx",
+    "src/export/index.ts",
+    "src/types/index.d.ts",
+  ]
 }

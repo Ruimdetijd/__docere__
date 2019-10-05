@@ -17,7 +17,7 @@ module.exports = {
 			}
 		}
 	},
-	entry: ['./src/index.tsx', './src/export.ts'],
+	entry: ['./src/index.tsx', './src/export/index.ts'],
 	output: {
 			filename: 'bundle.js',
 			chunkFilename: '[name].bundle.js',

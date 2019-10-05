@@ -14,24 +14,11 @@ export type PanelsProps = EntryProps & EntryState & {
 	toggleWordWrap: () => void
 }
 export interface PanelsState {
-	components: DocereComponents
 	highlight: string[]
 }
 export default class Panels extends React.Component<PanelsProps, PanelsState> {
 	state: PanelsState = {
-		components: {},
 		highlight: [],
-	}
-
-	async componentDidMount() {
-		let components: DocereComponents = {}
-		try {
-			const { default: getComponents } = await import(`../../project-components/${this.props.config.slug}`) as { default : GetComponents }
-			components = getComponents(this.props.config)
-		} catch (err) {
-			console.error(`No components found for project ${this.props.config.slug}`)	
-		}
-		this.setState({ components })
 	}
 
 	shouldComponentUpdate(nextProps: PanelsProps) {
@@ -46,7 +33,7 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 			activeFacsimilePath: this.props.activeFacsimilePath,
 			activeId: this.props.activeId,
 			activeListId: this.props.activeListId,
-			config: this.props.config,
+			config: this.props.configData.config,
 			facsimiles: this.props.facsimiles,
 			insideNote: false,
 			setActiveFacsimile: this.props.setActiveFacsimile,

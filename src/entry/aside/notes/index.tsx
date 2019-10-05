@@ -17,33 +17,25 @@ const Wrapper = styled.div`
 	z-index: ${(p: WProps) => p.active ? 1 : -1};
 `
 
-interface Props extends WProps, Pick<AppState, 'config'> {
+interface Props extends WProps, Pick<AppState, 'setEntryId' | 'configData'>, Pick<EntryState, 'activePanels'> {
 	activeId: string
 	activeListId: string
-	activePanels: EntryState['activePanels']
 	doc: XMLDocument
 	items: Record<string, any>
-	itemsConfig: any[]
 	onItemClick: SetActiveId
-	setEntryId: AppState['setEntryId']
 }
 interface State {
-	components: DocereComponents
 	containerHeight: number
 }
 export default class TextDataAside extends React.PureComponent<Props, State> {
 	private wrapperRef = React.createRef() as React.RefObject<HTMLDivElement>
 
 	state: State = {
-		components: {},
 		containerHeight: null,
 	}
 
 	async componentDidMount() {
-		const { default: getComponents } = await import(`../../../project-components/${this.props.config.slug}`) as { default : GetComponents }
-		const components = getComponents(this.props.config)
 		this.setState({
-			components,
 			containerHeight: this.wrapperRef.current.getBoundingClientRect().height,
 		})
 	}
@@ -55,18 +47,18 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 				ref={this.wrapperRef}
 			>
 				{
-					this.props.itemsConfig
+					this.props.configData.config.notes
 						.map((itemConfig, index) => {
 							return (
 								<ExtractedItems
 									active={this.props.activeListId === itemConfig.id || (this.props.activeListId == null && index === 0)}
 									activeItemId={this.props.activeId}
-									components={this.state.components}
-									config={this.props.config}
+									components={this.props.configData.components}
+									config={this.props.configData.config}
 									containerHeight={this.state.containerHeight}
 									itemConfig={itemConfig}
 									items={this.props.items[itemConfig.id]}
-									itemsConfig={this.props.itemsConfig}
+									itemsConfig={this.props.configData.config.notes}
 									key={itemConfig.id}
 									onItemClick={this.props.onItemClick}
 									onListClick={() => this.props.onItemClick(null, itemConfig.id, null)}

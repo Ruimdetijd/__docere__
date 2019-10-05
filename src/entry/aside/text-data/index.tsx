@@ -17,7 +17,7 @@ const Wrapper = styled.div`
 	z-index: ${(p: WProps) => p.active ? 1 : -1};
 `
 
-interface Props extends WProps, Pick<AppState, 'config'> {
+interface Props extends WProps, Pick<DocereConfigData, 'config'> {
 	activeId: string
 	activeListId: string
 	activePanels: EntryState['activePanels']

@@ -35,15 +35,15 @@ class TextPanel extends React.PureComponent<Props> {
 		return (
 			<TextWrapper>
 				<Text 
-					hasLb={this.props.components.hasOwnProperty('lb')}
-					hasFacs={this.props.extractFacsimiles != null}
+					hasLb={this.props.configData.components.hasOwnProperty('lb')}
+					hasFacs={this.props.configData.extractFacsimiles != null}
 					hasScroll={this.props.hasScroll}
 					ref={this.textRef}
 					wordwrap={this.props.wordwrap}
 				>
 					<DocereTextView
 						customProps={{...this.props.customProps, textLayer: this.props.textLayerConfig.id}}
-						components={this.props.components}
+						components={this.props.configData.components}
 						node={node}
 						highlight={this.props.highlight}
 					/>
@@ -53,7 +53,7 @@ class TextPanel extends React.PureComponent<Props> {
 	}
 
 	private async setHighlight() {
-		const response = await fetchPost(`/search/${this.props.config.slug}/_search`, {
+		const response = await fetchPost(`/search/${this.props.configData.config.slug}/_search`, {
 			_source: false,
 			query: {
 				bool: {

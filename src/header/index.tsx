@@ -66,7 +66,8 @@ const H1 = styled('h1')`
 `
 
 
-export default class Header extends React.PureComponent<AppState> {
+type Props = { config: DocereConfig } & Pick<AppState, 'setEntryId' | 'setPage'>
+export default class Header extends React.PureComponent<Props> {
 	render() {
 		return (
 			<Wrapper>

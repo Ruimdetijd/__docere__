@@ -71,7 +71,7 @@ const ActiveIndicator = styled.li`
 interface Props {
 	active: boolean
 	activeItemId: string
-	config: AppState['config']
+	config: DocereConfig
 	data: TextDataConfig
 	containerHeight: number
 	items: TextDataValue[]
