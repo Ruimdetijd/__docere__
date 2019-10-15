@@ -2,8 +2,22 @@
 
 import Entry from '../entry'
 import wrapAsFileExplorer from '../entry-selector/wrap-as-file-explorer'
-import { Viewport } from '../constants'
+import * as constants from '../constants'
 import extendConfigData from './extend-config-data'
 import App from '../app'
+import getPb from '../project-components/pb'
+import * as rs from '../project-components/rs'
 
-export { App, extendConfigData, Entry, wrapAsFileExplorer, Viewport }
+const components = {
+	getPb,
+	...rs
+}
+
+export {
+	App,
+	components,
+	constants,
+	extendConfigData,
+	Entry,
+	wrapAsFileExplorer,
+}

@@ -2,9 +2,6 @@ import * as React from 'react'
 import styled from '@emotion/styled'
 import { AsideTab } from '../constants'
 
-interface SvgProps { active: boolean, color: string }
-type RsProps = DocereComponentProps & SvgProps
-
 // Person
 function PersonSvg(props: SvgProps) {
 	return (
@@ -79,7 +76,7 @@ function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessCompo
 	}
 }
 
-const Rs = styled.span`
+export const Rs = styled.span`
 	background-color: ${(props: RsProps) => {
 		return props.active ? props.color : 'rgba(0, 0, 0, 0)'
 	}};
@@ -93,10 +90,7 @@ const Rs = styled.span`
 		border-bottom: 3px solid ${props.color};
 		color: white;
 	};` : ''}
-	
-
 `
 
 export const rsPerson = (rsConfig: TextDataConfig) => rsWithIcon(rsConfig, PersonSvg)
 export const rsPlace = (rsConfig: TextDataConfig) => rsWithIcon(rsConfig, PlaceSvg)
-export default Rs

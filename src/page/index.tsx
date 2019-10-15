@@ -2,7 +2,6 @@ import * as React from 'react'
 import styled from '@emotion/styled'
 import DocereTextView from 'docere-text-view'
 import { TOP_OFFSET, DEFAULT_SPACING, BROWN_LIGHT } from '../constants'
-import { getPageXmlPath } from '../utils'
 
 const Wrapper = styled.div`
 	background: white;
@@ -41,7 +40,7 @@ const Close = styled.div`
 	top: ${DEFAULT_SPACING}px;
 `
 
-type Props = Pick<DocereConfigData, 'config'> & Pick<AppState, 'entryId' | 'pageId' | 'setPage'>
+type Props = Pick<DocereConfigData, 'config'> & Pick<AppState, 'entry' | 'page' | 'setPage'>
 export default class PageView extends React.PureComponent<Props> {
 	flatPages: PageConfig[]
 
@@ -57,13 +56,15 @@ export default class PageView extends React.PureComponent<Props> {
 	}
 
 	render() {
-		if (this.props.entryId != 'pages') return null
-		const page = this.flatPages.find(p => p.id === this.props.pageId)
+		if (this.props.page == null) return null
+		const page = this.flatPages.find(p => p.id === this.props.page.id)
 		if (page == null) return null
 
+		console.log('PAGE', this.props.page)
 		return (
 			<Wrapper>
 				<DocereTextView
+					// TODO make configurable
 					components={{
 						a: styled.a``,
 						br: styled.span`display: block;`,
@@ -102,7 +103,7 @@ export default class PageView extends React.PureComponent<Props> {
 							}
 						`,
 					}}
-					url={getPageXmlPath(this.props.config.slug, page)}	
+					node={this.props.page.doc}
 				/>
 				<Close onClick={() => this.props.setPage()}>✕</Close>
 			</Wrapper>

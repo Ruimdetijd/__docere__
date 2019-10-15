@@ -60,13 +60,13 @@ const Link = styled.button`
 	}
 `
 
-function Page(props: { page: PageConfig, setPage: AppState['setPage']}) {
+function PageMenuItem(props: { pageConfig: PageConfig, setPage: AppState['setPage']}) {
 	return (
 		<li>
 			<Link
-				onClick={() => props.setPage(props.page)}
+				onClick={() => props.setPage(props.pageConfig.id)}
 			>
-				{props.page.title}
+				{props.pageConfig.title}
 			</Link>
 		</li>
 	)
@@ -84,13 +84,13 @@ export default function PagesMenu(props: Props) {
 							<ul>
 								{
 									page.children.map(page =>
-										<Page key={page.id} page={page} setPage={props.setPage} />
+										<PageMenuItem key={page.id} pageConfig={page} setPage={props.setPage} />
 									)
 								}
 							</ul>
 							
 						</li> :
-						<Page key={page.id} page={page} setPage={props.setPage} />
+						<PageMenuItem key={page.id} pageConfig={page} setPage={props.setPage} />
 
 				)
 			}

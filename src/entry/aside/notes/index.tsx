@@ -17,7 +17,7 @@ const Wrapper = styled.div`
 	z-index: ${(p: WProps) => p.active ? 1 : -1};
 `
 
-interface Props extends WProps, Pick<AppState, 'setEntryId' | 'configData'>, Pick<EntryState, 'activePanels'> {
+interface Props extends WProps, Pick<AppState, 'setEntry' | 'configData'>, Pick<EntryState, 'activePanels'> {
 	activeId: string
 	activeListId: string
 	doc: XMLDocument
@@ -62,7 +62,7 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 									key={itemConfig.id}
 									onItemClick={this.props.onItemClick}
 									onListClick={() => this.props.onItemClick(null, itemConfig.id, null)}
-									setEntryId={this.props.setEntryId}
+									setEntry={this.props.setEntry}
 								/>
 							)
 						})

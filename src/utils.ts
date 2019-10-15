@@ -27,6 +27,7 @@ export async function fetchPost(url: string, body: any) {
 export function getEntryXmlPath(projectSlug: string, filename: string) {
 	return `/node_modules/docere-config/projects/${projectSlug}/xml/${filename}.xml`
 }
+
 export function getPageXmlPath(projectSlug: string, page: PageConfig) {
 	return `/node_modules/docere-config/projects/${projectSlug}/pages/${page.path}`
 }

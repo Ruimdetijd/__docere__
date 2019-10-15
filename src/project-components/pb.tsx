@@ -1,5 +1,3 @@
-/// <reference path="../types.d.ts" />
-
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { BROWN_LIGHT } from '../constants';

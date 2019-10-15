@@ -25,11 +25,11 @@ class TextPanel extends React.PureComponent<Props> {
 	}
 
 	render() {
-		let node = this.props.doc as XMLDocument | Element
+		let node = this.props.entry.doc as XMLDocument | Element
 		if (this.props.textLayerConfig.selector != null) {
-			node = this.props.doc.querySelector(this.props.textLayerConfig.selector)
-		} else if (this.props.textLayers.hasOwnProperty(this.props.textLayerConfig.id)) {
-			node = this.props.textLayers[this.props.textLayerConfig.id]
+			node = this.props.entry.doc.querySelector(this.props.textLayerConfig.selector)
+		} else if (this.props.entry.textLayers.hasOwnProperty(this.props.textLayerConfig.id)) {
+			node = this.props.entry.textLayers[this.props.textLayerConfig.id]
 		}
 
 		return (
@@ -65,7 +65,7 @@ class TextPanel extends React.PureComponent<Props> {
 						},
 						{
 							match: {
-								id: this.props.entryId
+								id: this.props.entry.id
 							}
 						}
 					]

@@ -31,19 +31,6 @@ interface DocereConfigData {
 	prepareDocument: DocereConfigDataRaw['prepareDocument']
 }
 
-interface ExtractedNote {
-	n: string | number
-	el: Element
-}
-type ExtractedNotes = Record<string, ExtractedNote[]>
-type ExtractedMetadata = Record<string, boolean | string | string[]>
-type ExtractedTextData = Record<string, TextDataValue[]>
-type ExtractedTextLayers = Record<string, Element>
-interface ExtractedFacsimile {
-	id: string
-	path: string[]
-}
-
 interface MetaDataConfig extends EntityConfig {
 	aside?: boolean
 	datatype?: EsDataType
@@ -81,10 +68,4 @@ interface TextLayerConfig extends EntityConfig {
 
 interface NotesConfig extends EntityConfig {
 
-}
-
-interface TextDataValue {
-	count: number
-	key: string
-	value: string
 }

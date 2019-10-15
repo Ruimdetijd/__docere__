@@ -28,7 +28,7 @@ const Wrapper = styled.div`
 	// grid-column: 1;
 	// grid-row: ${(props: Props) => props.orientation === Orientation.Horizontal ? 1 : 2};
 
-type Props = Pick<EntryState, 'activeFacsimilePath' | 'orientation' | 'facsimiles'>
+type Props = Pick<EntryState, 'activeFacsimilePath' | 'orientation'> & Pick<Entry,  'facsimiles'>
 export default class Facsimile extends React.PureComponent<Props> {
 	private osd: any
 
@@ -56,7 +56,8 @@ export default class Facsimile extends React.PureComponent<Props> {
 	}
 
 	private async init() {
-		const { default: OpenSeaDragon } = await import('openseadragon')
+		const OpenSeaDragon = await import('openseadragon')
+
 		if (this.osd == null) {
 			this.osd = OpenSeaDragon({
 				constrainDuringPan: true,
@@ -64,7 +65,8 @@ export default class Facsimile extends React.PureComponent<Props> {
 				controlsFadeLength: 300,
 				id: "openseadragon",
 				navigatorPosition: 'BOTTOM_LEFT',
-				prefixUrl: "/node_modules/openseadragon/build/openseadragon/images/",
+				// TODO only for Electron, remove before commit
+				prefixUrl: "/home/gijs/Projects/docere/node_modules/openseadragon/build/openseadragon/images/",
 				sequenceMode: true,
 				showHomeControl: false,
 				showReferenceStrip: true,

@@ -41,9 +41,9 @@ interface AsideProps {
 type Props = EntryProps & EntryState & AsideProps
 export default class Aside extends React.PureComponent<Props> {
 	render() {
-		const hasMetadata = !isEmpty(this.props.metadata)
-		const hasTextData = !isEmpty(this.props.textData)
-		const hasNotes = !isEmpty(this.props.notes)
+		const hasMetadata = !isEmpty(this.props.entry.metadata)
+		const hasTextData = !isEmpty(this.props.entry.textData)
+		const hasNotes = !isEmpty(this.props.entry.notes)
 
 		const tabs = []
 		if (hasMetadata) tabs.push(AsideTab.Metadata)
@@ -63,7 +63,7 @@ export default class Aside extends React.PureComponent<Props> {
 						<MetadataAside
 							active={this.props.asideTab === AsideTab.Metadata}
 							config={this.props.configData.config}
-							metadata={this.props.metadata}
+							metadata={this.props.entry.metadata}
 						/>
 					}
 					{
@@ -74,8 +74,8 @@ export default class Aside extends React.PureComponent<Props> {
 							activeListId={this.props.activeListId}
 							activePanels={this.props.activePanels}
 							config={this.props.configData.config}
-							doc={this.props.doc}
-							items={this.props.textData}
+							doc={this.props.entry.doc}
+							items={this.props.entry.textData}
 							onItemClick={this.props.setActiveId}
 						/>
 					}
@@ -87,11 +87,11 @@ export default class Aside extends React.PureComponent<Props> {
 							activeListId={this.props.activeListId}
 							activePanels={this.props.activePanels}
 							configData={this.props.configData}
-							doc={this.props.doc}
-							items={this.props.notes}
+							doc={this.props.entry.doc}
+							items={this.props.entry.notes}
 							// itemsConfig={this.props.config.notes}
 							onItemClick={this.props.setActiveId}
-							setEntryId={this.props.setEntryId}
+							setEntry={this.props.setEntry}
 						/>
 					}
 				</Body>

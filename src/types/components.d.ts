@@ -9,12 +9,15 @@ interface DocereComponentProps {
 	activeListId: string
 	children?: any
 	config: DocereConfig
-	facsimiles: ExtractedFacsimile[]
+	facsimiles: Entry['facsimiles']
 	insideNote: boolean
 	setActiveFacsimile: (activeFacsimilePath: string) => void
 	setActiveId: SetActiveId
-	setEntryId: AppState['setEntryId']
+	setEntry: AppState['setEntry']
 	textLayer: string
 	viewport: Viewport
 	[key: string]: any
 }
+
+interface SvgProps { active: boolean, color: string }
+type RsProps = DocereComponentProps & SvgProps

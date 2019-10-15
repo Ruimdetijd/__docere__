@@ -34,11 +34,11 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 			activeId: this.props.activeId,
 			activeListId: this.props.activeListId,
 			config: this.props.configData.config,
-			facsimiles: this.props.facsimiles,
+			facsimiles: this.props.entry.facsimiles,
 			insideNote: false,
 			setActiveFacsimile: this.props.setActiveFacsimile,
 			setActiveId: this.props.setActiveId,
-			setEntryId: this.props.setEntryId,
+			setEntry: this.props.setEntry,
 			textLayer: null,
 			viewport: this.props.viewport,
 		}
@@ -55,7 +55,7 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 						ap.type === TextLayerType.Facsimile ?
 							<FacsimilePanel
 								activeFacsimilePath={this.props.activeFacsimilePath}
-								facsimiles={this.props.facsimiles}
+								facsimiles={this.props.entry.facsimiles}
 								key={ap.id}
 								orientation={this.props.orientation}
 							/> :
@@ -70,7 +70,7 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 								<XmlPanel
 									config={ap}
 									key={ap.id}
-									doc={this.props.doc}
+									doc={this.props.entry.doc}
 								/>
 					)
 				}

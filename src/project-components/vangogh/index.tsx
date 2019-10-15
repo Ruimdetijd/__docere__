@@ -33,7 +33,7 @@ const ref = function(props: DocereComponentProps & { target: string }) {
 				_ev.stopPropagation()
 				const [entryFilename, noteId] = props.target.split('#')
 				if (noteId != null && noteId.length) console.log(`[WARNING] Note ID "${noteId}" is not used`)
-				props.setEntryId(entryFilename.slice(0, -4))
+				props.setEntry(entryFilename.slice(0, -4))
 			}}
 		>
 			{props.children}

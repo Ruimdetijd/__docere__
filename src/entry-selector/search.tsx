@@ -110,11 +110,11 @@ export default class Search extends React.Component<FileExplorerProps, State> {
 			<FS
 				backend="elasticsearch"
 				disableDefaultStyle={this.props.searchTab === SearchTab.Results}
-				onClickResult={result => this.props.setEntryId(result.id)}
+				onClickResult={result => this.props.setEntry(result.id)}
 				ref={this.searchRef}
 				resultBodyComponent={this.state.resultBody}
 				resultBodyProps={{
-					activeId: this.props.entryId,
+					activeId: this.props.entry == null ? null : this.props.entry.id,
 					viewport: this.props.viewport,
 				}}
 				resultsPerPage={this.props.config.searchResultCount}

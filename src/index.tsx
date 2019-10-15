@@ -3,7 +3,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import BrowserApp from './browser-app'
-import { Viewport } from './constants';
 import EntrySelector from './entry-selector';
 
 document.addEventListener('DOMContentLoaded', async function() {
@@ -11,19 +10,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 	const dcdImport: { default: DocereConfigData } = await import(`docere-config/projects/${projectSlug}/index.js`)
 	const configData = dcdImport.default
 
-	let viewport = Viewport.Search
-	let title = configData.config.title
-	if (pageId != null) {
-		viewport = Viewport.Page
-		const page = configData.config.pages.find(p => p.id === pageId)
-		title = `${title} - ${page.title}`
-	}
-	else if (entryId != null) {
-		viewport = Viewport.Entry
-		title = `${title} - ${entryId}`
-	}
 
-	document.title = title
+	// TODO set viewport in BrowserApp (or App?) depending on entryId and pageId
 
 	ReactDOM.render(
 		<BrowserApp
@@ -31,7 +19,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 			entryId={entryId}
 			pageId={pageId}
 			EntrySelector={EntrySelector}
-			viewport={viewport}
 		/>
 		,
 		document.getElementById('container')

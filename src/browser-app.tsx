@@ -1,21 +1,25 @@
 import App from './app'
-import { fetchEntryXml } from './utils'
+import { fetchEntryXml, fetchXml, getPageXmlPath } from './utils'
 
 export default class BrowserApp extends App {
-	componentDidMount() {
+	afterComponentDidMount() {
 		window.addEventListener('popstate', () => {
 			const [, ,entryId, pageId] = document.location.pathname.split('/')
-			if (entryId == null && this.state.entryId != null) this.setEntryId(null, false)
-			else if (entryId === 'pages' && pageId != null) this.setPage(this.props.configData.config.pages.find(p => p.id === pageId), false)
-			else if (entryId != null) this.setEntryId(entryId, false)
+			if (entryId == null && this.state.entry.id != null) this.setEntry(null, false)
+			else if (entryId === 'pages' && pageId != null) this.setPage(pageId, false)
+			else if (entryId != null) this.setEntry(entryId, false)
 		})
 	}
 
-	protected async getEntryDoc() {
-		return await fetchEntryXml(this.props.configData.config.slug, this.props.entryId)
+	protected async getEntryDoc(id: string) {
+		return await fetchEntryXml(this.props.configData.config.slug, id)
 	}
 
-	protected afterSetEntryId(entryId: string, push: boolean) {
+	protected async getPageDoc(page: Page) {
+		return await fetchXml(getPageXmlPath(this.props.configData.config.slug, page))
+	}
+
+	protected afterSetEntry(entryId: string, push: boolean) {
 		let url = `/${this.props.configData.config.slug}`
 		let title = this.props.configData.config.title
 		if (entryId != null) {

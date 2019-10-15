@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from '@emotion/styled'
 import Note from './note'
 import { small } from '../../index.components';
-import { GRAY_LIGHT, GRAY_DARK, BROWN_LIGHT } from '../../../constants';
+import { GRAY_LIGHT, GRAY_DARK, BROWN_LIGHT } from '../../../constants'
 import DocereTextView from 'docere-text-view';
 
 const H2 = styled.h2`
@@ -82,7 +82,7 @@ interface Props {
 	itemsConfig: any[]
 	onItemClick: SetActiveId
 	onListClick: (listId: string) => void
-	setEntryId: AppState['setEntryId']
+	setEntry: AppState['setEntry']
 }
 export default class ExtractedItems extends React.Component<Props> {
 	render() {
@@ -113,7 +113,7 @@ export default class ExtractedItems extends React.Component<Props> {
 											components={this.props.components}
 											customProps={{
 												insideNote: true,
-												setEntryId: this.props.setEntryId,
+												setEntry: this.props.setEntry,
 											}}
 											node={item.el}
 										/>
