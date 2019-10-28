@@ -1,4 +1,5 @@
 interface DocereConfig {
+	data?: Record<string, any>
 	metadata?: MetaDataConfig[]
 	notes?: NotesConfig[]
 	pages?: PageConfig[]

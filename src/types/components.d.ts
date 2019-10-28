@@ -12,6 +12,7 @@ interface DocereComponentProps {
 	facsimiles: Entry['facsimiles']
 	insideNote: boolean
 	setActiveFacsimile: (activeFacsimilePath: string) => void
+	setFacsimileHighlight: (x: number, y: number, w: number, h: number) => void
 	setActiveId: SetActiveId
 	setEntry: AppState['setEntry']
 	textLayer: string

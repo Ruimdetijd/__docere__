@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { EntryState } from '../index'
+import { PanelsState } from './index'
 // import { TOP_OFFSET } from '../../constants'
 
 // TODO change facsimile when user scroll past a <pb />
@@ -28,9 +29,10 @@ const Wrapper = styled.div`
 	// grid-column: 1;
 	// grid-row: ${(props: Props) => props.orientation === Orientation.Horizontal ? 1 : 2};
 
-type Props = Pick<EntryState, 'activeFacsimilePath' | 'orientation'> & Pick<Entry,  'facsimiles'>
+type Props = Pick<EntryState, 'activeFacsimilePath' | 'orientation'> & Pick<Entry,  'facsimiles'> & Pick<PanelsState, 'facsimileHighlight'>
 export default class Facsimile extends React.PureComponent<Props> {
 	private osd: any
+	private OpenSeadragon: any
 
 	componentDidMount() {
 		this.init()
@@ -38,8 +40,12 @@ export default class Facsimile extends React.PureComponent<Props> {
 
 	componentDidUpdate(prevProps: Props) {
 		if (prevProps.activeFacsimilePath !== this.props.activeFacsimilePath) {
-		// 	if (this.osd) this.osd.open(this.props.activeFacsimilePath)
+			// 	if (this.osd) this.osd.open(this.props.activeFacsimilePath)
 			this.init()
+		}
+
+		if (prevProps.facsimileHighlight != this.props.facsimileHighlight) {
+			this.highlight()
 		}
 	}
 
@@ -56,10 +62,10 @@ export default class Facsimile extends React.PureComponent<Props> {
 	}
 
 	private async init() {
-		const OpenSeaDragon = await import('openseadragon')
+		this.OpenSeadragon = await import('openseadragon')
 
 		if (this.osd == null) {
-			this.osd = OpenSeaDragon({
+			this.osd = this.OpenSeadragon({
 				constrainDuringPan: true,
 				controlsFadeDelay: 0,
 				controlsFadeLength: 300,
@@ -88,5 +94,28 @@ export default class Facsimile extends React.PureComponent<Props> {
 		}
 		
 		this.osd.open(path)
+	}
+
+	private highlight() {
+		this.osd.removeOverlay('runtime-overlay')
+
+		var elt = document.createElement("div")
+        elt.id = 'runtime-overlay'
+		elt.style.boxShadow = '0 0 8px yellow'
+		elt.style.border = '2px solid yellow'
+
+		// console.log(this.props.facsimileHighlight, new this.OpenSeadragon.Rect(...this.props.facsimileHighlight))
+		const { width: imgWidth, height: imgHeight } = this.osd.world.getHomeBounds()
+		const aspectRatio = imgHeight / imgWidth
+		const [x, y, width, height] = this.props.facsimileHighlight
+
+		console.log(aspectRatio, x, y * aspectRatio, width, height * aspectRatio)
+
+        this.osd.addOverlay({
+            element: elt,
+			location: new this.OpenSeadragon.Rect(x, y * aspectRatio, width, height * aspectRatio),
+        });
+		console.log('HIL')
+		console.log(this.osd)
 	}
 }
