@@ -136,8 +136,16 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 	protected afterSetPage(_page: Page, _push: boolean) {}
 
 	protected async getPage(id: string): Promise<Page> {
-		const pageConfig = this.props.configData.config.pages.find(p => p.id === id)
+		// Flatten pages before using .find
+		const pages = this.props.configData.config.pages.reduce((prev, curr) => {
+			if (Array.isArray(curr.children)) prev.push(...curr.children)
+			prev.push(curr)
+			return prev
+		}, [])
+
+		const pageConfig = pages.find(p => p.id === id)
 		const doc = await this.getPageDoc(pageConfig)
+
 		return {
 			...pageConfig,
 			doc,
@@ -146,7 +154,7 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 	protected async getEntry(id: string): Promise<Entry> {
 		let doc = await this.getEntryDoc(id)
 
-		doc = this.props.configData.prepareDocument(doc, this.props.configData.config)
+		doc = this.props.configData.prepareDocument(doc, this.props.configData.config, id)
 
 		const facsimiles = this.props.configData.extractFacsimiles(doc)
 		const metadata = this.props.configData.extractMetadata(doc)
