@@ -20,11 +20,10 @@ services:
     image: lorisimageserver/loris
     ports:
       - 5004:5004
-    volumes:
-      - ./public/facsimile:/opt/loris/tests/img
-      - /home/gijs/Projects/docere-config/projects/archimedes-palimpsest/facsimiles:/opt/loris/tests/img/archimedes-palimpsest
-      - /home/gijs/Projects/docere-config/projects/ode/facsimiles:/opt/loris/tests/img/ode
+    # volumes:
+      # - ./public/facsimile:/opt/loris/tests/img
+      # - /home/gijs/Projects/docere-config/projects/archimedes-palimpsest/facsimiles:/opt/loris/tests/img/archimedes-palimpsest
+      # - /home/gijs/Projects/docere-config/projects/ode/facsimiles:/opt/loris/tests/img/ode
 
 volumes:
-  docere_db:
   docere_es2:

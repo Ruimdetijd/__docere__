@@ -1,15 +1,21 @@
-function byteToHex(byte: number) {
-	const hex = ('0' + byte.toString(16)).slice(-2);
-	return hex
-}
+// function byteToHex(byte: number) {
+// 	const hex = ('0' + byte.toString(16)).slice(-2);
+// 	return hex
+// }
 
-export function generateId(len = 10) {
-	var arr = new Uint8Array((len || 40) / 2);
-	window.crypto.getRandomValues(arr);
-	const tail = [].map.call(arr, byteToHex).join("");
-	const head = String.fromCharCode(97 + Math.floor(Math.random() * 26))
-	return `${head}${tail}`
-}
+// export function generateId(len = 10) {
+// 	var arr = new Uint8Array((len || 40) / 2);
+// 	window.crypto.getRandomValues(arr);
+// 	const tail = [].map.call(arr, byteToHex).join("");
+// 	const head = String.fromCharCode(97 + Math.floor(Math.random() * 26))
+// 	return `${head}${tail}`
+// }
+
+
+
+function getProjectDir(projectId: string) {
+	return `/node_modules/docere-project-${projectId}`
+} 
 
 export async function fetchPost(url: string, body: any) {
 	const response = await fetch(url, {
@@ -25,11 +31,11 @@ export async function fetchPost(url: string, body: any) {
 }
 
 export function getEntryXmlPath(projectSlug: string, filename: string) {
-	return `/node_modules/docere-config/projects/${projectSlug}/xml/${filename}.xml`
+	return `${getProjectDir(projectSlug)}/xml/${filename}.xml`
 }
 
 export function getPageXmlPath(projectSlug: string, page: PageConfig) {
-	return `/node_modules/docere-config/projects/${projectSlug}/pages/${page.path}`
+	return `${getProjectDir(projectSlug)}/pages/${page.path}`
 }
 
 export function fetchEntryXml(projectSlug: string, filename: string) {

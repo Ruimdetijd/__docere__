@@ -4,7 +4,7 @@
     "incremental": true,
     "importHelpers": true,
     "jsx": "react",
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "noUnusedLocals": true,

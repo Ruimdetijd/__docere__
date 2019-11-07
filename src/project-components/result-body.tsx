@@ -1,4 +1,3 @@
-/// <reference types="docere-config" />
 /// <reference types="huc-faceted-search" />
 
 import * as React from 'react'

@@ -3,19 +3,18 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import BrowserApp from './browser-app'
-import EntrySelector from './entry-selector';
+import EntrySelector from './entry-selector'
+import configDatas from './config-datas'
 
 document.addEventListener('DOMContentLoaded', async function() {
 	const [, projectSlug, entryId, pageId] = window.location.pathname.split('/')
-	const dcdImport: { default: DocereConfigData } = await import(`docere-config/projects/${projectSlug}/index.js`)
-	const configData = dcdImport.default
 
-
-	// TODO set viewport in BrowserApp (or App?) depending on entryId and pageId
+	// TODO redirect to 404 if projectSlug does not exist
+	const configData = await configDatas[projectSlug]()
 
 	ReactDOM.render(
 		<BrowserApp
-			configData={configData}
+			configData={configData.default}
 			entryId={entryId}
 			pageId={pageId}
 			EntrySelector={EntrySelector}

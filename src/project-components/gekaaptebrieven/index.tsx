@@ -1,9 +1,8 @@
-/// <reference path="../../types.d.ts" />
+/// <reference path="../../types/index.d.ts" />
 
 import * as React from 'react'
-import 'docere-config'
 import { AsideTab } from '../../constants'
-import Rs, { rsPlace, rsPerson } from '../rs'
+import { rsPlace, rsPerson, Rs } from '../rs'
 import getPb from '../pb';
 
 const getComponents: GetComponents = function(config) {

@@ -24,11 +24,12 @@ const Body = styled.div`
 	background-color: black;
 	color: white;
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	justify-content: center;
 	padding: ${DEFAULT_SPACING/2}px;
 `
-const PanelList = styled.ul`
-`
+
+const PanelList = styled.ul``
+
 const PanelItemWrapper = styled.li`
 	color: ${(p: PIWProps) => p.active ? '#EEE' : '#444'};
 	cursor: pointer;

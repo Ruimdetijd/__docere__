@@ -26,8 +26,6 @@ const Wrapper = styled.div`
 	height: 100%;
 	z-index: 1;
 `
-	// grid-column: 1;
-	// grid-row: ${(props: Props) => props.orientation === Orientation.Horizontal ? 1 : 2};
 
 type Props = Pick<EntryState, 'activeFacsimilePath' | 'orientation'> & Pick<Entry,  'facsimiles'> & Pick<PanelsState, 'facsimileHighlight'>
 export default class Facsimile extends React.PureComponent<Props> {
@@ -40,7 +38,6 @@ export default class Facsimile extends React.PureComponent<Props> {
 
 	componentDidUpdate(prevProps: Props) {
 		if (prevProps.activeFacsimilePath !== this.props.activeFacsimilePath) {
-			// 	if (this.osd) this.osd.open(this.props.activeFacsimilePath)
 			this.init()
 		}
 
@@ -62,7 +59,8 @@ export default class Facsimile extends React.PureComponent<Props> {
 	}
 
 	private async init() {
-		this.OpenSeadragon = await import('openseadragon')
+		const osdImport = await import('openseadragon')
+		this.OpenSeadragon = osdImport.default
 
 		if (this.osd == null) {
 			this.osd = this.OpenSeadragon({
@@ -72,7 +70,8 @@ export default class Facsimile extends React.PureComponent<Props> {
 				id: "openseadragon",
 				navigatorPosition: 'BOTTOM_LEFT',
 				// TODO only for Electron, remove before commit
-				prefixUrl: "/home/gijs/Projects/docere/node_modules/openseadragon/build/openseadragon/images/",
+				// prefixUrl: "/home/gijs/Projects/docere/node_modules/openseadragon/build/openseadragon/images/",
+				prefixUrl: "/node_modules/openseadragon/build/openseadragon/images/",
 				sequenceMode: true,
 				showHomeControl: false,
 				showReferenceStrip: true,

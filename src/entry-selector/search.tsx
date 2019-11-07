@@ -2,7 +2,6 @@ import * as React from 'react'
 import styled from '@emotion/styled'
 import HucFacetedSearch  from 'huc-faceted-search'
 import { DEFAULT_SPACING, TOP_OFFSET, ASIDE_WIDTH, Viewport, SearchTab } from '../constants'
-// import { defaultMetadata } from 'docere-config'
 import fieldToFacet from './field-to-facet'
 import { defaultMetadata } from '../export/extend-config-data'
 

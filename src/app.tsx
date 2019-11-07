@@ -14,7 +14,6 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 	// TODO use history api?
 	private lastEntryId: string
 
-	// TODO why add methods and props to state?
 	state: AppState = {
 		...this.props,
 		entry: null,

@@ -1,7 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import ExtractedItems from "./extracted-items"
-import 'docere-config'
 import { EntryState } from '../../index'
 import { GRAY_DARK } from '../../../constants'
 
