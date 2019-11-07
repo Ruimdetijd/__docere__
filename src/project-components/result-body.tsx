@@ -75,13 +75,16 @@ const Snippets = styled.ul`
 `
 
 const FacsimileThumbList = styled.ul`
-	display: grid;
-	grid-template-columns: ${(props: { small: boolean }) => props.small ?
-		'28px 28px' :
-		'60px 60px'
-	};
-	grid-gap: 8px;
+	& > li:nth-child(odd) {
+		margin-right: 8px;
+	}
 `
+
+const FacsimileThumb = styled.li`
+	display: inline-block;
+	margin-bottom: 8px;
+`
+
 function FacsimileThumbs(props: { facsimiles: string[], small: boolean }) {
 	if (props.facsimiles == null || !props.facsimiles.length) return null
 	const thumbWidth = props.small ? 64 : 128
@@ -90,15 +93,15 @@ function FacsimileThumbs(props: { facsimiles: string[], small: boolean }) {
 			src={props.facsimiles[0].replace('info.json', `full/${thumbWidth},/0/default.jpg`)}
 			width={`${thumbWidth}px`}
 		/> :
-		<FacsimileThumbList small={props.small}>
+		<FacsimileThumbList>
 			{
 				props.facsimiles.map(facs => 
-					<li key={facs}>
+					<FacsimileThumb key={facs}>
 						<img
 							src={facs.replace('info.json', `full/${(thumbWidth - 8)/2},/0/default.jpg`)} 
 							width={`${(thumbWidth - 8)/2}px`}
 						/>
-					</li>
+					</FacsimileThumb>
 				)
 			}
 		</FacsimileThumbList>

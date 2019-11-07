@@ -50,6 +50,7 @@ export default class Search extends React.Component<FileExplorerProps, State> {
 
 		try {
 			// Import the non-generic ResultBody component
+			// TODO move to project repo
 			rbImport = await import(`../project-components/${this.props.config.slug}/result-body.tsx`)
 		} catch (err) {
 			rbImport = await import('../project-components/generic-result-body')
