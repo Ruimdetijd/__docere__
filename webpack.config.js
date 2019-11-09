@@ -21,8 +21,8 @@ module.exports = {
 	output: {
 			filename: 'bundle.js',
 			chunkFilename: '[name].bundle.js',
-			path: __dirname + '/build',
-			publicPath: '/build/',
+			path: __dirname + '/build-dev-server',
+			publicPath: '/build-dev-server/',
 	},
 	mode: 'development',
 	module: {
@@ -41,6 +41,9 @@ module.exports = {
 	},
 	resolve: {
 		// Add '.ts' and '.tsx' as resolvable extensions.
-		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
+		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"],
+		// alias: {
+		// 	docere: path.resolve('.')
+		// }
 	}
 };

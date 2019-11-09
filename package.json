@@ -6,12 +6,12 @@
   "types": "build/export/index.d.ts",
   "scripts": {
     "backend": "./npm-run-backend.sh",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.electron.json",
     "dev": "webpack-dev-server",
-    "dist": "webpack && webpack --config webpack.config.prod.js",
+    "dist": "webpack --config webpack.config.prod.js",
     "postinstall": "./link.sh",
     "prod": "webpack-dev-server --config webpack.config.prod.js",
-    "watch": "tsc -w"
+    "watch": "tsc -w -p tsconfig.electron.json"
   },
   "author": "",
   "license": "GPL-3.0-or-later",

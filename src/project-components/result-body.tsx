@@ -113,7 +113,7 @@ export interface ResultBodyProps {
 	searchTab: SearchTab
 	viewport: Viewport
 }
-interface State {
+export interface State {
 	active: boolean
 	tooltipTop: number
 }

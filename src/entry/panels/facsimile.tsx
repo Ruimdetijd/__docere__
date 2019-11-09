@@ -60,7 +60,7 @@ export default class Facsimile extends React.PureComponent<Props> {
 
 	private async init() {
 		const osdImport = await import('openseadragon')
-		this.OpenSeadragon = osdImport.default
+		this.OpenSeadragon = osdImport.hasOwnProperty('default') ? osdImport.default : osdImport
 
 		if (this.osd == null) {
 			this.osd = this.OpenSeadragon({
