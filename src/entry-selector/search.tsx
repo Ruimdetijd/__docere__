@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import HucFacetedSearch  from 'huc-faceted-search'
-import { DEFAULT_SPACING, TOP_OFFSET, ASIDE_WIDTH, Viewport, SearchTab } from '../constants'
+import { DEFAULT_SPACING, TOP_OFFSET, RESULT_ASIDE_WIDTH, Viewport, SearchTab } from '../constants'
 import fieldToFacet from './field-to-facet'
 import { defaultMetadata } from '../export/extend-config-data'
 
@@ -18,15 +18,30 @@ const FS = styled(HucFacetedSearch)`
 		if (props.disableDefaultStyle) {
 			return `
 				display: grid;
-				grid-template-columns: calc(100vw - ${ASIDE_WIDTH}px) ${ASIDE_WIDTH}px;
+				grid-template-columns: calc(100vw - ${RESULT_ASIDE_WIDTH}px) ${RESULT_ASIDE_WIDTH}px;
 
 				& > aside {
 					max-height: 0;
 					overflow: hidden;
 				}
 
-				& > section {
+				section#huc-fs-search-results {
 					padding: 0 ${DEFAULT_SPACING}px ${DEFAULT_SPACING * 2}px ${DEFAULT_SPACING}px;
+
+					& > header > div:first-of-type {
+						display: none;
+					}
+
+					.pagenumbers {
+						& > div:not(.active) {
+							display: none;
+						}
+
+						& > .active {
+							background: none;
+							color: #888;
+						}
+					}
 				}
 			`
 		}
@@ -115,6 +130,7 @@ export default class Search extends React.Component<FileExplorerProps, State> {
 				resultBodyComponent={this.state.resultBody}
 				resultBodyProps={{
 					activeId: this.props.entry == null ? null : this.props.entry.id,
+					searchTab: this.props.searchTab,
 					viewport: this.props.viewport,
 				}}
 				resultsPerPage={this.props.config.searchResultCount}

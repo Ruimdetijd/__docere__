@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from "@emotion/styled";
 import { ASIDE_HANDLE_HEIGHT, TabPosition, ASIDE_HANDLE_WIDTH, GRAY_LIGHT, FooterTab } from "../constants";
+import icons from './icons'
 
 export const Wrapper = styled.ul`
 	align-self: center;
@@ -37,6 +38,7 @@ export const Wrapper = styled.ul`
 
 type TabProps = Pick<Props, 'position'> & { active: boolean }
 export const Tab = styled.li`
+	align-content: center;
 	background: linear-gradient(
 		${(p: TabProps) => p.position === TabPosition.Bottom ?
 			'to bottom' :
@@ -49,12 +51,20 @@ export const Tab = styled.li`
 	);
 	border: 1px solid #CCC;
 	color: ${(props: TabProps) => props.active ? '#EEE' : '#888'};
+	display: grid;
+	height: 32px;
+	justify-content: center;
 	transition: all 150ms;
 
 	${(props: TabProps) => !props.active ? `&:hover { color: #444; }` : '' }
 
 	& + li {
 		border-top: 0;
+	}
+
+	& svg {
+		width: 20px;
+		height: 20px;
 	}
 
 	${(props: TabProps) => {
@@ -78,6 +88,7 @@ interface WProps {
 	position?: TabPosition
 }
 interface Props extends WProps {
+	// icons?: Record<string, JSX.Element>
 	onClick: (tab: SearchTab | FooterTab | AsideTab) => void
 	tab: SearchTab | FooterTab | AsideTab
 	tabs: (SearchTab | FooterTab | AsideTab)[]
@@ -92,16 +103,23 @@ export default class Tabs extends React.PureComponent<Props> {
 			<Wrapper position={this.props.position}>
 				{
 					this.props.tabs
-						.map((tab) =>
-							<Tab
-								active={this.props.tab === tab}
-								key={tab}
-								onClick={() => this.props.onClick(tab)}
-								position={this.props.position}
-							>
-								{tab.slice(0, 1)}
-							</Tab>
-						)
+						.map((tab) => {
+							const Icon = icons[tab]
+							return (
+								<Tab
+									active={this.props.tab === tab}
+									key={tab}
+									onClick={() => this.props.onClick(tab)}
+									position={this.props.position}
+								>
+									{
+										Icon != null ?
+											<Icon active={this.props.tab === tab} /> :
+											tab.slice(0, 1)
+									}
+								</Tab>
+							)
+						})
 				}
 			</Wrapper>
 		)

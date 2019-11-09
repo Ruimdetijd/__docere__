@@ -1,3 +1,11 @@
-npm link docere-config
-# npm link docere-text-view
-# npm link huc-faceted-search
+#!/bin/bash
+projects=( gekaaptebrieven utrechtpsalter vangogh )
+cwd=`pwd`
+
+for project in "${projects[@]}"
+do
+	:
+	npm link "docere-project-$project"
+	cd "$cwd/node_modules/docere-project-$project"	
+	npm link docere
+done

@@ -1,12 +1,12 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { css } from '@emotion/core'
-import { TOP_OFFSET, TEXT_PANEL_WIDTH, DEFAULT_SPACING, ASIDE_WIDTH, FOOTER_HEIGHT, FooterTab, SearchTab } from '../constants'
+import { TOP_OFFSET, TEXT_PANEL_WIDTH, DEFAULT_SPACING, ASIDE_WIDTH, RESULT_ASIDE_WIDTH, FOOTER_HEIGHT, FooterTab, SearchTab } from '../constants'
 
 interface MainProps { asideTab: AsideTab, footerTab: FooterTab, searchTab: SearchTab }
 export const Main = styled.div`
 	bottom: ${(props: MainProps) => props.footerTab === FooterTab.PanelSelector ? `${FOOTER_HEIGHT}px` : 0};
-	left: ${props => props.searchTab === SearchTab.Results ? `${ASIDE_WIDTH}px` : 0};
+	left: ${props => props.searchTab === SearchTab.Results ? `${RESULT_ASIDE_WIDTH}px` : 0};
 	position: fixed;
 	right: ${props => props.asideTab != null ? `${ASIDE_WIDTH}px` : 0};
 	top: ${TOP_OFFSET}px;

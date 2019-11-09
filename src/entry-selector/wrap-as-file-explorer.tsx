@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { TOP_OFFSET, ASIDE_HANDLE_WIDTH, ASIDE_WIDTH, Viewport, TabPosition, SearchTab } from '../constants'
+import { TOP_OFFSET, ASIDE_HANDLE_WIDTH, RESULT_ASIDE_WIDTH, Viewport, TabPosition, SearchTab } from '../constants'
 import Tabs from '../ui/tabs';
 
 const Wrapper = styled.div`
@@ -12,7 +12,7 @@ const Wrapper = styled.div`
 	transform: translateX(${(props: { searchTab: SearchTab, viewport: Viewport }) => props.viewport === Viewport.Search ?
 		0 :
 		props.searchTab === SearchTab.Results ?
-			`calc(-100vw + ${ASIDE_WIDTH}px)` :
+			`calc(-100vw + ${RESULT_ASIDE_WIDTH}px)` :
 			'-100vw'
 	});
 	transition: transform 300ms;

@@ -9,6 +9,7 @@
     "build": "tsc",
     "dev": "webpack-dev-server",
     "dist": "webpack && webpack --config webpack.config.prod.js",
+    "postinstall": "./link.sh",
     "prod": "webpack-dev-server --config webpack.config.prod.js",
     "watch": "tsc -w"
   },
@@ -31,7 +32,7 @@
     "@types/react-dom": "^16.9.1",
     "ts-loader": "^6.2.0",
     "tslib": "^1.10.0",
-    "typescript": "^3.6.3",
+    "typescript": "^3.7.2",
     "webpack": "^4.41.0",
     "webpack-cli": "^3.3.9",
     "webpack-dev-server": "^3.8.2"
