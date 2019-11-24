@@ -41,7 +41,7 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 	}
 
 	render() {
-		const textData = (!Array.isArray(this.props.config.textdata) || this.props.items == null) ? [] : this.props.config.textdata
+		const textData = (!Array.isArray(this.props.config.textData) || this.props.items == null) ? [] : this.props.config.textData
 
 		const activeTextData =	textData.filter(td =>
 			td.hasOwnProperty('textLayers') &&

@@ -90,7 +90,7 @@ export default class ExtractedItems extends React.Component<Props> {
 				</H2>
 				<Ul
 					active={this.props.active}
-					textdataLength={this.props.config.textdata.length}
+					textdataLength={this.props.config.textData.length}
 					height={this.props.containerHeight}
 				>
 					<ActiveIndicator

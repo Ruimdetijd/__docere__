@@ -1,11 +1,9 @@
 import * as React from 'react'
 import { EntryState, EntryProps } from '../index'
-import FacsimilePanel from './facsimile'
 
 import { PanelsWrapper } from '../index.components'
-import TextPanel from './text'
-import XmlPanel from './xml'
 import { AsideTab } from '../../constants'
+import toPanel from './map-to-panel'
 
 export type PanelsProps = EntryProps & EntryState & {
 	setActiveId: SetActiveId
@@ -54,29 +52,7 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 				orientation={this.props.orientation}
 			>
 				{
-					activePanels.map(ap =>
-						ap.type === TextLayerType.Facsimile ?
-							<FacsimilePanel
-								activeFacsimilePath={this.props.activeFacsimilePath}
-								facsimileHighlight={this.state.facsimileHighlight}
-								facsimiles={this.props.entry.facsimiles}
-								key={ap.id}
-								orientation={this.props.orientation}
-							/> :
-							ap.type === TextLayerType.TextLayer ?
-								<TextPanel
-									{...this.props}
-									{...this.state}
-									customProps={customProps}
-									key={ap.id}
-									textLayerConfig={ap}
-								/> :
-								<XmlPanel
-									config={ap}
-									key={ap.id}
-									doc={this.props.entry.doc}
-								/>
-					)
+					activePanels.map(ap => toPanel(ap, this.props, this.state, customProps))
 				}
 			</PanelsWrapper>
 		)

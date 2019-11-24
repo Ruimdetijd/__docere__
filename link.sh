@@ -1,5 +1,5 @@
 #!/bin/bash
-projects=( gekaaptebrieven utrechtpsalter vangogh )
+projects=( achterdeschermen gekaaptebrieven utrechtpsalter vangogh )
 cwd=`pwd`
 
 for project in "${projects[@]}"

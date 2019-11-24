@@ -25,12 +25,8 @@ class TextPanel extends React.PureComponent<Props> {
 	}
 
 	render() {
-		let node = this.props.entry.doc as XMLDocument | Element
-		if (this.props.textLayerConfig.selector != null) {
-			node = this.props.entry.doc.querySelector(this.props.textLayerConfig.selector)
-		} else if (this.props.entry.textLayers.hasOwnProperty(this.props.textLayerConfig.id)) {
-			node = this.props.entry.textLayers[this.props.textLayerConfig.id]
-		}
+		const textLayer = this.props.entry.textLayers.find(tl => tl.id === this.props.textLayerConfig.id)
+		if (textLayer == null) return null
 
 		return (
 			<TextWrapper>
@@ -44,7 +40,7 @@ class TextPanel extends React.PureComponent<Props> {
 					<DocereTextView
 						customProps={{...this.props.customProps, textLayer: this.props.textLayerConfig.id}}
 						components={this.props.configData.components}
-						node={node}
+						node={textLayer.element}
 						highlight={this.props.highlight}
 					/>
 				</Text>

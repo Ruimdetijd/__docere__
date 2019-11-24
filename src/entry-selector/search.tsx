@@ -80,7 +80,7 @@ export default class Search extends React.Component<FileExplorerProps, State> {
 				.filter(key => key !== 'text' && key !== 'facsimiles' && key !== 'id')
 				.map(key => {
 					let config = this.props.config.metadata.find(md => md.id === key)
-					if (config == null) this.props.config.textdata.find(td => td.id === key)
+					if (config == null) this.props.config.textData.find(td => td.id === key)
 					if (config == null) config = {
 						...defaultMetadata,
 						id: key

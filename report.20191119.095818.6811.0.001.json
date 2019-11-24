@@ -1,0 +1,601 @@
+
+{
+  "header": {
+    "reportVersion": 1,
+    "event": "Allocation failed - JavaScript heap out of memory",
+    "trigger": "FatalError",
+    "filename": "report.20191119.095818.6811.0.001.json",
+    "dumpEventTime": "2019-11-19T09:58:18Z",
+    "dumpEventTimeStamp": "1574153898688",
+    "processId": 6811,
+    "cwd": "/home/gijs/Projects/docere",
+    "commandLine": [
+      "node",
+      "/home/gijs/Projects/docere/node_modules/.bin/webpack-dev-server"
+    ],
+    "nodejsVersion": "v12.13.0",
+    "glibcVersionRuntime": "2.30",
+    "glibcVersionCompiler": "2.30",
+    "wordSize": 64,
+    "arch": "x64",
+    "platform": "linux",
+    "componentVersions": {
+      "node": "12.13.0",
+      "v8": "7.7.299.13-node.12",
+      "uv": "1.33.1",
+      "zlib": "1.2.11",
+      "brotli": "1.0.7",
+      "ares": "1.15.0",
+      "modules": "72",
+      "nghttp2": "1.39.2",
+      "napi": "5",
+      "llhttp": "1.1.4",
+      "http_parser": "2.8.0",
+      "openssl": "1.1.1d",
+      "cldr": "35.1",
+      "icu": "64.2",
+      "tz": "2019a",
+      "unicode": "12.1"
+    },
+    "release": {
+      "name": "node",
+      "lts": "Erbium",
+      "headersUrl": "https://nodejs.org/download/release/v12.13.0/node-v12.13.0-headers.tar.gz",
+      "sourceUrl": "https://nodejs.org/download/release/v12.13.0/node-v12.13.0.tar.gz"
+    },
+    "osName": "Linux",
+    "osRelease": "4.19.84-1-MANJARO",
+    "osVersion": "#1 SMP PREEMPT Wed Nov 13 00:07:37 UTC 2019",
+    "osMachine": "x86_64",
+    "cpus": [
+      {
+        "model": "Intel(R) Core(TM) i7-6600U CPU @ 2.60GHz",
+        "speed": 1600,
+        "user": 7115200,
+        "nice": 3600,
+        "sys": 1870200,
+        "idle": 21395200,
+        "irq": 575400
+      },
+      {
+        "model": "Intel(R) Core(TM) i7-6600U CPU @ 2.60GHz",
+        "speed": 1600,
+        "user": 7426300,
+        "nice": 3700,
+        "sys": 1817900,
+        "idle": 4128300,
+        "irq": 152300
+      },
+      {
+        "model": "Intel(R) Core(TM) i7-6600U CPU @ 2.60GHz",
+        "speed": 1600,
+        "user": 7515500,
+        "nice": 5300,
+        "sys": 1810600,
+        "idle": 4124900,
+        "irq": 212100
+      },
+      {
+        "model": "Intel(R) Core(TM) i7-6600U CPU @ 2.60GHz",
+        "speed": 1599,
+        "user": 7429000,
+        "nice": 5100,
+        "sys": 1798200,
+        "idle": 4173400,
+        "irq": 156000
+      }
+    ],
+    "networkInterfaces": [
+      {
+        "name": "lo",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "127.0.0.1",
+        "netmask": "255.0.0.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "br-a15857369b1c",
+        "internal": false,
+        "mac": "02:42:ba:77:78:f3",
+        "address": "172.18.0.1",
+        "netmask": "255.255.0.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "lo",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "::1",
+        "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
+        "family": "IPv6",
+        "scopeid": 0
+      },
+      {
+        "name": "br-a15857369b1c",
+        "internal": false,
+        "mac": "02:42:ba:77:78:f3",
+        "address": "fe80::42:baff:fe77:78f3",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 8
+      },
+      {
+        "name": "vethcbb794b",
+        "internal": false,
+        "mac": "aa:07:b7:77:f0:92",
+        "address": "fe80::a807:b7ff:fe77:f092",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 31
+      },
+      {
+        "name": "vethe4d0bb0",
+        "internal": false,
+        "mac": "d2:1f:63:55:d7:50",
+        "address": "fe80::d01f:63ff:fe55:d750",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 33
+      }
+    ],
+    "host": "huc"
+  },
+  "javascriptStack": {
+    "message": "No stack.",
+    "stack": [
+      "Unavailable."
+    ]
+  },
+  "nativeStack": [
+    {
+      "pc": "0x0000555fa8ce62aa",
+      "symbol": "report::TriggerNodeReport(v8::Isolate*, node::Environment*, char const*, char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, v8::Local<v8::String>) [node]"
+    },
+    {
+      "pc": "0x0000555fa8bb36b8",
+      "symbol": "node::OnFatalError(char const*, char const*) [node]"
+    },
+    {
+      "pc": "0x0000555fa8d190f2",
+      "symbol": "v8::Utils::ReportOOMFailure(v8::internal::Isolate*, char const*, bool) [node]"
+    },
+    {
+      "pc": "0x0000555fa8d19358",
+      "symbol": "v8::internal::V8::FatalProcessOutOfMemory(v8::internal::Isolate*, char const*, bool) [node]"
+    },
+    {
+      "pc": "0x0000555fa8e9ada6",
+      "symbol": " [node]"
+    },
+    {
+      "pc": "0x0000555fa8e9aee9",
+      "symbol": " [node]"
+    },
+    {
+      "pc": "0x0000555fa8eabd2f",
+      "symbol": "v8::internal::Heap::PerformGarbageCollection(v8::internal::GarbageCollector, v8::GCCallbackFlags) [node]"
+    },
+    {
+      "pc": "0x0000555fa8eaca08",
+      "symbol": "v8::internal::Heap::CollectGarbage(v8::internal::AllocationSpace, v8::internal::GarbageCollectionReason, v8::GCCallbackFlags) [node]"
+    },
+    {
+      "pc": "0x0000555fa8eaef4c",
+      "symbol": "v8::internal::Heap::AllocateRawWithLightRetry(int, v8::internal::AllocationType, v8::internal::AllocationAlignment) [node]"
+    },
+    {
+      "pc": "0x0000555fa8eaf251",
+      "symbol": "v8::internal::Heap::AllocateRawWithRetryOrFail(int, v8::internal::AllocationType, v8::internal::AllocationAlignment) [node]"
+    },
+    {
+      "pc": "0x0000555fa8e7555c",
+      "symbol": "v8::internal::Factory::AllocateRawWithImmortalMap(int, v8::internal::AllocationType, v8::internal::Map, v8::internal::AllocationAlignment) [node]"
+    },
+    {
+      "pc": "0x0000555fa8e7d62f",
+      "symbol": "v8::internal::Factory::NewRawOneByteString(int, v8::internal::AllocationType) [node]"
+    },
+    {
+      "pc": "0x0000555fa90b1b41",
+      "symbol": "v8::internal::String::SlowFlatten(v8::internal::Isolate*, v8::internal::Handle<v8::internal::ConsString>, v8::internal::AllocationType) [node]"
+    },
+    {
+      "pc": "0x0000555fa91d3362",
+      "symbol": "v8::internal::Runtime_StringCharCodeAt(int, unsigned long*, v8::internal::Isolate*) [node]"
+    },
+    {
+      "pc": "0x0000555fa94e51d9",
+      "symbol": " [node]"
+    }
+  ],
+  "javascriptHeap": {
+    "totalMemory": 2167816192,
+    "totalCommittedMemory": 2159113920,
+    "usedMemory": 2018284624,
+    "availableMemory": 105674672,
+    "memoryLimit": 2197815296,
+    "heapSpaces": {
+      "read_only_space": {
+        "memorySize": 262144,
+        "committedMemory": 32568,
+        "capacity": 261872,
+        "used": 32296,
+        "available": 229576
+      },
+      "new_space": {
+        "memorySize": 33554432,
+        "committedMemory": 26219400,
+        "capacity": 16759808,
+        "used": 4590184,
+        "available": 12169624
+      },
+      "old_space": {
+        "memorySize": 2059776000,
+        "committedMemory": 2058862832,
+        "capacity": 1987178480,
+        "used": 1940661920,
+        "available": 46516560
+      },
+      "code_space": {
+        "memorySize": 3047424,
+        "committedMemory": 2917248,
+        "capacity": 2545856,
+        "used": 2545856,
+        "available": 0
+      },
+      "map_space": {
+        "memorySize": 2101248,
+        "committedMemory": 2006928,
+        "capacity": 1613760,
+        "used": 1613760,
+        "available": 0
+      },
+      "large_object_space": {
+        "memorySize": 68452352,
+        "committedMemory": 68452352,
+        "capacity": 68289952,
+        "used": 68289952,
+        "available": 0
+      },
+      "code_large_object_space": {
+        "memorySize": 622592,
+        "committedMemory": 622592,
+        "capacity": 550656,
+        "used": 550656,
+        "available": 0
+      },
+      "new_large_object_space": {
+        "memorySize": 0,
+        "committedMemory": 0,
+        "capacity": 16759808,
+        "used": 0,
+        "available": 16759808
+      }
+    }
+  },
+  "resourceUsage": {
+    "userCpuSeconds": 301.739,
+    "kernelCpuSeconds": 37.7147,
+    "cpuConsumptionPercent": 45.7485,
+    "maxRss": 2666491904,
+    "pageFaults": {
+      "IORequired": 29,
+      "IONotRequired": 882908
+    },
+    "fsActivity": {
+      "reads": 61712,
+      "writes": 0
+    }
+  },
+  "uvthreadResourceUsage": {
+    "userCpuSeconds": 142.361,
+    "kernelCpuSeconds": 8.78609,
+    "cpuConsumptionPercent": 20.3703,
+    "fsActivity": {
+      "reads": 47320,
+      "writes": 16
+    }
+  },
+  "libuv": [
+  ],
+  "environmentVariables": {
+    "SHELL": "/bin/bash",
+    "npm_config_timing": "",
+    "npm_config_access": "",
+    "npm_config_save_dev": "",
+    "SESSION_MANAGER": "local/huc:@/tmp/.ICE-unix/1374,unix/huc:/tmp/.ICE-unix/1374",
+    "WINDOWID": "12582915",
+    "npm_config_sign_git_tag": "",
+    "npm_config_before": "",
+    "npm_config_userconfig": "/home/gijs/.npmrc",
+    "npm_config_global": "",
+    "npm_config_unsafe_perm": "true",
+    "COLORTERM": "truecolor",
+    "npm_config_fetch_retry_mintimeout": "10000",
+    "XDG_CONFIG_DIRS": "/etc/xdg",
+    "npm_config_cache": "/home/gijs/.npm",
+    "npm_config_loglevel": "notice",
+    "npm_config_init_author_name": "Gijsjan Brouwer",
+    "npm_package_main": "build/export/index.js",
+    "npm_config_send_metrics": "",
+    "XDG_SESSION_PATH": "/org/freedesktop/DisplayManager/Session0",
+    "XDG_MENU_PREFIX": "xfce-",
+    "TERM_PROGRAM_VERSION": "1.40.0",
+    "npm_config_optional": "true",
+    "npm_config_user": "",
+    "npm_config_git_tag_version": "true",
+    "APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL": "true",
+    "npm_package_devDependencies__types_react": "^16.9.5",
+    "npm_config_rebuild_bundle": "true",
+    "npm_package_scripts_backend": "./npm-run-backend.sh",
+    "npm_config_always_auth": "",
+    "npm_config_cache_max": "Infinity",
+    "NODE": "/usr/bin/node",
+    "npm_config_searchstaleness": "900",
+    "npm_config_ignore_scripts": "",
+    "npm_package_devDependencies_tslib": "^1.10.0",
+    "npm_config_save_optional": "",
+    "LC_ADDRESS": "nl_NL.UTF-8",
+    "LC_NAME": "nl_NL.UTF-8",
+    "HOSTALIASES": "/home/gijs/.host.aliases",
+    "SSH_AUTH_SOCK": "/tmp/ssh-PHLhONUDiYCA/agent.1520",
+    "npm_config_dev": "",
+    "npm_config_browser": "",
+    "npm_config_maxsockets": "50",
+    "npm_package_dependencies_react_emotion": "^10.0.0",
+    "npm_config_argv": "{\"remain\":[],\"cooked\":[\"run\",\"dev\"],\"original\":[\"run\",\"dev\"]}",
+    "npm_config_ham_it_up": "",
+    "npm_config_bin_links": "true",
+    "DESKTOP_SESSION": "xfce",
+    "LC_MONETARY": "nl_NL.UTF-8",
+    "SSH_AGENT_PID": "1522",
+    "npm_package_scripts_dist": "webpack --config webpack.config.prod.js",
+    "NO_AT_BRIDGE": "1",
+    "npm_config_allow_same_version": "",
+    "npm_config_globalconfig": "/usr/etc/npmrc",
+    "npm_config_cache_min": "10",
+    "EDITOR": "/usr/bin/vim",
+    "npm_config_tag_version_prefix": "v",
+    "npm_config_shell": "/bin/bash",
+    "npm_config_preid": "",
+    "npm_config_usage": "",
+    "GTK_MODULES": "canberra-gtk-module:canberra-gtk-module",
+    "XDG_SEAT": "seat0",
+    "PWD": "/home/gijs/Projects/docere",
+    "npm_config_save_prefix": "^",
+    "npm_config_only": "",
+    "LOGNAME": "gijs",
+    "XDG_SESSION_DESKTOP": "xfce",
+    "QT_QPA_PLATFORMTHEME": "qt5ct",
+    "XDG_SESSION_TYPE": "x11",
+    "npm_config_sign_git_commit": "",
+    "npm_package_readmeFilename": "README.md",
+    "npm_package_dependencies_react": "^16.10.2",
+    "npm_config_commit_hooks": "true",
+    "npm_config_init_module": "/home/gijs/.npm-init.js",
+    "npm_config_otp": "",
+    "npm_config_editor": "/usr/bin/vim",
+    "npm_config_tmp": "/tmp",
+    "npm_package_scripts_build": "tsc -p tsconfig.electron.json",
+    "npm_config_audit_level": "low",
+    "npm_package_author": "",
+    "npm_package_dependencies_docere_text_view": "^1.4.1",
+    "_": "/home/gijs/Projects/docere/node_modules/.bin/webpack-dev-server",
+    "npm_config_color": "true",
+    "XAUTHORITY": "/home/gijs/.Xauthority",
+    "npm_config_package_lock_only": "",
+    "XDG_GREETER_DATA_DIR": "/var/lib/lightdm-data/gijs",
+    "npm_config_save_prod": "",
+    "npm_config_format_package_lock": "true",
+    "npm_package_devDependencies__types_react_dom": "^16.9.1",
+    "GTK2_RC_FILES": "/home/gijs/.gtkrc-2.0",
+    "npm_config_also": "",
+    "npm_config_cidr": "",
+    "HOME": "/home/gijs",
+    "npm_config_node_version": "12.13.0",
+    "LC_PAPER": "nl_NL.UTF-8",
+    "LANG": "en_US.UTF-8",
+    "npm_config_init_author_url": "",
+    "npm_package_devDependencies_webpack": "^4.41.0",
+    "npm_package_devDependencies_typescript": "^3.7.2",
+    "XDG_CURRENT_DESKTOP": "XFCE",
+    "npm_config_globalignorefile": "/usr/etc/npmignore",
+    "npm_config_init_license": "GPL-3.0-or-later",
+    "npm_package_dependencies_emotion": "^10.0.17",
+    "npm_package_version": "1.0.0",
+    "npm_config_cache_lock_stale": "60000",
+    "VTE_VERSION": "5802",
+    "npm_config_versions": "",
+    "npm_config_proxy": "",
+    "npm_config_fetch_retry_maxtimeout": "60000",
+    "npm_config_fetch_retries": "2",
+    "npm_config_git": "git",
+    "npm_config_read_only": "",
+    "npm_config_group": "1000",
+    "XDG_SEAT_PATH": "/org/freedesktop/DisplayManager/Seat0",
+    "npm_config_unicode": "true",
+    "npm_config_sso_type": "oauth",
+    "npm_config_cache_lock_retries": "10",
+    "npm_config_local_address": "",
+    "npm_config_description": "true",
+    "npm_package_dependencies__emotion_styled": "^10.0.17",
+    "INIT_CWD": "/home/gijs/Projects/docere",
+    "npm_config_dry_run": "",
+    "CHROME_DESKTOP": "code-oss.desktop",
+    "npm_config_viewer": "man",
+    "npm_config_offline": "",
+    "npm_config_message": "%s",
+    "npm_config_production": "",
+    "npm_config_prefer_online": "",
+    "npm_config_link": "",
+    "npm_lifecycle_script": "webpack-dev-server",
+    "npm_package_description": "Docere is a tool for publishing digital scholarly editions. Docere aims to find the sweet spot between the wishes of researchers (flexibility and customization) and software developers (predictability and maintainability). This feature is achieved by using pure functions which are tailored to a specific project or set of XML documents. The functions are used to prepare the XML documents and extract data like metadata, text data, text layers, facsimiles and annotations. All the functions are run in a browser environment, because the browser is great at reading and manipulating DOM trees. The output of the functions is used to generate a generic digital edition with faceted search, powered by very diverse XML.",
+    "npm_config_shrinkwrap": "true",
+    "npm_config_force": "",
+    "npm_config_rollback": "true",
+    "npm_package_devDependencies_ts_loader": "^6.2.0",
+    "XDG_SESSION_CLASS": "user",
+    "npm_config_save_bundle": "",
+    "npm_config_onload_script": "",
+    "LC_IDENTIFICATION": "nl_NL.UTF-8",
+    "TERM": "xterm-256color",
+    "npm_package_name": "docere",
+    "npm_config_prefix": "/usr",
+    "npm_config_cert": "",
+    "USER": "gijs",
+    "npm_package_devDependencies_webpack_cli": "^3.3.9",
+    "npm_config_heading": "npm",
+    "npm_package_dependencies_react_dom": "^16.10.2",
+    "npm_package_devDependencies_webpack_dev_server": "^3.8.2",
+    "VISUAL": "/usr/bin/vim",
+    "npm_config_cache_lock_wait": "10000",
+    "npm_config_node_options": "",
+    "npm_package_scripts_watch": "tsc -w -p tsconfig.electron.json",
+    "npm_config_key": "",
+    "npm_config_json": "",
+    "npm_config_depth": "Infinity",
+    "npm_package_scripts_prod": "webpack-dev-server --config webpack.config.prod.js",
+    "DISPLAY": ":0.0",
+    "npm_lifecycle_event": "dev",
+    "SHLVL": "3",
+    "LC_TELEPHONE": "nl_NL.UTF-8",
+    "npm_config_ca": "",
+    "npm_config_prefer_offline": "",
+    "LC_MEASUREMENT": "nl_NL.UTF-8",
+    "XDG_VTNR": "7",
+    "npm_config_if_present": "",
+    "XDG_SESSION_ID": "2",
+    "npm_config_user_agent": "npm/6.12.1 node/v12.13.0 linux x64",
+    "npm_config_save_exact": "",
+    "npm_execpath": "/usr/lib/node_modules/npm/bin/npm-cli.js",
+    "npm_config_progress": "true",
+    "npm_config_global_style": "",
+    "MOZ_PLUGIN_PATH": "/usr/lib/mozilla/plugins",
+    "npm_config_init_author_email": "",
+    "XDG_RUNTIME_DIR": "/run/user/1000",
+    "npm_config_script_shell": "",
+    "npm_config_long": "",
+    "npm_config_save": "true",
+    "npm_config_strict_ssl": "true",
+    "npm_config_auth_type": "legacy",
+    "npm_config_version": "",
+    "npm_config_logs_max": "10",
+    "LC_TIME": "nl_NL.UTF-8",
+    "npm_package_dependencies_huc_faceted_search": "^1.6.1",
+    "npm_package_scripts_dev": "webpack-dev-server",
+    "npm_config_umask": "0022",
+    "npm_config_sso_poll_frequency": "500",
+    "npm_config_searchopts": "",
+    "npm_package_dependencies__emotion_core": "^10.0.20",
+    "npm_config_legacy_bundling": "",
+    "QT_AUTO_SCREEN_SCALE_FACTOR": "0",
+    "npm_package_dependencies_docere_config": "file:../docere-config",
+    "XDG_DATA_DIRS": "/home/gijs/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/usr/share",
+    "npm_config_searchlimit": "20",
+    "npm_config_noproxy": "",
+    "PATH": "/usr/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin:/home/gijs/Projects/docere/node_modules/.bin:/home/gijs/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl",
+    "npm_config_metrics_registry": "https://registry.npmjs.org/",
+    "npm_config_node_gyp": "/usr/lib/node_modules/node-gyp/bin/node-gyp.js",
+    "npm_config_searchexclude": "",
+    "GDMSESSION": "xfce",
+    "DBUS_SESSION_BUS_ADDRESS": "unix:path=/run/user/1000/bus",
+    "npm_package_license": "GPL-3.0-or-later",
+    "npm_package_scripts_postinstall": "./link.sh",
+    "npm_package_gitHead": "125a0372895e31903070fb936467c140be83936a",
+    "npm_config_update_notifier": "true",
+    "MAIL": "/var/spool/mail/gijs",
+    "npm_config_registry": "https://registry.npmjs.org/",
+    "npm_package_dependencies_openseadragon": "^2.4.1",
+    "npm_config_ignore_prepublish": "",
+    "npm_config_audit": "true",
+    "npm_config_tag": "latest",
+    "npm_config_scripts_prepend_node_path": "warn-only",
+    "npm_config_cafile": "",
+    "npm_config_fetch_retry_factor": "10",
+    "npm_node_execpath": "/usr/bin/node",
+    "npm_config_engine_strict": "",
+    "npm_config_https_proxy": "",
+    "LC_NUMERIC": "nl_NL.UTF-8",
+    "OLDPWD": "/home/gijs",
+    "npm_package_types": "build/export/index.d.ts",
+    "npm_config_scope": "",
+    "npm_config_package_lock": "true",
+    "TERM_PROGRAM": "vscode",
+    "npm_config_parseable": "",
+    "npm_config_init_version": "1.0.0",
+    "WEBPACK_DEV_SERVER": "true"
+  },
+  "userLimits": {
+    "core_file_size_blocks": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "data_seg_size_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "file_size_blocks": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "max_locked_memory_bytes": {
+      "soft": 65536,
+      "hard": 65536
+    },
+    "max_memory_size_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "open_files": {
+      "soft": 524288,
+      "hard": 524288
+    },
+    "stack_size_bytes": {
+      "soft": 8388608,
+      "hard": "unlimited"
+    },
+    "cpu_time_seconds": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "max_user_processes": {
+      "soft": 62704,
+      "hard": 62704
+    },
+    "virtual_memory_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    }
+  },
+  "sharedObjects": [
+    "linux-vdso.so.1",
+    "/usr/lib/libz.so.1",
+    "/usr/lib/libuv.so.1",
+    "/usr/lib/libcares.so.2",
+    "/usr/lib/libnghttp2.so.14",
+    "/usr/lib/libcrypto.so.1.1",
+    "/usr/lib/libssl.so.1.1",
+    "/usr/lib/libicui18n.so.64",
+    "/usr/lib/libicuuc.so.64",
+    "/usr/lib/libdl.so.2",
+    "/usr/lib/libstdc++.so.6",
+    "/usr/lib/libm.so.6",
+    "/usr/lib/libgcc_s.so.1",
+    "/usr/lib/libpthread.so.0",
+    "/usr/lib/libc.so.6",
+    "/usr/lib/librt.so.1",
+    "/usr/lib/libnsl.so.2",
+    "/usr/lib/libicudata.so.64",
+    "/lib64/ld-linux-x86-64.so.2",
+    "/usr/lib/libtirpc.so.3",
+    "/usr/lib/libgssapi_krb5.so.2",
+    "/usr/lib/libkrb5.so.3",
+    "/usr/lib/libk5crypto.so.3",
+    "/usr/lib/libcom_err.so.2",
+    "/usr/lib/libkrb5support.so.0",
+    "/usr/lib/libkeyutils.so.1",
+    "/usr/lib/libresolv.so.2",
+    "/usr/lib/libnss_files.so.2"
+  ]
+}

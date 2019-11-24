@@ -5,8 +5,8 @@ interface DocereConfig {
 	pages?: PageConfig[]
 	searchResultCount?: number
 	slug: string
-	textdata?: TextDataConfig[]
-	textlayers?: TextLayerConfig[]
+	textData?: TextDataConfig[]
+	textLayers?: TextLayerConfig[]
 	title: string
 }
 
@@ -17,7 +17,7 @@ interface DocereConfigDataRaw {
 	extractMetadata?: (doc: XMLDocument) => ExtractedMetadata
 	extractNotes?: (doc: XMLDocument) => ExtractedNotes
 	extractTextData?: (doc: XMLDocument, config: DocereConfig) => ExtractedTextData
-	extractTextLayers?: (doc: XMLDocument, config: DocereConfig) => ExtractedTextLayers
+	extractTextLayers?: (doc: XMLDocument, config: DocereConfig) => ExtractedTextLayer[]
 	prepareDocument?: (doc: XMLDocument, config: DocereConfig, id?: string) => XMLDocument
 }
 
@@ -64,7 +64,10 @@ interface PageConfig extends EntityConfig {
 interface TextLayerConfig extends EntityConfig {
 	active: boolean
 	type: TextLayerType
-	selector?: string
+}
+
+interface TextLayer extends TextLayerConfig {
+	element: Element
 }
 
 interface NotesConfig extends EntityConfig {

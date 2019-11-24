@@ -15,6 +15,7 @@ interface DocereComponentProps {
 	setFacsimileHighlight: (x: number, y: number, w: number, h: number) => void
 	setActiveId: SetActiveId
 	setEntry: AppState['setEntry']
+	// TODO change to textLayerId
 	textLayer: string
 	viewport: Viewport
 	[key: string]: any

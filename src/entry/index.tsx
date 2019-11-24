@@ -26,7 +26,8 @@ export default class Entry extends React.PureComponent<EntryProps, EntryState> {
 		activeFacsimilePath: null,
 		activeId: null,
 		activeListId: null,
-		activePanels: this.props.configData.config.textlayers,
+		// activePanels: this.props.configData.config.textLayers,
+		activePanels: [],
 		asideTab: null,
 		footerTab: null,
 		hasScroll: false,
@@ -103,13 +104,14 @@ export default class Entry extends React.PureComponent<EntryProps, EntryState> {
 
 	private async updateState() {
 		if (this.props.entry == null) return
-		const { facsimiles } = this.props.entry
+		const { facsimiles, textLayers } = this.props.entry
 
-		console.log('updatestate')
 		const nextState: Partial<EntryState> = {}
 		nextState.activeFacsimilePath = facsimiles.length ? facsimiles[0].path[0] : null
 		const hasScroll = window.innerHeight < document.documentElement.scrollHeight
 		nextState.hasScroll = hasScroll
+
+		nextState.activePanels = textLayers
 
 		this.setState(nextState as EntryState)
 	}

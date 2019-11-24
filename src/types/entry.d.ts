@@ -11,7 +11,7 @@ interface ExtractedNote {
 type ExtractedNotes = Record<string, ExtractedNote[]>
 type ExtractedMetadata = Record<string, boolean | string | string[]>
 type ExtractedTextData = Record<string, TextDataValue[]>
-type ExtractedTextLayers = Record<string, Element>
+type ExtractedTextLayer = Pick<TextLayer, 'element'> & Pick<TextLayerConfig, 'id'> & Partial<TextLayerConfig>
 
 interface ExtractedFacsimile {
 	id: string
@@ -25,5 +25,5 @@ interface Entry {
 	metadata: ExtractedMetadata
 	notes: ExtractedNotes
 	textData: ExtractedTextData
-	textLayers: ExtractedTextLayers
+	textLayers: TextLayer[]
 }

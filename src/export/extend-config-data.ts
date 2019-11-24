@@ -7,26 +7,27 @@ const defaultConfig: DocereConfig = {
 	searchResultCount: 20,
 	slug: 'unknown-project',
 	title: 'Unknown project',
-	textdata: [],
-	textlayers: [
-		{
-			active: true,
-			id: 'facsimile',
-			title: 'Facsimile',
-			type: TextLayerType.Facsimile
-		},
-		{
-			active: true,
-			id: 'transcription',
-			title: 'Transcription',
-			type: TextLayerType.TextLayer
-		},
-		{
-			active: false,
-			id: 'tei',
-			title: 'TEI',
-			type: TextLayerType.XML
-		}
+	textData: [],
+	// textLayers: []
+	textLayers: [
+		// {
+		// 	active: true,
+		// 	id: 'facsimile',
+		// 	title: 'Facsimile',
+		// 	type: TextLayerType.Facsimile
+		// },
+		// {
+		// 	active: true,
+		// 	id: 'transcription',
+		// 	title: 'Transcription',
+		// 	type: TextLayerType.TextLayer
+		// },
+		// {
+		// 	active: false,
+		// 	id: 'tei',
+		// 	title: 'TEI',
+		// 	type: TextLayerType.XML
+		// }
 	]
 }
 
@@ -37,13 +38,24 @@ export const defaultMetadata: MetaDataConfig = {
 	order: 9999,
 }
 
+const defaultTextLayer: TextLayerConfig = {
+	active: false,
+	id: null,
+	type: TextLayerType.TextLayer
+}
+export function extendTextLayer(extractedTextLayer: ExtractedTextLayer, textLayersConfig: DocereConfig['textLayers']): TextLayer {
+	const textLayerConfig = textLayersConfig.find(tlc => tlc.id === extractedTextLayer.id)
+	if (textLayerConfig == null) return { title: extractedTextLayer.id, ...defaultTextLayer, ...extractedTextLayer }
+	return { title: extractedTextLayer.id, ...textLayerConfig, ...extractedTextLayer }
+}
+
 const defaultDocereFunctions: Pick<DocereConfigData, 'prepareDocument' | 'extractFacsimiles' | 'extractMetadata' | 'extractNotes' | 'extractTextData' | 'extractTextLayers'> = {
 	prepareDocument: function prepareDocument(doc) { return doc },
 	extractFacsimiles: function extractFacsimiles(_doc) { return [] },
 	extractMetadata: function extractMetadata(_doc) { return {} },
 	extractNotes: function extractNotes(_doc) { return {} },
 	extractTextData,
-	extractTextLayers: function extractTextLayers(_doc) { return {} }
+	extractTextLayers: function extractTextLayers(_doc) { return [] }
 }
 
 function setTitle<T extends EntityConfig>(entityConfig: T): T {
@@ -60,13 +72,13 @@ function setPath(page: PageConfig) {
 
 export default function extendConfigData(configDataRaw: DocereConfigDataRaw): DocereConfigData {
 	const config = {...defaultConfig, ...configDataRaw.config}
-	config.textlayers = config.textlayers.map(setTitle)
+	config.textLayers = config.textLayers.map(setTitle)
 
 	config.metadata = config.metadata.map(md => setTitle({...defaultMetadata, ...md}))
-	config.textdata = config.textdata.map(td => {
+	config.textData = config.textData.map(td => {
 		td = {...defaultMetadata, ...td }
 		if (!Array.isArray(td.textLayers)) {
-			td.textLayers = config.textlayers.map(tl => tl.id)
+			td.textLayers = config.textLayers.map(tl => tl.id)
 		}
 		return setTitle(td)
 	})

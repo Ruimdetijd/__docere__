@@ -4,6 +4,7 @@ import PageView from './page'
 import { SearchTab, Viewport } from './constants'
 import EntrySelector from './entry-selector'
 import Header from './header'
+import { extendTextLayer } from './export/extend-config-data'
 
 // TODO move to types.d.ts, but first replace EntrySelector
 type AppProps = Pick<AppState, 'configData'> & { entryId: string, EntrySelector: typeof EntrySelector, pageId: string }
@@ -122,7 +123,6 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 		}
 
 		const page = await this.getPage(id)
-		console.log(page)
 
 		this.setState(
 			{ entry: null, page },
@@ -159,7 +159,11 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 		const metadata = this.props.configData.extractMetadata(doc)
 		const notes = this.props.configData.extractNotes(doc)
 		const textData = this.props.configData.extractTextData(doc, this.props.configData.config)
-		const textLayers = this.props.configData.extractTextLayers(doc, this.props.configData.config)
+		let textLayers = this.props.configData.extractTextLayers(doc, this.props.configData.config)
+			.map(tl => extendTextLayer(tl, this.props.configData.config.textLayers))
+
+		const otherLayers = this.props.configData.config.textLayers.filter(tl => textLayers.find(tl2 => tl.id === tl2.id) == null)
+		textLayers = otherLayers.map((ol: TextLayer) => { ol.element = null; return ol }).concat(textLayers)
 
 		return {
 			id,

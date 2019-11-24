@@ -50,7 +50,7 @@ export const hi = styled.span`
 		const rules = []
 		if (has('underline')) rules.push('text-decoration: underline;')
 		if (has('super')) rules.push('font-style: italic;')
-		if (has('italic')) rules.push('font-style: italic;')
+		if (has('italic') || has('i')) rules.push('font-style: italic;')
 		return rules.join('')
 	}}
 `

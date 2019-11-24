@@ -10,11 +10,11 @@ document.addEventListener('DOMContentLoaded', async function() {
 	const [, projectSlug, entryId, pageId] = window.location.pathname.split('/')
 
 	// TODO redirect to 404 if projectSlug does not exist
-	const configData = await configDatas[projectSlug]()
+	const { default: configData } = await configDatas[projectSlug]()
 
 	ReactDOM.render(
 		<BrowserApp
-			configData={configData.default}
+			configData={configData}
 			entryId={entryId}
 			pageId={pageId}
 			EntrySelector={EntrySelector}

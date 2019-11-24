@@ -27,7 +27,12 @@ const Wrapper = styled.div`
 	z-index: 1;
 `
 
-type Props = Pick<EntryState, 'activeFacsimilePath' | 'orientation'> & Pick<Entry,  'facsimiles'> & Pick<PanelsState, 'facsimileHighlight'>
+type Props =
+	Pick<EntryState, 'activeFacsimilePath' | 'orientation'> &
+	Pick<Entry,  'facsimiles'> &
+	Pick<PanelsState, 'facsimileHighlight'> &
+	{ projectId: DocereConfig['slug'] }
+
 export default class Facsimile extends React.PureComponent<Props> {
 	private osd: any
 	private OpenSeadragon: any
@@ -60,7 +65,7 @@ export default class Facsimile extends React.PureComponent<Props> {
 
 	private async init() {
 		const osdImport = await import('openseadragon')
-		this.OpenSeadragon = osdImport.hasOwnProperty('default') ? osdImport.default : osdImport
+		this.OpenSeadragon = osdImport.default != null ? osdImport.default : osdImport
 
 		if (this.osd == null) {
 			this.osd = this.OpenSeadragon({
@@ -87,8 +92,7 @@ export default class Facsimile extends React.PureComponent<Props> {
 		// TODO find the paths in this.props.facsimiles with activeFacsimileID
 		let path = this.props.activeFacsimilePath as any
 		
-		const [,projectSlug] = document.location.pathname.split('/')
-		if (projectSlug === 'vangogh') {
+		if (this.props.projectId === 'vangogh') {
 			path = { tileSource: { type: 'image', url: path.slice(0, -5).concat('f.png'), buildPyramid: false } }
 		}
 		
