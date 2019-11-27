@@ -1,20 +1,5 @@
-// function byteToHex(byte: number) {
-// 	const hex = ('0' + byte.toString(16)).slice(-2);
-// 	return hex
-// }
-
-// export function generateId(len = 10) {
-// 	var arr = new Uint8Array((len || 40) / 2);
-// 	window.crypto.getRandomValues(arr);
-// 	const tail = [].map.call(arr, byteToHex).join("");
-// 	const head = String.fromCharCode(97 + Math.floor(Math.random() * 26))
-// 	return `${head}${tail}`
-// }
-
-
-
 function getProjectDir(projectId: string) {
-	return `/node_modules/docere-project-${projectId}`
+	return `/node_modules/docere-projects/src/${projectId}`
 } 
 
 export async function fetchPost(url: string, body: any) {
@@ -58,3 +43,18 @@ export function fetchXml(url: string): Promise<XMLDocument> {
 		xhr.send()
 	})
 }
+
+// function byteToHex(byte: number) {
+// 	const hex = ('0' + byte.toString(16)).slice(-2);
+// 	return hex
+// }
+
+// export function generateId(len = 10) {
+// 	var arr = new Uint8Array((len || 40) / 2);
+// 	window.crypto.getRandomValues(arr);
+// 	const tail = [].map.call(arr, byteToHex).join("");
+// 	const head = String.fromCharCode(97 + Math.floor(Math.random() * 26))
+// 	return `${head}${tail}`
+// }
+
+
