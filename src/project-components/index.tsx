@@ -39,10 +39,6 @@ export const damage = styled.span``
 // 		color: ${(props: RsProps) => props.activeId === props[ID_ATTRIBUTE_NAME] ? props[COLOR_ATTRIBUTE_NAME] : '#444'};
 // 	}
 // `
-
-interface HiProps {
-	rend: string
-}
 export const hi = styled.span`
 	${(props: HiProps) => {
 		if (!props.hasOwnProperty('rend')) return ''

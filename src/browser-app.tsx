@@ -23,7 +23,7 @@ export default class BrowserApp extends App {
 		let url = `/${this.props.configData.config.slug}`
 		let title = this.props.configData.config.title
 		if (entryId != null) {
-			url += `/${entryId}`
+			url += `/entries/${entryId}`
 			title = `${title} - ${entryId}`
 		}
 		if (push) history.pushState({}, title, url)

@@ -160,10 +160,14 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 		const notes = this.props.configData.extractNotes(doc)
 		const textData = this.props.configData.extractTextData(doc, this.props.configData.config)
 		let textLayers = this.props.configData.extractTextLayers(doc, this.props.configData.config)
+			// Extend the extracted text layers with their config
 			.map(tl => extendTextLayer(tl, this.props.configData.config.textLayers))
 
+		// The "other" layers are layers that are not found by extractTextLayers, but are defined in the config
 		const otherLayers = this.props.configData.config.textLayers.filter(tl => textLayers.find(tl2 => tl.id === tl2.id) == null)
-		textLayers = otherLayers.map((ol: TextLayer) => { ol.element = null; return ol }).concat(textLayers)
+
+		// The "other" layers don't have an element, so they will use the whole XMLDocument
+		textLayers = otherLayers.map((ol: TextLayer) => { ol.element = doc; return ol }).concat(textLayers)
 
 		return {
 			id,

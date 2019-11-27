@@ -4,10 +4,14 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import BrowserApp from './browser-app'
 import EntrySelector from './entry-selector'
-import configDatas from './config-datas'
+import configDatas from 'docere-projects'
 
 document.addEventListener('DOMContentLoaded', async function() {
-	const [, projectSlug, entryId, pageId] = window.location.pathname.split('/')
+	const [, projectSlug, type, id] = window.location.pathname.split('/')
+
+	let entryId, pageId
+	if (type === 'entries') entryId = id
+	else if (type === 'pages') pageId = id
 
 	// TODO redirect to 404 if projectSlug does not exist
 	const { default: configData } = await configDatas[projectSlug]()
@@ -24,8 +28,11 @@ document.addEventListener('DOMContentLoaded', async function() {
 	)
 })
 
+// FEATS
+// Add text data icon
+
 // BUGS
-// TODO fix padding-bottom when text view scrolls
+// TODO order of text layers should represent config (see Van Gogh)
 
 // Asides
 // TODO replace first letter of tab with icon + tooltip text
