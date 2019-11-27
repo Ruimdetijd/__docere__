@@ -67,7 +67,7 @@ interface TextLayerConfig extends EntityConfig {
 }
 
 interface TextLayer extends TextLayerConfig {
-	element: Element
+	element: Element | XMLDocument
 }
 
 interface NotesConfig extends EntityConfig {

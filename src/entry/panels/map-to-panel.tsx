@@ -1,6 +1,7 @@
 import * as React from 'react'
 import FacsimilePanel from './facsimile'
 import TextPanel from './text'
+import WitnessAnimationPanel from './witness-animation'
 import XmlPanel from './xml'
 import { PanelsProps, PanelsState } from './index'
 
@@ -31,17 +32,17 @@ export default function mapToPanel(ap: TextLayerConfig, props: PanelsProps, stat
 		)
 	}
 
-	// if (ap.type === TextLayerType.TextLayer) {
-	// 	return (
-	// 		<TextPanel
-	// 			{...props}
-	// 			{...state}
-	// 			customProps={customProps}
-	// 			key={ap.id}
-	// 			textLayerConfig={ap}
-	// 		/>
-	// 	)
-	// }
+	if (ap.type === TextLayerType.WitnessAnimation) {
+		return (
+			<WitnessAnimationPanel
+				{...props}
+				{...state}
+				customProps={customProps}
+				key={ap.id}
+				textLayerConfig={ap}
+			/>
+		)
+	}
 
 	if (ap.type === TextLayerType.XML) {
 		return (

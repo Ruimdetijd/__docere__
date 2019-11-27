@@ -23,3 +23,8 @@ interface DocereComponentProps {
 
 interface SvgProps { active: boolean, color: string }
 type RsProps = DocereComponentProps & SvgProps
+
+
+interface HiProps extends DocereComponentProps {
+	rend: string
+}

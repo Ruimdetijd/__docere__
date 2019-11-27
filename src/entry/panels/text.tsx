@@ -26,7 +26,6 @@ class TextPanel extends React.PureComponent<Props> {
 
 	render() {
 		const textLayer = this.props.entry.textLayers.find(tl => tl.id === this.props.textLayerConfig.id)
-		if (textLayer == null) return null
 
 		return (
 			<TextWrapper>

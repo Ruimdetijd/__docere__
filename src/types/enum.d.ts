@@ -7,7 +7,7 @@ declare const enum Orientation {
 	Vertical
 }
 
-declare const enum TextLayerType { Facsimile, TextLayer, XML }
+declare const enum TextLayerType { Facsimile, TextLayer, WitnessAnimation, XML }
 
 // TODO items in enum should be capitalized
 declare const enum EsDataType {

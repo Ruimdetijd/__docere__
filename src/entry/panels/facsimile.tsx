@@ -112,13 +112,9 @@ export default class Facsimile extends React.PureComponent<Props> {
 		const aspectRatio = imgHeight / imgWidth
 		const [x, y, width, height] = this.props.facsimileHighlight
 
-		console.log(aspectRatio, x, y * aspectRatio, width, height * aspectRatio)
-
         this.osd.addOverlay({
             element: elt,
 			location: new this.OpenSeadragon.Rect(x, y * aspectRatio, width, height * aspectRatio),
         });
-		console.log('HIL')
-		console.log(this.osd)
 	}
 }
