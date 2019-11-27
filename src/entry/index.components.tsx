@@ -28,7 +28,7 @@ export const PanelsWrapper = styled.div`
 				.map(ap =>
 					ap.type === TextLayerType.Facsimile ?
 						`minmax(${DEFAULT_SPACING * 10}px, auto)` :
-						`${textPanelSpace}px`
+						`minmax(${textPanelSpace}px, auto)`
 				)
 				.join(' ')
 
@@ -97,6 +97,7 @@ export const Text = styled.div`
 	font-size: 1.25rem;
 	grid-column: 2;
 	line-height: 2rem;
+	margin-bottom: 20vh;
 	padding-top: ${DEFAULT_SPACING}px;
 	padding-left: ${(props: TextProps) => {
 		let paddingLeft = 0;
