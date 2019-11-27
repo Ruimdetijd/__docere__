@@ -1,23 +1,7 @@
 {
   "compilerOptions": {
-    "declaration": true,
-    "incremental": true,
-    "importHelpers": true,
-    "jsx": "react",
     "module": "commonjs",
-    "moduleResolution": "node",
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "outDir": "./build",
-    "preserveConstEnums": true,
-    "removeComments": true,
-    "target": "es6"
+    "outDir": "./build"
   },
-  "exclude": [ "node_modules" ],
-  "files": [
-    "src/index.tsx",
-    "src/export/index.ts",
-    "src/types/index.d.ts",
-  ]
+  "extends": "./tsconfig.json"
 }

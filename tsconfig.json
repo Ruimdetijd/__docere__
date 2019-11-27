@@ -14,7 +14,7 @@
     "removeComments": true,
     "target": "es6"
   },
-  "exclude": [ "node_modules" ],
+  "exclude": [ "node_modules", "build", "dist" ],
   "files": [
     "src/index.tsx",
     "src/export/index.ts",
