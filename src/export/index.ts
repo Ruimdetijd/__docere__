@@ -7,11 +7,12 @@ import extendConfigData from './extend-config-data'
 import App from '../app'
 import getPb from '../project-components/pb'
 import * as rs from '../project-components/rs'
-import { hi } from '../project-components'
+import { hi, lb } from '../project-components'
 
 const components = {
 	getPb,
 	hi,
+	lb,
 	...rs
 }
 
