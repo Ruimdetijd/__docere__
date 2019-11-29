@@ -5,16 +5,17 @@ import * as ReactDOM from 'react-dom'
 import BrowserApp from './browser-app'
 import EntrySelector from './entry-selector'
 import configDatas from 'docere-projects'
+import { analyzeWindowLocation } from './utils'
 
 document.addEventListener('DOMContentLoaded', async function() {
-	const [, projectSlug, type, id] = window.location.pathname.split('/')
+	const { documentId, documentType, projectId } = analyzeWindowLocation()
 
 	let entryId, pageId
-	if (type === 'entries') entryId = id
-	else if (type === 'pages') pageId = id
+	if (documentType === 'entries') entryId = documentId
+	else if (documentType === 'pages') pageId = documentId
 
 	// TODO redirect to 404 if projectSlug does not exist
-	const { default: configData } = await configDatas[projectSlug]()
+	const { default: configData } = await configDatas[projectId]()
 
 	ReactDOM.render(
 		<BrowserApp

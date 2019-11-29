@@ -1,5 +1,5 @@
 import App from './app'
-import { fetchEntryXml, fetchXml, getPageXmlPath } from './utils'
+import { fetchEntryXml, fetchXml, getPageXmlPath, analyzeWindowLocation } from './utils'
 
 export default class BrowserApp extends App {
 	afterComponentDidMount() {
@@ -11,8 +11,9 @@ export default class BrowserApp extends App {
 		})
 	}
 
-	protected async getEntryDoc(id: string) {
-		return await fetchEntryXml(this.props.configData.config.slug, id)
+	protected async getEntryDoc() {
+		const { documentId, documentPath } = analyzeWindowLocation()
+		return await fetchEntryXml(this.props.configData.config.slug, documentPath, documentId)
 	}
 
 	protected async getPageDoc(page: Page) {
