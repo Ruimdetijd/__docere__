@@ -3,6 +3,14 @@ type SetActiveId = (id: string, listId: string, asideTab: AsideTab) => void
 type DocereComponents = Record<string, (props: DocereComponentProps) => JSX.Element>
 type GetComponents = (config: DocereConfig) => DocereComponents
 
+interface FacsimileHighlightOptions {
+	x: number
+	y: number
+	w: number
+	h: number
+	unit: 'px' | 'perc'
+}
+
 interface DocereComponentProps {
 	activeFacsimilePath: string
 	activeId: string
@@ -12,7 +20,7 @@ interface DocereComponentProps {
 	facsimiles: Entry['facsimiles']
 	insideNote: boolean
 	setActiveFacsimile: (activeFacsimilePath: string) => void
-	setFacsimileHighlight: (x: number, y: number, w: number, h: number) => void
+	setFacsimileHighlight: (settings: FacsimileHighlightOptions) => void
 	setActiveId: SetActiveId
 	setEntry: AppState['setEntry']
 	// TODO change to textLayerId

@@ -102,19 +102,28 @@ export default class Facsimile extends React.PureComponent<Props> {
 	private highlight() {
 		this.osd.removeOverlay('runtime-overlay')
 
-		var elt = document.createElement("div")
-        elt.id = 'runtime-overlay'
-		elt.style.boxShadow = '0 0 8px yellow'
-		elt.style.border = '2px solid yellow'
+		var element = document.createElement("div")
+        element.id = 'runtime-overlay'
+		element.style.boxShadow = 'rgba(255, 255, 0, 0.8) 0px 0px 4px, rgba(255, 255, 0, 0.8) 0px 0px 16px, rgba(255, 255, 0, 0.8) 0px 0px 64px'
+		// element.style.border = '2px solid rgba(255, 255, 0, .6)'
 
 		// console.log(this.props.facsimileHighlight, new this.OpenSeadragon.Rect(...this.props.facsimileHighlight))
-		const { width: imgWidth, height: imgHeight } = this.osd.world.getHomeBounds()
-		const aspectRatio = imgHeight / imgWidth
-		const [x, y, width, height] = this.props.facsimileHighlight
+		const { width: imgWidthRatio, height: imgHeightRatio } = this.osd.world.getHomeBounds()
+		const aspectRatio = imgHeightRatio / imgWidthRatio
+
+
+		let { x, y, w, h, unit } = this.props.facsimileHighlight
+		if (unit === 'px') {
+			const { x: imgWidth, y: imgHeight } = this.osd.world._contentSize
+			x = x / imgWidth
+			y = y / imgHeight
+			w = w / imgWidth
+			h = h / imgHeight
+		} 
 
         this.osd.addOverlay({
-            element: elt,
-			location: new this.OpenSeadragon.Rect(x, y * aspectRatio, width, height * aspectRatio),
+            element,
+			location: new this.OpenSeadragon.Rect(x, y * aspectRatio, w, h * aspectRatio),
         });
 	}
 }

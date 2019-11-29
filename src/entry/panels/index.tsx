@@ -12,7 +12,7 @@ export type PanelsProps = EntryProps & EntryState & {
 	toggleWordWrap: () => void
 }
 export interface PanelsState {
-	facsimileHighlight: [number, number, number, number]
+	facsimileHighlight: FacsimileHighlightOptions
 	highlight: string[]
 }
 export default class Panels extends React.Component<PanelsProps, PanelsState> {
@@ -39,7 +39,7 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 			setActiveFacsimile: this.props.setActiveFacsimile,
 			setActiveId: this.props.setActiveId,
 			setEntry: this.props.setEntry,
-			setFacsimileHighlight: (x, y, w, h) => this.setState({ facsimileHighlight: [x, y, w, h] }),
+			setFacsimileHighlight: (opts) => this.setState({ facsimileHighlight: opts }),
 			textLayer: null,
 			viewport: this.props.viewport,
 		}

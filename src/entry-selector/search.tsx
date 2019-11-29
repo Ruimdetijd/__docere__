@@ -92,6 +92,8 @@ export default class Search extends React.Component<FileExplorerProps, State> {
 			console.log(err)
 		}
 
+		if (tmpfields == null) return
+
 		// Prepare the facets definitions from the config
 		const fields = tmpfields
 			.filter(field => field.datatype !== EsDataType.null && field.datatype !== EsDataType.text )
