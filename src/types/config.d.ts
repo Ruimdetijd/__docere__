@@ -14,11 +14,11 @@ interface DocereConfigDataRaw {
 	getComponents?: (config: DocereConfig) => DocereComponents
 	config?: DocereConfig
 	extractFacsimiles?: (doc: XMLDocument) => ExtractedFacsimile[]
-	extractMetadata?: (doc: XMLDocument) => ExtractedMetadata
+	extractMetadata?: (doc: XMLDocument, config: DocereConfig, id: string) => ExtractedMetadata
 	extractNotes?: (doc: XMLDocument) => ExtractedNotes
 	extractTextData?: (doc: XMLDocument, config: DocereConfig) => ExtractedTextData
 	extractTextLayers?: (doc: XMLDocument, config: DocereConfig) => ExtractedTextLayer[]
-	prepareDocument?: (doc: XMLDocument, config: DocereConfig, id?: string) => XMLDocument
+	prepareDocument?: (doc: XMLDocument, config: DocereConfig, id: string, textLayer?: TextLayer) => XMLDocument
 }
 
 interface DocereConfigData {
@@ -64,6 +64,7 @@ interface PageConfig extends EntityConfig {
 interface TextLayerConfig extends EntityConfig {
 	active: boolean
 	type: TextLayerType
+	xmlPath?: (id: string) => string
 }
 
 interface TextLayer extends TextLayerConfig {

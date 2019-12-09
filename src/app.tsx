@@ -156,7 +156,7 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 		doc = this.props.configData.prepareDocument(doc, this.props.configData.config, id)
 
 		const facsimiles = this.props.configData.extractFacsimiles(doc)
-		const metadata = this.props.configData.extractMetadata(doc)
+		const metadata = this.props.configData.extractMetadata(doc, this.props.configData.config, id)
 		const notes = this.props.configData.extractNotes(doc)
 		const textData = this.props.configData.extractTextData(doc, this.props.configData.config)
 		let textLayers = this.props.configData.extractTextLayers(doc, this.props.configData.config)
@@ -167,7 +167,16 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 		const otherLayers = this.props.configData.config.textLayers.filter(tl => textLayers.find(tl2 => tl.id === tl2.id) == null)
 
 		// The "other" layers don't have an element, so they will use the whole XMLDocument
-		textLayers = otherLayers.map((ol: TextLayer) => { ol.element = doc; return ol }).concat(textLayers)
+		textLayers = await Promise.all(otherLayers.map((ol: TextLayer) => { ol.element = doc; return ol }).concat(textLayers)
+			.map(async (tl) => {
+				const tl2 = extendTextLayer(tl, this.props.configData.config.textLayers)
+				if (tl2.hasOwnProperty('xmlPath')) {
+					const doc = await this.getEntryDoc(tl2.xmlPath(id))
+					const element = this.props.configData.prepareDocument(doc, this.props.configData.config, id, tl2)
+					tl2.element = element
+				}
+				return tl2
+			}))
 
 		return {
 			id,

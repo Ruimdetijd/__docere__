@@ -104,7 +104,7 @@ export default class Facsimile extends React.PureComponent<Props> {
 
 		var element = document.createElement("div")
         element.id = 'runtime-overlay'
-		element.style.boxShadow = 'rgba(255, 255, 0, 0.8) 0px 0px 4px, rgba(255, 255, 0, 0.8) 0px 0px 16px, rgba(255, 255, 0, 0.8) 0px 0px 64px'
+		element.style.boxShadow = 'rgba(255, 0, 0, 0.8) 0px 0px 4px, rgba(255, 0, 0, 0.8) 0px 0px 16px, rgba(255, 0, 0, 0.8) 0px 0px 64px'
 		// element.style.border = '2px solid rgba(255, 255, 0, .6)'
 
 		// console.log(this.props.facsimileHighlight, new this.OpenSeadragon.Rect(...this.props.facsimileHighlight))

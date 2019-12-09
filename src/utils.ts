@@ -3,13 +3,12 @@ function getProjectDir(projectId: string) {
 } 
 
 export function analyzeWindowLocation() {
-	const [, projectId, documentType, ...path] = window.location.pathname.split('/')
+	const [, projectId, documentType, ...documentId] = window.location.pathname.split('/')
 
 	return {
 		projectId,
 		documentType,
-		documentPath: path.slice(0, -1).join('/'),
-		documentId: path[path.length - 1]
+		documentId: documentId.join('/'),
 	}
 }
 
@@ -26,16 +25,16 @@ export async function fetchPost(url: string, body: any) {
 	}
 }
 
-export function getEntryXmlPath(projectSlug: string, path: string, id: string) {
-	return `${getProjectDir(projectSlug)}/xml/${path}/${id}.xml`
+export function getEntryXmlPath(projectSlug: string, documentId: string) {
+	return `${getProjectDir(projectSlug)}/xml/${documentId}.xml`
 }
 
 export function getPageXmlPath(projectSlug: string, page: PageConfig) {
 	return `${getProjectDir(projectSlug)}/pages/${page.path}`
 }
 
-export function fetchEntryXml(projectSlug: string, path: string, id: string) {
-	return fetchXml(getEntryXmlPath(projectSlug, path, id))
+export function fetchEntryXml(projectSlug: string, documentId: string) {
+	return fetchXml(getEntryXmlPath(projectSlug, documentId))
 }
 
 export function fetchXml(url: string): Promise<XMLDocument> {

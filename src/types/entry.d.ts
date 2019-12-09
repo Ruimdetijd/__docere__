@@ -9,7 +9,7 @@ interface ExtractedNote {
 }
 
 type ExtractedNotes = Record<string, ExtractedNote[]>
-type ExtractedMetadata = Record<string, boolean | string | string[]>
+type ExtractedMetadata = Record<string, number | boolean | string | string[]>
 type ExtractedTextData = Record<string, TextDataValue[]>
 type ExtractedTextLayer = Pick<TextLayer, 'element'> & Pick<TextLayerConfig, 'id'> & Partial<TextLayerConfig>
 
