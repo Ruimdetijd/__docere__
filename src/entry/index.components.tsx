@@ -88,7 +88,7 @@ interface TextProps {
 	hasScroll: boolean
 	hasLb: boolean
 	hasFacs: boolean
-	wordwrap: boolean
+	// wordwrap: boolean
 }
 export const Text = styled.div`
 	color: #222;
@@ -99,17 +99,7 @@ export const Text = styled.div`
 	line-height: 2rem;
 	margin-bottom: 20vh;
 	padding-top: ${DEFAULT_SPACING}px;
-	padding-left: ${(props: TextProps) => {
-		let paddingLeft = 0;
-		// The facsthumb is 32px wide and get 16px extra space
-		if (props.hasFacs) paddingLeft += DEFAULT_SPACING * 1.5
-
-		// The linenumber gets 42 px, so check if the facsthumb is already adding 16px extra space
-		if (props.wordwrap && props.hasLb) {
-			paddingLeft += props.hasFacs ? 26 : 42 
-		}
-		return `${paddingLeft}px`
-	}};
+	padding-left: ${(props: TextProps) => props.hasFacs ? DEFAULT_SPACING * 2.5 : 0}px;
 	padding-bottom: ${(props: TextProps) => props.hasScroll ? '33vh' : 0};
 	position: relative;
 `
@@ -153,40 +143,40 @@ export const SVGButton = function(props: ButtonProps) {
 	)
 }
 
-interface OBProps {
-	orientation: Orientation
-	onClick: () => void
-}
-export const OrientationButton = function(props: OBProps) {
-	return (
-		<SVGButton
-			onClick={props.onClick}
-			title={`Switch to ${props.orientation === Orientation.Horizontal ? 'vertical' : 'horizontal' } layout`}
-		>
-			<rect width="40" height="30" fill="white" stroke="#444" />
-			<rect width="40" height="8" />
-			{
-				props.orientation === Orientation.Horizontal ?
-					<rect width="40" height="4" y="16" /> :
-					<rect width="4" height="30" x="18" />
-			}
-		</SVGButton>
-	)
-}
+// interface OBProps {
+// 	orientation: Orientation
+// 	onClick: () => void
+// }
+// export const OrientationButton = function(props: OBProps) {
+// 	return (
+// 		<SVGButton
+// 			onClick={props.onClick}
+// 			title={`Switch to ${props.orientation === Orientation.Horizontal ? 'vertical' : 'horizontal' } layout`}
+// 		>
+// 			<rect width="40" height="30" fill="white" stroke="#444" />
+// 			<rect width="40" height="8" />
+// 			{
+// 				props.orientation === Orientation.Horizontal ?
+// 					<rect width="40" height="4" y="16" /> :
+// 					<rect width="4" height="30" x="18" />
+// 			}
+// 		</SVGButton>
+// 	)
+// }
 
-interface WWProps {
-	wordwrap: boolean
-	onClick: () => void
-}
-export const WordWrapButton = function(props: WWProps) {
-	return (
-		<SVGButton
-			onClick={props.onClick}
-			title={`${props.wordwrap ? 'Disable' : 'Enable'} wordwrap`}
-		>
-			<polygon points="4,18 20,9 20,27" />
-			<line x1="20" y1="18" x2="32" y2="18" strokeWidth="6" />
-			<line x1="32" y1="21" x2="32" y2="4" strokeWidth="6" />
-		</SVGButton>
-	)
-}
+// interface WWProps {
+// 	wordwrap: boolean
+// 	onClick: () => void
+// }
+// export const WordWrapButton = function(props: WWProps) {
+// 	return (
+// 		<SVGButton
+// 			onClick={props.onClick}
+// 			title={`${props.wordwrap ? 'Disable' : 'Enable'} wordwrap`}
+// 		>
+// 			<polygon points="4,18 20,9 20,27" />
+// 			<line x1="20" y1="18" x2="32" y2="18" strokeWidth="6" />
+// 			<line x1="32" y1="21" x2="32" y2="4" strokeWidth="6" />
+// 		</SVGButton>
+// 	)
+// }

@@ -17,7 +17,6 @@ export interface EntryState {
 	setAsideTab: (asideTab: AsideTab) => void
 	setFooterTab: (footerTab: FooterTab) => void
 	togglePanel: (panelId: string) => void
-	wordwrap: boolean
 }
 
 export type EntryProps = Pick<AppState, 'configData' | 'entry' | 'searchQuery' | 'searchTab' | 'setEntry' | 'viewport'>
@@ -46,7 +45,6 @@ export default class Entry extends React.PureComponent<EntryProps, EntryState> {
 			)
 			this.setState({ activePanels })
 		},
-		wordwrap: false,
 	}
 
 	async componentDidMount() {
@@ -80,7 +78,6 @@ export default class Entry extends React.PureComponent<EntryProps, EntryState> {
 								Orientation.Horizontal
 						})
 					}
-					toggleWordWrap={() => this.setState({ wordwrap: !this.state.wordwrap })}
 				/>
 				<Aside
 					{...this.props}

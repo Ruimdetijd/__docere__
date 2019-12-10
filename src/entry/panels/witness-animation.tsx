@@ -83,7 +83,6 @@ export default class WitnessAnimationPanel extends React.PureComponent<Props, St
 						hasFacs={this.props.configData.extractFacsimiles != null}
 						hasScroll={this.props.hasScroll}
 						ref={this.textRef}
-						wordwrap={this.props.wordwrap}
 					>
 						<DocereTextView
 							customProps={{
@@ -128,28 +127,3 @@ export default class WitnessAnimationPanel extends React.PureComponent<Props, St
 	}
 }
 
-
-				// <Menu>
-				// 	<div>
-						
-				// 	</div>
-				// 	<div>
-				// 		<a
-				// 			download="test.xml"
-				// 			href={getEntryXmlPath(this.props.config.slug, this.props.entryId)}
-				// 		>
-				// 			<img src="https://tei-c.org/Vault/Logos/TEIlogo.svg" width="32px" />
-				// 		</a>
-				// 		{
-				// 			this.props.components.hasOwnProperty('lb') &&
-				// 			<WordWrapButton
-				// 				onClick={this.props.toggleWordWrap}
-				// 				wordwrap={this.props.wordwrap}
-				// 			/>
-				// 		}
-				// 		<OrientationButton
-				// 			onClick={this.props.togglePanelOrientation}
-				// 			orientation={this.props.orientation}
-				// 		/>
-				// 	</div>
-				// </Menu>

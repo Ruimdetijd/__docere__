@@ -9,7 +9,6 @@ export type PanelsProps = EntryProps & EntryState & {
 	setActiveId: SetActiveId
 	setActiveFacsimile: (path: string) => void
 	togglePanelOrientation: () => void
-	toggleWordWrap: () => void
 }
 export interface PanelsState {
 	facsimileHighlight: FacsimileHighlightOptions
