@@ -88,40 +88,46 @@ interface WProps {
 	position?: TabPosition
 }
 interface Props extends WProps {
-	// icons?: Record<string, JSX.Element>
 	onClick: (tab: SearchTab | FooterTab | AsideTab) => void
 	tab: SearchTab | FooterTab | AsideTab
 	tabs: (SearchTab | FooterTab | AsideTab)[]
 }
-export default class Tabs extends React.PureComponent<Props> {
-	static defaultProps = {
-		position: TabPosition.Right
-	}
 
-	render() {
-		return (
-			<Wrapper position={this.props.position}>
-				{
-					this.props.tabs
-						.map((tab) => {
-							const Icon = icons[tab]
-							return (
-								<Tab
-									active={this.props.tab === tab}
-									key={tab}
-									onClick={() => this.props.onClick(tab)}
-									position={this.props.position}
-								>
-									{
-										Icon != null ?
-											<Icon active={this.props.tab === tab} /> :
-											tab.slice(0, 1)
-									}
-								</Tab>
-							)
-						})
-				}
-			</Wrapper>
-		)
-	}
+function Tabs(props: Props) {
+	const handleTabClick = React.useCallback(e => {
+		const tab = e.currentTarget.dataset.tab
+		props.onClick(tab)
+	}, [])
+
+	return (
+		<Wrapper position={props.position}>
+			{
+				props.tabs
+					.map((tab) => {
+						const Icon = icons[tab]
+						return (
+							<Tab
+								active={props.tab === tab}
+								data-tab={tab}
+								key={tab}
+								onClick={handleTabClick}
+								position={props.position}
+							>
+								{
+									Icon != null ?
+										<Icon active={props.tab === tab} /> :
+										tab.slice(0, 1)
+								}
+							</Tab>
+						)
+					})
+			}
+		</Wrapper>
+	)
 }
+
+Tabs.defaultProps = {
+	position: TabPosition.Right
+}
+
+export default React.memo(Tabs)
