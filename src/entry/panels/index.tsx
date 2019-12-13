@@ -8,7 +8,6 @@ import toPanel from './map-to-panel'
 export type PanelsProps = EntryProps & EntryState & {
 	setActiveId: SetActiveId
 	setActiveFacsimile: (path: string) => void
-	togglePanelOrientation: () => void
 }
 export interface PanelsState {
 	facsimileHighlight: FacsimileHighlightOptions
@@ -38,7 +37,7 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 			setActiveFacsimile: this.props.setActiveFacsimile,
 			setActiveId: this.props.setActiveId,
 			setEntry: this.props.setEntry,
-			setFacsimileHighlight: (opts) => this.setState({ facsimileHighlight: opts }),
+			setFacsimileHighlight: this.setFacsimileHighlight,
 			textLayer: null,
 			viewport: this.props.viewport,
 		}
@@ -56,4 +55,6 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 			</PanelsWrapper>
 		)
 	}
+
+	private setFacsimileHighlight = (opts: FacsimileHighlightOptions) => this.setState({ facsimileHighlight: opts })
 }

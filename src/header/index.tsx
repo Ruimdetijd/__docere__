@@ -67,19 +67,21 @@ const H1 = styled('h1')`
 
 
 type Props = { config: DocereConfig } & Pick<AppState, 'setEntry' | 'setPage'>
-export default class Header extends React.PureComponent<Props> {
-	render() {
-		return (
-			<Wrapper>
-				<TopMenu>
-					<H1
-						onClick={() => this.props.setEntry()}
-					>
-						{this.props.config.title}
-					</H1>
-					<PagesMenu {...this.props} />
-				</TopMenu>
-			</Wrapper>
-		)
-	}
-}
+export default React.memo(function Header(props: Props) {
+	const setEntry = React.useCallback(() => props.setEntry(), [])
+	return (
+		<Wrapper>
+			<TopMenu>
+				<H1
+					onClick={setEntry}
+				>
+					{props.config.title}
+				</H1>
+				<PagesMenu
+					config={props.config}
+					setPage={props.setPage}
+				/>
+			</TopMenu>
+		</Wrapper>
+	)
+})

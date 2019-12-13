@@ -60,20 +60,22 @@ const Link = styled.button`
 	}
 `
 
-function PageMenuItem(props: { pageConfig: PageConfig, setPage: AppState['setPage']}) {
+type PageMenuItemProps = { pageConfig: PageConfig } & Pick<AppState, 'setPage'>
+const PageMenuItem = React.memo((props: PageMenuItemProps) => {
+	const setPage = React.useCallback(() => props.setPage(props.pageConfig.id), [props.pageConfig.id])
 	return (
 		<li>
 			<Link
-				onClick={() => props.setPage(props.pageConfig.id)}
+				onClick={setPage}
 			>
 				{props.pageConfig.title}
 			</Link>
 		</li>
 	)
-}
+})
 
 type Props = { config: DocereConfig } & Pick<AppState, 'setPage'>
-export default function PagesMenu(props: Props) {
+export default React.memo(function PagesMenu(props: Props) {
 	return (
 		<Wrapper>
 			{
@@ -83,17 +85,16 @@ export default function PagesMenu(props: Props) {
 							<span>{page.title} ▾</span>
 							<ul>
 								{
-									page.children.map(page =>
-										<PageMenuItem key={page.id} pageConfig={page} setPage={props.setPage} />
+									page.children.map(child =>
+										<PageMenuItem key={child.id} pageConfig={child} setPage={props.setPage} />
 									)
 								}
 							</ul>
 							
 						</li> :
 						<PageMenuItem key={page.id} pageConfig={page} setPage={props.setPage} />
-
 				)
 			}
 		</Wrapper>
 	)
-}
+})

@@ -69,15 +69,8 @@ export default class Entry extends React.PureComponent<EntryProps, EntryState> {
 				<Panels
 					{...this.props}
 					{...this.state}
-					setActiveFacsimile={(activeFacsimilePath: string) => this.setState({ activeFacsimilePath })}
+					setActiveFacsimile={this.setActiveFacsimile}
 					setActiveId={this.setActiveId}
-					togglePanelOrientation={() =>
-						this.setState({
-							orientation: this.state.orientation === Orientation.Horizontal ?
-								Orientation.Vertical :
-								Orientation.Horizontal
-						})
-					}
 				/>
 				<Aside
 					{...this.props}
@@ -112,4 +105,6 @@ export default class Entry extends React.PureComponent<EntryProps, EntryState> {
 
 		this.setState(nextState as EntryState)
 	}
+
+	private setActiveFacsimile = (activeFacsimilePath: string) => this.setState({ activeFacsimilePath })
 }
