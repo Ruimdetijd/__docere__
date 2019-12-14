@@ -1,4 +1,5 @@
 import extractTextData from './textdata'
+import * as React from 'react'
 
 const defaultConfig: DocereConfig = {
 	metadata: [],
@@ -95,11 +96,17 @@ export default function extendConfigData(configDataRaw: DocereConfigDataRaw): Do
 	// getComponents is only used to generate a map of components
 	const { getComponents, ...configData } = configDataRaw
 
+	const componentMap = getComponents ? getComponents(config) : {}
+	const components = Object.keys(componentMap).reduce((prev, curr) => {
+		prev[curr] = React.memo(components[curr])
+		return prev
+	}, {} as any)
+
 	// TODO getComponents is added to docereCOnfigData, but should not
 	return {
 		...defaultDocereFunctions,
 		...configData,
 		config,
-		components: getComponents ? getComponents(config) : {},
+		components,
 	}
 }
