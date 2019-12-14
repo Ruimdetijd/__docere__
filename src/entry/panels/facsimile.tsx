@@ -1,8 +1,5 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { EntryState } from '../index'
-import { PanelsState } from './index'
-// import { TOP_OFFSET } from '../../constants'
 
 // TODO change facsimile when user scroll past a <pb />
 

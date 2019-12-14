@@ -1,23 +1,3 @@
-interface TextDataValue {
-	count: number
-	key: string
-	value: string
-}
-interface ExtractedNote {
-	n: string | number
-	el: Element
-}
-
-type ExtractedNotes = Record<string, ExtractedNote[]>
-type ExtractedMetadata = Record<string, number | boolean | string | string[]>
-type ExtractedTextData = Record<string, TextDataValue[]>
-type ExtractedTextLayer = Pick<TextLayer, 'element'> & Pick<TextLayerConfig, 'id'> & Partial<TextLayerConfig>
-
-interface ExtractedFacsimile {
-	id: string
-	path: string[]
-}
-
 interface Entry {
 	id: string
 	doc: XMLDocument
@@ -27,3 +7,24 @@ interface Entry {
 	textData: ExtractedTextData
 	textLayers: TextLayer[]
 }
+
+interface EntryState {
+	activeFacsimilePath: string
+	activeId: string
+	activeListId: string
+	activePanels: TextLayerConfig[]
+	asideTab: AsideTab
+	footerTab: FooterTab
+	hasScroll: boolean
+	orientation: Orientation
+	setAsideTab: (asideTab: AsideTab) => void
+	setFooterTab: (footerTab: FooterTab) => void
+	togglePanel: (panelId: string) => void
+}
+
+type EntryProps = Pick<AppState, 'configData' | 'entry' | 'searchQuery' | 'searchTab' | 'setEntry' | 'viewport'>
+
+type EntryAsideProps =	Pick<EntryProps, 'configData' | 'entry' | 'setEntry'> &
+						Pick<EntryState, 'activeId' | 'activeListId' | 'activePanels' | 'asideTab' | 'setAsideTab'> &
+						{ setActiveId: SetActiveId }
+						

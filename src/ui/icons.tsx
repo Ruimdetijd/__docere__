@@ -135,12 +135,12 @@ function NotesIcon(props: IconProps) {
 }
 
 export default {
-	[AsideTab.Metadata]: LabelIcon,
-	[AsideTab.Notes]: NotesIcon,
+	[AsideTab.Metadata]: React.memo(LabelIcon),
+	[AsideTab.Notes]: React.memo(NotesIcon),
 	[AsideTab.TextData]: null,
 
-	[FooterTab.PanelSelector]: LayersIcon,
+	[FooterTab.PanelSelector]: React.memo(LayersIcon),
 
-	[SearchTab.Results]: SearchRightIcon,
-	[SearchTab.Search]: SearchLeftIcon,
+	[SearchTab.Results]: React.memo(SearchRightIcon),
+	[SearchTab.Search]: React.memo(SearchLeftIcon),
 }

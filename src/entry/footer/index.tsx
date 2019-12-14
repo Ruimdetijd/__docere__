@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { EntryState, EntryProps } from '../index'
 import styled from '@emotion/styled'
 import { FOOTER_HEIGHT, TabPosition, FOOTER_HANDLE_HEIGHT, DEFAULT_SPACING, FooterTab } from '../../constants'
 import Tabs from '../../ui/tabs'
@@ -79,32 +78,30 @@ function PanelItem(props: PIProps) {
 }
 
 type Props = EntryProps & EntryState
-class Footer extends React.PureComponent<Props> {
-	render() {
-		return (
-			<Wrapper>
-				<Tabs
-					onClick={(tab: FooterTab) => this.props.setFooterTab(tab)}
-					position={TabPosition.Bottom}
-					tab={this.props.footerTab}
-					tabs={[FooterTab.PanelSelector]}
-				/>
-				<Body>
-					<PanelList>
-						{
-							this.props.activePanels.map(tl =>
-								<PanelItem
-									key={tl.id}
-									textLayer={tl}
-									togglePanel={this.props.togglePanel}
-								/>
-							)
-						}
-					</PanelList>
-				</Body>
-			</Wrapper>
-		)
-	}
+function Footer(props: Props) {
+	return (
+		<Wrapper>
+			<Tabs
+				onClick={props.setFooterTab}
+				position={TabPosition.Bottom}
+				tab={props.footerTab}
+				tabs={[FooterTab.PanelSelector]}
+			/>
+			<Body>
+				<PanelList>
+					{
+						props.activePanels.map(tl =>
+							<PanelItem
+								key={tl.id}
+								textLayer={tl}
+								togglePanel={props.togglePanel}
+							/>
+						)
+					}
+				</PanelList>
+			</Body>
+		</Wrapper>
+	)
 }
 
-export default Footer
+export default React.memo(Footer)

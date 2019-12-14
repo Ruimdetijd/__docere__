@@ -3,9 +3,8 @@ import FacsimilePanel from './facsimile'
 import TextPanel from './text'
 import WitnessAnimationPanel from './witness-animation'
 import XmlPanel from './xml'
-import { PanelsProps, PanelsState } from './index'
 
-export default function mapToPanel(ap: TextLayerConfig, props: PanelsProps, state: PanelsState, customProps: DocereComponentProps) {
+export default function mapToPanel(ap: TextLayerConfig, props: PanelsProps, state: PanelsState) {
 
 	if (ap.type === TextLayerType.Facsimile) {
 		return (
@@ -23,10 +22,13 @@ export default function mapToPanel(ap: TextLayerConfig, props: PanelsProps, stat
 	if (ap.type === TextLayerType.TextLayer) {
 		return (
 			<TextPanel
-				{...props}
-				{...state}
-				customProps={customProps}
+				configData={props.configData}
+				customProps={state.customProps}
+				entry={props.entry}
+				hasScroll={props.hasScroll}
+				highlight={state.highlight}
 				key={ap.id}
+				searchQuery={props.searchQuery}
 				textLayerConfig={ap}
 			/>
 		)
@@ -35,10 +37,11 @@ export default function mapToPanel(ap: TextLayerConfig, props: PanelsProps, stat
 	if (ap.type === TextLayerType.WitnessAnimation) {
 		return (
 			<WitnessAnimationPanel
-				{...props}
-				{...state}
-				customProps={customProps}
+				configData={props.configData}
+				entry={props.entry}
+				hasScroll={props.hasScroll}
 				key={ap.id}
+				setActiveFacsimile={props.setActiveFacsimile}
 				textLayerConfig={ap}
 			/>
 		)

@@ -2,20 +2,15 @@ import * as React from 'react'
 import DocereTextView from 'docere-text-view'
 import { TextWrapper, Text } from '../index.components'
 import { fetchPost } from '../../utils'
-import { PanelsProps, PanelsState } from './index'
 
-interface Props extends PanelsProps, PanelsState {
-	customProps: DocereComponentProps
-	textLayerConfig: TextLayerConfig
-}
-class TextPanel extends React.PureComponent<Props> {
+class TextPanel extends React.PureComponent<TextPanelProps> {
 	private textRef: React.RefObject<HTMLDivElement>
 
 	async componentDidMount() {
 		if (this.props.searchQuery != null) this.setHighlight()
 	}
 
-	componentDidUpdate(prevProps: Props) {
+	componentDidUpdate(prevProps: TextPanelProps) {
 		if (prevProps.highlight.length && !this.props.highlight.length) {
 			for (const el of this.textRef.current.querySelectorAll('mark')) {
 				el.replaceWith(...el.childNodes)

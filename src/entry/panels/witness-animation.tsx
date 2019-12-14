@@ -1,7 +1,6 @@
 import * as React from 'react'
 import DocereTextView from 'docere-text-view'
 import { Text } from '../index.components'
-import { PanelsProps, PanelsState } from './index'
 import styled from '@emotion/styled'
 import { TEXT_PANEL_WIDTH } from '../../constants'
 
@@ -39,16 +38,12 @@ const Marker = styled.li`
 	width: ${(props: any) => props.active ? 12 : 4}px;
 `
 
-interface Props extends PanelsProps, PanelsState {
-	customProps: DocereComponentProps
-	textLayerConfig: TextLayerConfig
-}
 interface State {
 	textLayer: TextLayerConfig
 	prevTextLayer: TextLayerConfig
 	textLayers: TextLayerConfig[]
 }
-export default class WitnessAnimationPanel extends React.PureComponent<Props, State> {
+export default class WitnessAnimationPanel extends React.PureComponent<WitnessAnimationPanelProps, State> {
 	private textRef: React.RefObject<HTMLDivElement>
 	private interval: any
 
@@ -72,9 +67,6 @@ export default class WitnessAnimationPanel extends React.PureComponent<Props, St
 	}
 
 	render() {
-		// const textLayer = this.props.entry.textLayers.find(tl => tl.id === this.props.textLayerConfig.id)
-		// if (textLayer == null) return null
-
 		return (
 			<Wrapper>
 				<TextWrapper>
@@ -86,13 +78,11 @@ export default class WitnessAnimationPanel extends React.PureComponent<Props, St
 					>
 						<DocereTextView
 							customProps={{
-								...this.props.customProps,
 								prevTextLayer: this.state.prevTextLayer?.id,
 								textLayer: this.state.textLayer.id
 							}}
 							components={this.props.configData.components}
 							node={this.props.entry.textLayers[3].element}
-							highlight={this.props.highlight}
 						/>
 					</Text>
 				</TextWrapper>

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import styled from '@emotion/styled';
-import { EntryState, EntryProps } from '../index'
 import MetadataAside from './metadata'
 import Notes from './notes'
 import TextDataAside from './text-data'
@@ -35,11 +34,7 @@ function isEmpty(obj: Object) {
 	return Object.keys(obj).length === 0
 }
 
-interface AsideProps {
-	setActiveId: SetActiveId
-}
-type Props = EntryProps & EntryState & AsideProps
-export default class Aside extends React.PureComponent<Props> {
+export default class Aside extends React.PureComponent<EntryAsideProps> {
 	render() {
 		const hasMetadata = !isEmpty(this.props.entry.metadata)
 		const hasTextData = !isEmpty(this.props.entry.textData)

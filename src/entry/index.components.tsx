@@ -127,7 +127,7 @@ interface ButtonProps {
 	onClick: () => void
 	title: string
 }
-export const SVGButton = function(props: ButtonProps) {
+export const SVGButton = React.memo(function(props: ButtonProps) {
 	return (
 		<svg
 			onClick={props.onClick}
@@ -141,42 +141,4 @@ export const SVGButton = function(props: ButtonProps) {
 			</g>
 		</svg>
 	)
-}
-
-// interface OBProps {
-// 	orientation: Orientation
-// 	onClick: () => void
-// }
-// export const OrientationButton = function(props: OBProps) {
-// 	return (
-// 		<SVGButton
-// 			onClick={props.onClick}
-// 			title={`Switch to ${props.orientation === Orientation.Horizontal ? 'vertical' : 'horizontal' } layout`}
-// 		>
-// 			<rect width="40" height="30" fill="white" stroke="#444" />
-// 			<rect width="40" height="8" />
-// 			{
-// 				props.orientation === Orientation.Horizontal ?
-// 					<rect width="40" height="4" y="16" /> :
-// 					<rect width="4" height="30" x="18" />
-// 			}
-// 		</SVGButton>
-// 	)
-// }
-
-// interface WWProps {
-// 	wordwrap: boolean
-// 	onClick: () => void
-// }
-// export const WordWrapButton = function(props: WWProps) {
-// 	return (
-// 		<SVGButton
-// 			onClick={props.onClick}
-// 			title={`${props.wordwrap ? 'Disable' : 'Enable'} wordwrap`}
-// 		>
-// 			<polygon points="4,18 20,9 20,27" />
-// 			<line x1="20" y1="18" x2="32" y2="18" strokeWidth="6" />
-// 			<line x1="32" y1="21" x2="32" y2="4" strokeWidth="6" />
-// 		</SVGButton>
-// 	)
-// }
+})

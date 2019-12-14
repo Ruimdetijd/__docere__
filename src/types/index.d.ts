@@ -2,6 +2,7 @@
 /// <reference path="./entry.d.ts" />
 /// <reference path="./config.d.ts" />
 /// <reference path="./components.d.ts" />
+/// <reference path="./panels.d.ts" />
 
 declare module 'openseadragon'
 

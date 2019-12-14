@@ -3,23 +3,7 @@ import { Main } from './index.components'
 import Panels from './panels'
 import Aside from './aside'
 import Footer from './footer'
-import { FooterTab } from '../constants'
 
-export interface EntryState {
-	activeFacsimilePath: string
-	activeId: string
-	activeListId: string
-	activePanels: TextLayerConfig[]
-	asideTab: AsideTab
-	footerTab: FooterTab
-	hasScroll: boolean
-	orientation: Orientation
-	setAsideTab: (asideTab: AsideTab) => void
-	setFooterTab: (footerTab: FooterTab) => void
-	togglePanel: (panelId: string) => void
-}
-
-export type EntryProps = Pick<AppState, 'configData' | 'entry' | 'searchQuery' | 'searchTab' | 'setEntry' | 'viewport'>
 export default class Entry extends React.PureComponent<EntryProps, EntryState> {
 	state: EntryState = {
 		activeFacsimilePath: null,

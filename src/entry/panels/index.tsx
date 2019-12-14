@@ -1,19 +1,9 @@
 import * as React from 'react'
-import { EntryState, EntryProps } from '../index'
 
 import { PanelsWrapper } from '../index.components'
 import { AsideTab } from '../../constants'
 import toPanel from './map-to-panel'
 
-export type PanelsProps = EntryProps & EntryState & {
-	setActiveId: SetActiveId
-	setActiveFacsimile: (path: string) => void
-}
-export interface PanelsState {
-	customProps: DocereComponentProps
-	facsimileHighlight: FacsimileHighlightOptions
-	highlight: string[]
-}
 export default class Panels extends React.Component<PanelsProps, PanelsState> {
 	private setFacsimileHighlight = (opts: FacsimileHighlightOptions) => this.setState({ facsimileHighlight: opts })
 	state: PanelsState = {
@@ -63,7 +53,6 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 	}
 
 	render() {
-		console.log('r p')
 		const activePanels = this.props.activePanels.filter(ap => ap.active)
 
 		return (
@@ -72,7 +61,7 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 				orientation={this.props.orientation}
 			>
 				{
-					activePanels.map(ap => toPanel(ap, this.props, this.state, this.state.customProps))
+					activePanels.map(ap => toPanel(ap, this.props, this.state))
 				}
 			</PanelsWrapper>
 		)
