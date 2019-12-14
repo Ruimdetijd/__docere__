@@ -61,7 +61,7 @@ const Link = styled.button`
 `
 
 type PageMenuItemProps = { pageConfig: PageConfig } & Pick<AppState, 'setPage'>
-const PageMenuItem = React.memo((props: PageMenuItemProps) => {
+function PageMenuItem(props: PageMenuItemProps) {
 	const setPage = React.useCallback(() => props.setPage(props.pageConfig.id), [props.pageConfig.id])
 	return (
 		<li>
@@ -72,7 +72,7 @@ const PageMenuItem = React.memo((props: PageMenuItemProps) => {
 			</Link>
 		</li>
 	)
-})
+}
 
 type Props = { config: DocereConfig } & Pick<AppState, 'setPage'>
 export default React.memo(function PagesMenu(props: Props) {

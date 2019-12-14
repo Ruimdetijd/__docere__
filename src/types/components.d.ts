@@ -1,6 +1,6 @@
 type SetActiveId = (id: string, listId: string, asideTab: AsideTab) => void
 
-type DocereComponents = Record<string, (props: DocereComponentProps) => JSX.Element>
+type DocereComponents = Record<string, (props: Partial<DocereComponentProps>) => JSX.Element>
 type GetComponents = (config: DocereConfig) => DocereComponents
 
 interface FacsimileHighlightOptions {
@@ -15,7 +15,7 @@ interface DocereComponentProps {
 	activeFacsimilePath: string
 	activeId: string
 	activeListId: string
-	children?: any
+	children?: React.ReactNode
 	config: DocereConfig
 	facsimiles: Entry['facsimiles']
 	insideNote: boolean

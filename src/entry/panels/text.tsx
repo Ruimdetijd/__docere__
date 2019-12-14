@@ -36,7 +36,8 @@ class TextPanel extends React.PureComponent<Props> {
 					ref={this.textRef}
 				>
 					<DocereTextView
-						customProps={{...this.props.customProps, textLayer: this.props.textLayerConfig.id}}
+						// customProps={{...this.props.customProps, textLayer: this.props.textLayerConfig.id}}
+						customProps={this.props.customProps}
 						components={this.props.configData.components}
 						node={textLayer.element}
 						highlight={this.props.highlight}

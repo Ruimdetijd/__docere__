@@ -10,24 +10,14 @@ export type PanelsProps = EntryProps & EntryState & {
 	setActiveFacsimile: (path: string) => void
 }
 export interface PanelsState {
+	customProps: DocereComponentProps
 	facsimileHighlight: FacsimileHighlightOptions
 	highlight: string[]
 }
 export default class Panels extends React.Component<PanelsProps, PanelsState> {
+	private setFacsimileHighlight = (opts: FacsimileHighlightOptions) => this.setState({ facsimileHighlight: opts })
 	state: PanelsState = {
-		facsimileHighlight: null,
-		highlight: [],
-	}
-
-	shouldComponentUpdate(nextProps: PanelsProps) {
-		// Only update when the viewport has not changed
-		return this.props.viewport === nextProps.viewport ||
-			this.props.asideTab === AsideTab.TextData ||
-			nextProps.asideTab === AsideTab.TextData
-	}
-
-	render() {
-		const customProps: DocereComponentProps = {
+		customProps: {
 			activeFacsimilePath: this.props.activeFacsimilePath,
 			activeId: this.props.activeId,
 			activeListId: this.props.activeListId,
@@ -40,8 +30,40 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 			setFacsimileHighlight: this.setFacsimileHighlight,
 			textLayer: null,
 			viewport: this.props.viewport,
+		},
+		facsimileHighlight: null,
+		highlight: [],
+	}
+
+	shouldComponentUpdate(nextProps: PanelsProps) {
+		// Only update when the viewport has not changed
+		return this.props.viewport === nextProps.viewport ||
+			this.props.asideTab === AsideTab.TextData ||
+			nextProps.asideTab === AsideTab.TextData
+	}
+
+	componentDidUpdate() {
+		if (
+			this.state.customProps.activeFacsimilePath !== this.props.activeFacsimilePath ||
+			this.state.customProps.activeId !== this.props.activeId ||
+			this.state.customProps.activeListId !== this.props.activeListId ||
+			// facsimiles: this.props.entry.facsimiles,
+			this.state.customProps.viewport !== this.props.viewport
+		) {
+			this.setState({ customProps: {
+				...this.state.customProps,
+				activeFacsimilePath: this.props.activeFacsimilePath,
+				activeId: this.props.activeId,
+				activeListId: this.props.activeListId,
+				viewport: this.props.viewport,
+			}})
 		}
 
+		return this.state.customProps
+	}
+
+	render() {
+		console.log('r p')
 		const activePanels = this.props.activePanels.filter(ap => ap.active)
 
 		return (
@@ -50,11 +72,9 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 				orientation={this.props.orientation}
 			>
 				{
-					activePanels.map(ap => toPanel(ap, this.props, this.state, customProps))
+					activePanels.map(ap => toPanel(ap, this.props, this.state, this.state.customProps))
 				}
 			</PanelsWrapper>
 		)
 	}
-
-	private setFacsimileHighlight = (opts: FacsimileHighlightOptions) => this.setState({ facsimileHighlight: opts })
 }

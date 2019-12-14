@@ -32,9 +32,11 @@ const NoWrap = styled.span`
 
 function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessComponent<SvgProps>) {
 	return function (props: DocereComponentProps & { [key: string]: any }) {
+		const children = React.Children.toArray(props.children)
+
 		const activeId: string = rsConfig.extractor.extractionType === TextDataExtractionType.Attribute ?
 			props[rsConfig.extractor.idAttribute] :
-			props.children[0]
+			children[0]
 
 		// The RS is active when the text data list (defined by the ID), for example: person, place, theme, etc
 		// and the ID match. Only the ID is not sufficient, because two lists could have matching IDs.
@@ -44,8 +46,8 @@ function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessCompo
 		// The icon and the first word are placed inside a span with white-space: nowrap.
 		let firstWord: string
 		let restOfFirstChild: string
-		if (props.children.length && typeof props.children[0] === 'string') {
-			const [fw, ...rofc] = props.children[0].split(/\s/)
+		if (children.length && typeof children[0] === 'string') {
+			const [fw, ...rofc] = children[0].split(/\s/)
 			firstWord = fw
 			restOfFirstChild = ' '.concat(rofc.join(' '))
 		}
@@ -69,7 +71,7 @@ function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessCompo
 						</NoWrap>
 				}
 				{restOfFirstChild}
-				{props.children.slice(1)}
+				{children.slice(1)}
 			</Rs>
 		)
 
