@@ -64,7 +64,6 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 				/>
 				<PageView
 					config={configData.config}
-					entry={entry}
 					page={page}
 					setPage={setPage}
 				/>
