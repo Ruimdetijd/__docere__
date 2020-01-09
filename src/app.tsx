@@ -171,8 +171,10 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 				const tl2 = extendTextLayer(tl, this.props.configData.config.textLayers)
 				if (tl2.hasOwnProperty('xmlPath')) {
 					const doc = await this.getEntryDoc(tl2.xmlPath(id))
-					const element = this.props.configData.prepareDocument(doc, this.props.configData.config, id, tl2)
-					tl2.element = element
+					if (doc != null) {
+						const element = this.props.configData.prepareDocument(doc, this.props.configData.config, id, tl2)
+						tl2.element = element
+					}
 				}
 				return tl2
 			}))

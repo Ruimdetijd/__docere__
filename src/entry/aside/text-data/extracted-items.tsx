@@ -74,44 +74,50 @@ interface Props {
 	config: DocereConfig
 	data: TextDataConfig
 	containerHeight: number
-	items: TextDataValue[]
+	items: Map<string, TextDataValue>
 	onItemClick: SetActiveId
 	onListClick: (listId: string) => void
 }
-export default class ExtractedItems extends React.Component<Props> {
-	render() {
-		return (
-			<>
-				<H2
-					onClick={() => this.props.onListClick(this.props.data.id)}
-				>
-					{this.props.data.title}
-					<small>({this.props.items.length})</small>
-				</H2>
-				<Ul
-					active={this.props.active}
-					textdataLength={this.props.config.textData.length}
-					height={this.props.containerHeight}
-				>
-					<ActiveIndicator
-						activeIndex={this.props.items.findIndex(item => item.key === this.props.activeItemId)}
-						color={this.props.data.color}
-					/>
-					{
-						this.props.items
-							.map((item, i) =>
-								<ItemInText
-									active={item.key === this.props.activeItemId}
-									count={item.count}
-									key={item.key + i}
-									onClick={() => this.props.onItemClick(item.key, this.props.data.id, null)}
-								>
-									{item.value}
-								</ItemInText>
-							)
-					}
-				</Ul>
-			</>
-		)
-	}
+
+function ExtractedItems(props: Props) {
+	const entries = Array.from(props.items.entries())
+	return (
+		<>
+			<H2
+				onClick={() => props.onListClick(props.data.id)}
+			>
+				{props.data.title}
+				<small>({props.items.size})</small>
+			</H2>
+			<Ul
+				active={props.active}
+				textdataLength={props.config.textData.length}
+				height={props.containerHeight}
+			>
+				<ActiveIndicator
+					activeIndex={entries.findIndex(([key]) => key === props.activeItemId)}
+					color={props.data.color}
+				/>
+				{
+					entries
+						.map(([key, item], i) =>
+							<ItemInText
+								active={key === props.activeItemId}
+								count={item.count}
+								key={key + i}
+								onClick={() => props.onItemClick(key, props.data.id, null)}
+							>
+								{item.value}
+							</ItemInText>
+						)
+				}
+			</Ul>
+		</>
+	)
 }
+
+ExtractedItems.defaultProps = {
+	items: new Map()
+}
+
+export default React.memo(ExtractedItems)

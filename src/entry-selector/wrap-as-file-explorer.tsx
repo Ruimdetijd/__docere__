@@ -20,7 +20,7 @@ const Wrapper = styled.div`
 	z-index: 6000;
 `
 
-export default function wrapAsFileExplorer(FileExplorer: React.ComponentClass<FileExplorerProps>) {
+export default function wrapAsFileExplorer(FileExplorer: React.FC<FileExplorerProps>) {
 	return function FileExplorerWrapper(props: FileExplorerProps & Pick<AppState, 'setSearchTab'>) {
 		return (
 			<Wrapper

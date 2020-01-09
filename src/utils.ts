@@ -33,12 +33,21 @@ export function getPageXmlPath(projectSlug: string, page: PageConfig) {
 	return `${getProjectDir(projectSlug)}/pages/${page.path}`
 }
 
-export function fetchEntryXml(projectSlug: string, documentId: string) {
-	return fetchXml(getEntryXmlPath(projectSlug, documentId))
+export async function fetchEntryXml(projectSlug: string, documentId: string) {
+	let doc: XMLDocument
+
+	try {
+		// doc = await fetchEntryXml(this.props.configData.config.slug, documentId)
+		doc = await fetchXml(getEntryXmlPath(projectSlug, documentId))
+	} catch (err) {
+		doc = null			
+	}
+
+	return doc
 }
 
 export function fetchXml(url: string): Promise<XMLDocument> {
-	return new Promise((resolve, _reject) => {
+	return new Promise((resolve, reject) => {
 		var xhr = new XMLHttpRequest
 		xhr.open('GET', url)
 		xhr.responseType = 'document'
@@ -47,11 +56,18 @@ export function fetchXml(url: string): Promise<XMLDocument> {
 		xhr.onload = function() {
 			if (xhr.readyState === xhr.DONE && xhr.status === 200) {
 				resolve(xhr.responseXML)
+			} else {
+				reject()
 			}
 		}
 
 		xhr.send()
 	})
+}
+
+export async function fetchJson(url: string) {
+	const result = await fetch(url)
+	return await result.json()
 }
 
 // function byteToHex(byte: number) {

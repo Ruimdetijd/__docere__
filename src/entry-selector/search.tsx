@@ -1,9 +1,10 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import HucFacetedSearch  from 'huc-faceted-search'
-import { DEFAULT_SPACING, TOP_OFFSET, RESULT_ASIDE_WIDTH, Viewport, SearchTab } from '../constants'
-import fieldToFacet from './field-to-facet'
+import { DEFAULT_SPACING, TOP_OFFSET, RESULT_ASIDE_WIDTH, SearchTab } from '../constants'
 import { defaultMetadata } from '../export/extend-config-data'
+import { fetchJson } from '../utils'
+import GenericResultBodyComponent from '../project-components/generic-result-body'
 
 const FS = styled(HucFacetedSearch)`
 	background: white;
@@ -48,98 +49,69 @@ const FS = styled(HucFacetedSearch)`
 	}}
 `
 
-interface State {
-	fields: MetaDataConfig[]
-	resultBody: React.FunctionComponent<ResultBodyProps>
+
+// function getResultBodyComponent(projectId: string) {
+// 	return async function() {
+// 		let ResultBodyComponent: React.FunctionComponent<ResultBodyProps>
+
+// 		try {
+// 			ResultBodyComponent = await import(`../project-components/${projectId}/result-body.tsx`)
+// 		} catch (err) {
+// 			ResultBodyComponent = await import('../project-components/generic-result-body') as any
+// 		}
+
+// 		// @ts-ignore
+// 		return ResultBodyComponent.default
+// 	}
+// }
+
+function useFields(config: DocereConfig) {
+	const [fields, setFields] = React.useState<MetaDataConfig[]>([])
+
+	React.useEffect(() => {
+		fetchJson(`/search/${config.slug}/_mapping`)
+			.then(json => {
+				const { properties } = json[config.slug].mappings
+				const tmpFields = Object.keys(properties)
+					.filter(key => key !== 'text' && key !== 'facsimiles' && key !== 'id')
+					.map(key => {
+						let mdConfig = config.metadata.find(md => md.id === key)
+						if (mdConfig == null) config.textData.find(td => td.id === key)
+						if (mdConfig == null) mdConfig = {
+							...defaultMetadata,
+							id: key
+						}
+						return mdConfig
+					})
+					.filter(field => field.datatype !== EsDataType.Null && field.datatype !== EsDataType.Text )
+					.sort((f1, f2) => f1.order - f2.order)
+				setFields(tmpFields)
+			})
+			.catch(err => console.log(err))
+	}, [config.slug])
+	
+	return fields
 }
-export default class Search extends React.Component<FileExplorerProps, State> {
-	private searchRef = React.createRef() as React.RefObject<HucFacetedSearch>
 
-	state: State = {
-		fields: [],
-		resultBody: null,
-	}
+export default function Search(props: FileExplorerProps) {
+	const fields = useFields(props.config)
 
-	async componentDidMount() {
-		let rbImport
+	// TODO remove this check. The FS should update when the fields change
+	if (!fields.length) return null
 
-		try {
-			// Import the non-generic ResultBody component
-			// TODO move to project repo
-			rbImport = await import(`../project-components/${this.props.config.slug}/result-body.tsx`)
-		} catch (err) {
-			rbImport = await import('../project-components/generic-result-body')
-		}
-
-		let tmpfields
-		try {
-			const result = await fetch(`/search/${this.props.config.slug}/_mapping`)
-			const json = await result.json()
-			const { properties } = json[this.props.config.slug].mappings
-			tmpfields = Object.keys(properties)
-				.filter(key => key !== 'text' && key !== 'facsimiles' && key !== 'id')
-				.map(key => {
-					let config = this.props.config.metadata.find(md => md.id === key)
-					if (config == null) this.props.config.textData.find(td => td.id === key)
-					if (config == null) config = {
-						...defaultMetadata,
-						id: key
-					}
-
-					return config
-				})
-		} catch (err) {
-			console.log(err)
-		}
-
-		if (tmpfields == null) return
-
-		// Prepare the facets definitions from the config
-		const fields = tmpfields
-			.filter(field => field.datatype !== EsDataType.null && field.datatype !== EsDataType.text )
-			.sort((f1, f2) => f1.order - f2.order)
-		
-		this.setState({
-			fields,
-			resultBody: rbImport.default
-		})
-	}
-
-	shouldComponentUpdate(nextProps: FileExplorerProps, nextState: State) {
-		// Update when the resultBody is loaded
-		if (this.state.resultBody == null && nextState.resultBody != null) return true
-
-		// Don't update when the search is not involved in the view
-		if (
-			this.props.viewport !== Viewport.Search &&
-			this.props.searchTab !== SearchTab.Results &&
-			nextProps.viewport !== Viewport.Search &&
-			nextProps.searchTab !== SearchTab.Results
-		) return false
-
-		return true
-	}
-
-	render() {
-		if (this.state.resultBody == null) return null
-
-		return (
-			<FS
-				backend="elasticsearch"
-				disableDefaultStyle={this.props.searchTab === SearchTab.Results}
-				onClickResult={result => this.props.setEntry(result.id)}
-				ref={this.searchRef}
-				resultBodyComponent={this.state.resultBody}
-				resultBodyProps={{
-					activeId: this.props.entry == null ? null : this.props.entry.id,
-					searchTab: this.props.searchTab,
-					viewport: this.props.viewport,
-				}}
-				resultsPerPage={this.props.config.searchResultCount}
-				url={`/search/${this.props.config.slug}/_search`}
-			>
-				{this.state.fields.map(fieldToFacet)}
-			</FS>
-		)
-	}
+	return (
+		<FS
+			disableDefaultStyle={props.searchTab === SearchTab.Results}
+			fields={fields}
+			ResultBodyComponent={GenericResultBodyComponent}
+			onClickResult={result => props.setEntry(result.id)}
+			resultBodyProps={{
+				activeId: props.entry == null ? null : props.entry.id,
+				searchTab: props.searchTab,
+				viewport: props.viewport,
+			}}
+			resultsPerPage={props.config.searchResultCount}
+			url={`/search/${props.config.slug}/_search`}
+		/>
+	)
 }

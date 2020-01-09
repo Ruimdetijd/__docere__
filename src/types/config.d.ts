@@ -1,6 +1,7 @@
+/// <reference types="huc-faceted-search" />
+
 interface TextDataValue {
 	count: number
-	key: string
 	value: string
 }
 interface ExtractedNote {
@@ -10,7 +11,7 @@ interface ExtractedNote {
 
 type ExtractedNotes = Record<string, ExtractedNote[]>
 type ExtractedMetadata = Record<string, number | boolean | string | string[]>
-type ExtractedTextData = Record<string, TextDataValue[]>
+type ExtractedTextData = Map<string, Map<string, TextDataValue>>
 type ExtractedTextLayer = Pick<TextLayer, 'element'> & Pick<TextLayerConfig, 'id'> & Partial<TextLayerConfig>
 
 interface ExtractedFacsimile {
@@ -30,26 +31,18 @@ interface DocereConfig {
 	title: string
 }
 
-interface DocereConfigDataRaw {
-	getComponents?: (config: DocereConfig) => DocereComponents
-	config?: DocereConfig
-	extractFacsimiles?: (doc: XMLDocument) => ExtractedFacsimile[]
-	extractMetadata?: (doc: XMLDocument, config: DocereConfig, id: string) => ExtractedMetadata
-	extractNotes?: (doc: XMLDocument) => ExtractedNotes
-	extractTextData?: (doc: XMLDocument, config: DocereConfig) => ExtractedTextData
-	extractTextLayers?: (doc: XMLDocument, config: DocereConfig) => ExtractedTextLayer[]
-	prepareDocument?: (doc: XMLDocument, config: DocereConfig, id: string, textLayer?: TextLayer) => XMLDocument
-}
+type DocereConfigDataRaw = Partial<Omit<DocereConfigData, 'components'>> &
+	{ getComponents?: (config: DocereConfig) => DocereComponents }
 
 interface DocereConfigData {
 	components: DocereComponents
 	config: DocereConfig
-	extractFacsimiles: DocereConfigDataRaw['extractFacsimiles']
-	extractMetadata: DocereConfigDataRaw['extractMetadata']
-	extractNotes: DocereConfigDataRaw['extractNotes']
-	extractTextData: DocereConfigDataRaw['extractTextData']
-	extractTextLayers: DocereConfigDataRaw['extractTextLayers']
-	prepareDocument: DocereConfigDataRaw['prepareDocument']
+	extractFacsimiles: (doc: XMLDocument) => ExtractedFacsimile[]
+	extractMetadata: (doc: XMLDocument, config: DocereConfig, id: string) => ExtractedMetadata
+	extractNotes: (doc: XMLDocument) => ExtractedNotes
+	extractTextData: (doc: XMLDocument, config: DocereConfig) => ExtractedTextData
+	extractTextLayers: (doc: XMLDocument, config: DocereConfig) => ExtractedTextLayer[]
+	prepareDocument: (doc: XMLDocument, config: DocereConfig, id: string, textLayer?: TextLayer) => XMLDocument
 }
 
 interface MetaDataConfig extends EntityConfig {
@@ -66,8 +59,8 @@ interface TextDataExtractor {
 }
 
 interface TextDataConfig extends MetaDataConfig {
-	color: string
-	extractor: TextDataExtractor
+	color?: string
+	extractor?: TextDataExtractor
 	textLayers?: string[]
 }
 

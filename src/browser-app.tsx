@@ -12,7 +12,6 @@ export default class BrowserApp extends App {
 	}
 
 	protected async getEntryDoc(documentId: string) {
-		// const { documentId, documentPath } = analyzeWindowLocation()
 		return await fetchEntryXml(this.props.configData.config.slug, documentId)
 	}
 

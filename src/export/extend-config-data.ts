@@ -1,4 +1,4 @@
-import extractTextData from './textdata'
+// import extractTextData from './textdata'
 import * as React from 'react'
 
 const defaultConfig: DocereConfig = {
@@ -34,8 +34,9 @@ const defaultConfig: DocereConfig = {
 
 export const defaultMetadata: MetaDataConfig = {
 	aside: true,
-	datatype: EsDataType.keyword,
+	datatype: EsDataType.Keyword,
 	id: null,
+	// TODO fixate the order number, which means: if there is no order than increment the order number: 999, 1000, 1001, 1002 (import for example the sort setting in the FS)
 	order: 9999,
 }
 
@@ -55,7 +56,7 @@ const defaultDocereFunctions: Pick<DocereConfigData, 'prepareDocument' | 'extrac
 	extractFacsimiles: function extractFacsimiles(_doc) { return [] },
 	extractMetadata: function extractMetadata(_doc) { return {} },
 	extractNotes: function extractNotes(_doc) { return {} },
-	extractTextData,
+	extractTextData: function extractTextData(_doc) { return new Map() },
 	extractTextLayers: function extractTextLayers(_doc) { return [] }
 }
 
@@ -98,7 +99,7 @@ export default function extendConfigData(configDataRaw: DocereConfigDataRaw): Do
 
 	const componentMap = getComponents ? getComponents(config) : {}
 	const components = Object.keys(componentMap).reduce((prev, curr) => {
-		prev[curr] = React.memo(components[curr])
+		prev[curr] = React.memo(componentMap[curr])
 		return prev
 	}, {} as any)
 

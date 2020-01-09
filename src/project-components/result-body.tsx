@@ -83,6 +83,10 @@ const FacsimileThumbList = styled.ul`
 const FacsimileThumb = styled.li`
 	display: inline-block;
 	margin-bottom: 8px;
+
+	& > img {
+		border-radius: .15em;
+	}
 `
 
 function FacsimileThumbs(props: { facsimiles: string[], small: boolean }) {
@@ -107,73 +111,73 @@ function FacsimileThumbs(props: { facsimiles: string[], small: boolean }) {
 		</FacsimileThumbList>
 }
 
+// TODO there are two implementations of ResultBodyProps
 export interface ResultBodyProps {
-	activeId: string
+	activeId?: string
 	result: Hit
-	searchTab: SearchTab
-	viewport: Viewport
+	searchTab?: SearchTab
+	viewport?: Viewport
 }
 export interface State {
 	active: boolean
 	tooltipTop: number
 }
-const getResultBody = (MetadataItems: React.FunctionComponent<ResultBodyProps>) => 
-	class ResultBody extends React.PureComponent<ResultBodyProps, State> {
-		state: State = {
-			active: false,
-			tooltipTop: 0
-		}
 
-		render() {
-			return (
-				<Wrapper
-					active={this.props.result.id === this.props.activeId}
-					hasFacsimile={this.props.result.hasOwnProperty('facsimiles') && this.props.result.facsimiles.length > 0}
-					onMouseEnter={(ev) => {
-						const top = ev.currentTarget.getBoundingClientRect().top - MAINHEADER_HEIGHT - 32
-						this.setState({ active: true, tooltipTop: top })
-					}}
-					onMouseLeave={() => this.setState({ active: false })}
-					small={this.props.viewport === Viewport.Entry}
-				>
-					<FacsimileThumbs
-						facsimiles={this.props.result.facsimiles}
-						small={this.props.viewport === Viewport.Entry}
-					/>
-					{
-						this.props.viewport === Viewport.Entry && this.props.searchTab === SearchTab.Results ?
-							<Tooltip
-								orientation="right"
-								style={{
-									width: '360px',
-									display: this.state.active ? 'block' : 'none',
-									top: `${this.state.tooltipTop}px`,
-								}}
-								bodyStyle={{ 
-									backgroundColor: '#212830',
-									color: '#EEE',
- 								}}
-								shift={.15}
-							>
-								<Metadata>
-									<MetadataItems {...this.props} />
-								</Metadata>
-							</Tooltip> :
+const getResultBody = (MetadataItems: React.FunctionComponent<ResultBodyProps>) => 
+	React.memo(function ResultBody(props: ResultBodyProps) {
+		const [active, setActive] = React.useState(false)
+		const [tooltipTop, setTooltipTop] = React.useState(0)
+
+		return (
+			<Wrapper
+				active={props.result.id === props.activeId}
+				hasFacsimile={props.result.hasOwnProperty('facsimiles') && props.result.facsimiles.length > 0}
+				onMouseEnter={(ev) => {
+					const top = ev.currentTarget.getBoundingClientRect().top - MAINHEADER_HEIGHT - 32
+					setActive(true)
+					setTooltipTop(top)
+				}}
+				onMouseLeave={() => setActive(false)}
+				small={props.viewport === Viewport.Entry}
+			>
+				<FacsimileThumbs
+					facsimiles={props.result.facsimiles}
+					small={props.viewport === Viewport.Entry}
+				/>
+				{
+					props.viewport === Viewport.Entry && props.searchTab === SearchTab.Results ?
+						<Tooltip
+							orientation="right"
+							style={{
+								width: '360px',
+								display: active ? 'block' : 'none',
+								top: `${tooltipTop}px`,
+							}}
+							bodyStyle={{ 
+								backgroundColor: '#212830',
+								color: '#EEE',
+							}}
+							shift={.15}
+						>
 							<Metadata>
-								<MetadataItems {...this.props} />
+								<MetadataItems {...props} />
 							</Metadata>
-					}
-					{
-						this.props.result.snippets.length > 0 &&
-						<Snippets>
-							{this.props.result.snippets.map((snippet, index) =>
-								<li dangerouslySetInnerHTML={{ __html: `...${snippet}...` }}  key={index} />
-							)}
-						</Snippets>
-					}
-				</Wrapper>
-			)
-		}
-	}
+						</Tooltip> :
+						<Metadata>
+							<MetadataItems {...props} />
+						</Metadata>
+				}
+				{
+					props.result.snippets.length > 0 &&
+					<Snippets>
+						{props.result.snippets.map((snippet, index) =>
+							<li dangerouslySetInnerHTML={{ __html: `...${snippet}...` }}  key={index} />
+						)}
+					</Snippets>
+				}
+			</Wrapper>
+		)
+	})
+
 
 export default getResultBody

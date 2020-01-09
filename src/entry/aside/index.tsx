@@ -37,7 +37,7 @@ function isEmpty(obj: Object) {
 export default class Aside extends React.PureComponent<EntryAsideProps> {
 	render() {
 		const hasMetadata = !isEmpty(this.props.entry.metadata)
-		const hasTextData = !isEmpty(this.props.entry.textData)
+		const hasTextData = this.props.entry.textData.size > 0
 		const hasNotes = !isEmpty(this.props.entry.notes)
 
 		const tabs = []
@@ -70,7 +70,7 @@ export default class Aside extends React.PureComponent<EntryAsideProps> {
 							activePanels={this.props.activePanels}
 							config={this.props.configData.config}
 							doc={this.props.entry.doc}
-							items={this.props.entry.textData}
+							textData={this.props.entry.textData}
 							onItemClick={this.props.setActiveId}
 						/>
 					}

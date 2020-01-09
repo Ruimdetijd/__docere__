@@ -20,7 +20,7 @@ interface Props extends WProps, Pick<DocereConfigData, 'config'> {
 	activeListId: string
 	activePanels: EntryState['activePanels']
 	doc: XMLDocument
-	items: any
+	textData: ExtractedTextData
 	onItemClick: SetActiveId
 }
 interface State {
@@ -40,7 +40,7 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 	}
 
 	render() {
-		const textData = (!Array.isArray(this.props.config.textData) || this.props.items == null) ? [] : this.props.config.textData
+		const textData = (!Array.isArray(this.props.config.textData) || this.props.textData == null) ? [] : this.props.config.textData
 
 		const activeTextData =	textData.filter(td =>
 			td.hasOwnProperty('textLayers') &&
@@ -64,7 +64,7 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 									config={this.props.config}
 									data={data}
 									containerHeight={this.state.containerHeight}
-									items={this.props.items[data.id]}
+									items={this.props.textData.get(data.id)}
 									key={data.id}
 									onItemClick={this.props.onItemClick}
 									onListClick={() => this.props.onItemClick(null, data.id, null)}

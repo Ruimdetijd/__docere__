@@ -13,7 +13,7 @@ const components = {
 	getPb,
 	hi,
 	lb,
-	...rs
+	...rs,
 }
 
 export {

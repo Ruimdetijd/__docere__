@@ -101,13 +101,15 @@ export default class Facsimile extends React.PureComponent<Props> {
 
 		var element = document.createElement("div")
         element.id = 'runtime-overlay'
-		element.style.boxShadow = 'rgba(255, 0, 0, 0.8) 0px 0px 4px, rgba(255, 0, 0, 0.8) 0px 0px 16px, rgba(255, 0, 0, 0.8) 0px 0px 64px'
-		// element.style.border = '2px solid rgba(255, 255, 0, .6)'
+		// element.style.boxShadow = 'rgba(255, 0, 0, 0.8) 0px 0px 4px, rgba(255, 0, 0, 0.8) 0px 0px 16px, rgba(255, 0, 0, 0.8) 0px 0px 64px'
+		element.style.border = '3px solid rgba(255, 0, 0, .6)'
 
 		// console.log(this.props.facsimileHighlight, new this.OpenSeadragon.Rect(...this.props.facsimileHighlight))
 		const { width: imgWidthRatio, height: imgHeightRatio } = this.osd.world.getHomeBounds()
 		const aspectRatio = imgHeightRatio / imgWidthRatio
 
+		// TODO check why this is necessary
+		if (this.props.facsimileHighlight == null) return
 
 		let { x, y, w, h, unit } = this.props.facsimileHighlight
 		if (unit === 'px') {

@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { AsideTab } from '../constants'
 
 // Person
-function PersonSvg(props: SvgProps) {
+export function PersonSvg(props: SvgProps) {
 	return (
 		<svg viewBox="0 0 64 64" style={{width: 20, height: 20, verticalAlign: 'text-top'}}>
 			<path
@@ -16,7 +16,7 @@ function PersonSvg(props: SvgProps) {
 
 
 // Place
-function PlaceSvg(props: SvgProps) {
+export function PlaceSvg(props: SvgProps) {
 	return (
 		<svg viewBox="0 0 512 512" style={{width: 20, height: 20, verticalAlign: 'text-top'}}>
 			<path
