@@ -15,6 +15,7 @@ interface DocereComponentProps {
 	activeFacsimilePath: string
 	activeId: string
 	activeListId: string
+	attributes:	Record<string, string>
 	children?: React.ReactNode
 	config: DocereConfig
 	facsimiles: Entry['facsimiles']
@@ -26,7 +27,6 @@ interface DocereComponentProps {
 	// TODO change to textLayerId
 	textLayer: string
 	viewport: Viewport
-	[key: string]: any
 }
 
 interface SvgProps { active: boolean, color: string }

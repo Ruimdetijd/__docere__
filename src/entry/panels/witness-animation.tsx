@@ -76,6 +76,7 @@ export default class WitnessAnimationPanel extends React.PureComponent<WitnessAn
 						hasScroll={this.props.hasScroll}
 						ref={this.textRef}
 					>
+						{/* TODO customProps should be of type DocereComponentProps */}
 						<DocereTextView
 							customProps={{
 								prevTextLayer: this.state.prevTextLayer?.id,

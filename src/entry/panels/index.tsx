@@ -11,6 +11,7 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 			activeFacsimilePath: this.props.activeFacsimilePath,
 			activeId: this.props.activeId,
 			activeListId: this.props.activeListId,
+			attributes: {},
 			config: this.props.configData.config,
 			facsimiles: this.props.entry.facsimiles,
 			insideNote: false,
