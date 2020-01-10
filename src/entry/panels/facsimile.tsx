@@ -41,38 +41,41 @@ function useOpenSeaddragon(): [any, any] {
 	return OpenSeadragon
 }
 
-function useHighlight(osd: any, facsimileHighlight: Props['facsimileHighlight'], OpenSeadragon: any) {
+function useHighlight(osd: any, facsimileAreas: Props['facsimileAreas'], OpenSeadragon: any) {
 	React.useEffect(() => {
 		if (osd == null) return
 
-		osd.removeOverlay('runtime-overlay')
-
-		var element = document.createElement("div")
-		element.id = 'runtime-overlay'
-		// element.style.boxShadow = 'rgba(255, 0, 0, 0.8) 0px 0px 4px, rgba(255, 0, 0, 0.8) 0px 0px 16px, rgba(255, 0, 0, 0.8) 0px 0px 64px'
-		element.style.border = '3px solid rgba(255, 0, 0, .6)'
+		for (const areaEl of osd.container.querySelectorAll('.facsimile-area')) {
+			osd.removeOverlay(areaEl)
+		}
 
 		// console.log(props.facsimileHighlight, new OpenSeadragon.Rect(...props.facsimileHighlight))
 		const { width: imgWidthRatio, height: imgHeightRatio } = osd.world.getHomeBounds()
 		const aspectRatio = imgHeightRatio / imgWidthRatio
 
 		// TODO check why this is necessary
-		if (facsimileHighlight == null) return
+		if (!Array.isArray(facsimileAreas)) return
 
-		let { x, y, w, h, unit } = facsimileHighlight
-		if (unit === 'px') {
-			const { x: imgWidth, y: imgHeight } = osd.world._contentSize
-			x = x / imgWidth
-			y = y / imgHeight
-			w = w / imgWidth
-			h = h / imgHeight
-		} 
+		facsimileAreas.forEach(area => {
+			let { x, y, w, h, unit } = area
+			if (unit === 'px') {
+				const { x: imgWidth, y: imgHeight } = osd.world._contentSize
+				x = x / imgWidth
+				y = y / imgHeight
+				w = w / imgWidth
+				h = h / imgHeight
+			} 
 
-		osd.addOverlay({
-			element,
-			location: new OpenSeadragon.Rect(x, y * aspectRatio, w, h * aspectRatio),
-		});
-	}, [osd, facsimileHighlight])
+			var element = document.createElement("div")
+			element.classList.add('facsimile-area')
+			element.style.border = '3px solid rgba(255, 0, 0, .6)'
+
+			osd.addOverlay({
+				element,
+				location: new OpenSeadragon.Rect(x, y * aspectRatio, w, h * aspectRatio),
+			});
+		})
+	}, [osd, facsimileAreas])
 }
 
 function useFacsimilePath(osd: any, activeFacsimilePath: Props['activeFacsimilePath'], projectId: Props['projectId']) {
@@ -95,13 +98,13 @@ function useFacsimilePath(osd: any, activeFacsimilePath: Props['activeFacsimileP
 type Props =
 	Pick<EntryState, 'activeFacsimilePath' | 'orientation'> &
 	Pick<Entry,  'facsimiles'> &
-	Pick<PanelsState, 'facsimileHighlight'> &
+	Pick<PanelsState, 'facsimileAreas'> &
 	{ projectId: DocereConfig['slug'] }
 
 function FacsimilePanel(props: Props) {
 	const [osd, OpenSeadragon] = useOpenSeaddragon()
 	useFacsimilePath(osd, props.activeFacsimilePath, props.projectId)
-	useHighlight(osd, props.facsimileHighlight, OpenSeadragon)
+	useHighlight(osd, props.facsimileAreas, OpenSeadragon)
 
 	return (
 		<Wrapper>

@@ -5,7 +5,11 @@ import { AsideTab } from '../../constants'
 import toPanel from './map-to-panel'
 
 export default class Panels extends React.Component<PanelsProps, PanelsState> {
-	private setFacsimileHighlight = (opts: FacsimileHighlightOptions) => this.setState({ facsimileHighlight: opts })
+	private setFacsimileArea: DocereComponentProps['setFacsimileArea'] = (facsimileAreas: FacsimileArea[]) => {
+		if (facsimileAreas.hasOwnProperty('x')) facsimileAreas = [facsimileAreas as any]
+		this.setState({ facsimileAreas })
+	}
+
 	state: PanelsState = {
 		customProps: {
 			activeFacsimilePath: this.props.activeFacsimilePath,
@@ -18,11 +22,11 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 			setActiveFacsimile: this.props.setActiveFacsimile,
 			setActiveId: this.props.setActiveId,
 			setEntry: this.props.setEntry,
-			setFacsimileHighlight: this.setFacsimileHighlight,
+			setFacsimileArea: this.setFacsimileArea,
 			textLayer: null,
 			viewport: this.props.viewport,
 		},
-		facsimileHighlight: null,
+		facsimileAreas: [],
 		highlight: [],
 	}
 

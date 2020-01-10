@@ -4,7 +4,7 @@ type PanelsProps = EntryProps & EntryState & {
 }
 interface PanelsState {
 	customProps: DocereComponentProps
-	facsimileHighlight: FacsimileHighlightOptions
+	facsimileAreas: FacsimileArea[]
 	highlight: string[]
 }
 type TextPanelBaseProps = Pick<PanelsProps, 'configData' | 'entry' | 'hasScroll' | 'searchQuery'> & Pick<PanelsState, 'highlight'>

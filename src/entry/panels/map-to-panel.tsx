@@ -10,7 +10,7 @@ export default function mapToPanel(ap: TextLayerConfig, props: PanelsProps, stat
 		return (
 			<FacsimilePanel
 				activeFacsimilePath={props.activeFacsimilePath}
-				facsimileHighlight={state.facsimileHighlight}
+				facsimileAreas={state.facsimileAreas}
 				facsimiles={props.entry.facsimiles}
 				key={ap.id}
 				orientation={props.orientation}
