@@ -71,32 +71,37 @@ const ActiveIndicator = styled.li`
 interface Props {
 	active: boolean
 	activeItemId: string
-	config: DocereConfig
-	data: TextDataConfig
+	config: TextDataConfig
 	containerHeight: number
 	items: Map<string, TextDataValue>
+	listCount: number // Number of lists (persons, locations, etc), needed for height calculation
+	listId: string
 	onItemClick: SetActiveId
 	onListClick: (listId: string) => void
 }
 
-function ExtractedItems(props: Props) {
+function TextDataList(props: Props) {
 	const entries = Array.from(props.items.entries())
+
+	const title = props.config?.title || props.listId
+	const color = props.config?.color || 'black';
+
 	return (
 		<>
 			<H2
-				onClick={() => props.onListClick(props.data.id)}
+				onClick={() => props.onListClick(props.listId)}
 			>
-				{props.data.title}
+				{title}
 				<small>({props.items.size})</small>
 			</H2>
 			<Ul
 				active={props.active}
-				textdataLength={props.config.textData.length}
+				textdataLength={props.listCount}
 				height={props.containerHeight}
 			>
 				<ActiveIndicator
 					activeIndex={entries.findIndex(([key]) => key === props.activeItemId)}
-					color={props.data.color}
+					color={color}
 				/>
 				{
 					entries
@@ -105,7 +110,7 @@ function ExtractedItems(props: Props) {
 								active={key === props.activeItemId}
 								count={item.count}
 								key={key + i}
-								onClick={() => props.onItemClick(key, props.data.id, null)}
+								onClick={() => props.onItemClick(key, props.listId, null)}
 							>
 								{item.value}
 							</ItemInText>
@@ -116,8 +121,8 @@ function ExtractedItems(props: Props) {
 	)
 }
 
-ExtractedItems.defaultProps = {
+TextDataList.defaultProps = {
 	items: new Map()
 }
 
-export default React.memo(ExtractedItems)
+export default React.memo(TextDataList)

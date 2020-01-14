@@ -1,86 +1,208 @@
 import * as React from 'react'
 import DocereTextView from 'docere-text-view'
-import { TextWrapper, Text } from '../index.components'
-import { fetchPost } from '../../utils'
+// import { fetchPost } from '../../utils'
+import styled from '@emotion/styled'
+import { TEXT_PANEL_WIDTH, DEFAULT_SPACING } from '../../constants'
+// @ts-ignore
+import debounce from 'lodash.debounce'
 
-class TextPanel extends React.PureComponent<TextPanelProps> {
-	private textRef: React.RefObject<HTMLDivElement>
+const TopWrapper = styled.div`
+	position: relative;
+	display: grid;
 
-	async componentDidMount() {
-		if (this.props.searchQuery != null) this.setHighlight()
-	}
+	& > div.minimap {
+		bottom: 0;
+		box-sizing: border-box;
+		left: calc(100% - ((100% - 480px) / 2) + 32px);
+		overflow: auto;
+		padding-top: 32px;
+		position: absolute;
+		top: 0;
+		width: 48px;
+		scrollbar-width: none;
+		pointer-events: none;
 
-	componentDidUpdate(prevProps: TextPanelProps) {
-		if (prevProps.highlight.length && !this.props.highlight.length) {
-			for (const el of this.textRef.current.querySelectorAll('mark')) {
-				el.replaceWith(...el.childNodes)
-			} 
-		}
-		if (prevProps.searchQuery !== this.props.searchQuery) this.setHighlight()
-	}
-
-	render() {
-		const textLayer = this.props.entry.textLayers.find(tl => tl.id === this.props.textLayerConfig.id)
-
-		return (
-			<TextWrapper>
-				<Text 
-					hasLb={this.props.configData.components.hasOwnProperty('lb')}
-					hasFacs={this.props.configData.extractFacsimiles != null}
-					hasScroll={this.props.hasScroll}
-					ref={this.textRef}
-				>
-					<DocereTextView
-						customProps={this.props.customProps}
-						components={this.props.configData.components}
-						node={textLayer.element}
-						highlight={this.props.highlight}
-					/>
-				</Text>
-			</TextWrapper>
-		)
-	}
-
-	private async setHighlight() {
-		const response = await fetchPost(`/search/${this.props.configData.config.slug}/_search`, {
-			_source: false,
-			query: {
-				bool: {
-					must: [
-						{
-							query_string: {
-								query: this.props.searchQuery
-							}
-						},
-						{
-							match: {
-								id: this.props.entry.id
-							}
-						}
-					]
-				}
-			},
-			highlight: {
-				fields: {
-					text: {}
-				},
-				require_field_match: false,
-				fragment_size: 0,
-				number_of_fragments: 1000
-			}
-		})
-
-		let hits = []
-		if (!response.hasOwnProperty('error') && response.hits.hits.length) {
-			hits = response.hits.hits[0].highlight.text.reduce((set: Set<string>, hit: string) => {
-				hit = hit.slice(hit.indexOf('<em>') + 4, hit.indexOf('</em>'))
-				set.add(hit)
-				return set
-			}, new Set())
+		&::-webkit-scrollbar {
+			display: none;
 		}
 
-		this.setState({ highlight: [...hits] })
+		& > div:nth-of-type(2) {
+			box-sizing: border-box;
+			transform: scaleX(.1) scaleY(.1);
+			transform-origin: top left;
+			width: 480px;
+		}
 	}
+`
+const Wrapper = styled.div`
+	display: grid;
+	grid-template-columns: auto ${TEXT_PANEL_WIDTH}px auto;
+	height: 100%;
+	overflow-y: auto;
+	will-change: transform;
+
+	& > div:first-of-type {
+		grid-column: 2;
+	}
+`
+
+const MiniMap = React.memo(
+	(props: any) => (
+		<div
+			className="minimap"
+			onWheel={() => false}
+		>
+			<ActiveArea ref={props.activeAreaRef} />
+			{props.text}
+		</div>
+	),
+	() => true
+)
+
+interface TextProps {
+	hasFacs: boolean
+}
+export const Text = styled.div`
+	color: #222;
+	counter-reset: linenumber notenumber;
+	font-family: serif;
+	font-size: 1.25rem;
+	line-height: 2rem;
+	padding-top: ${DEFAULT_SPACING}px;
+	padding-left: ${(props: TextProps) => props.hasFacs ? DEFAULT_SPACING * 2.5 : 0}px;
+	padding-bottom: 200px;
+	position: relative;
+`
+
+const activeAreaRGB = '200, 200, 200'
+
+const ActiveArea = styled.div`
+	background: rgba(${activeAreaRGB}, 0);
+	position: absolute;
+	width: 100%;
+	transition: background 600ms;
+`
+
+function useSetVisibleMiniMapAreaHeight(textWrapperEl: HTMLDivElement, activeAreaRef: HTMLDivElement) {
+	React.useEffect(() => {
+		if (textWrapperEl != null && activeAreaRef != null) {
+			activeAreaRef.style.height = textWrapperEl.clientHeight / 10 + 'px'
+		}
+	}, [textWrapperEl, activeAreaRef])
 }
 
-export default TextPanel
+function TextPanel(props: TextPanelProps) {
+	const textWrapperRef = React.useRef<HTMLDivElement>()
+	const activeAreaRef = React.useRef<HTMLDivElement>()
+	const textLayer = props.entry.textLayers.find(tl => tl.id === props.textLayerConfig.id)
+
+	useSetVisibleMiniMapAreaHeight(textWrapperRef.current, activeAreaRef.current)
+
+	const resetActiveArea = debounce(() => {
+		activeAreaRef.current.style.background = `rgba(${activeAreaRGB}, 0)`
+	}, 1000)
+
+	const handleScroll = React.useCallback(() => {
+		const { scrollTop, scrollHeight, clientHeight } = textWrapperRef.current
+
+		if (scrollHeight / 10 > clientHeight) {
+			const maxScrollTopActiveArea = (scrollHeight/10) - clientHeight + 32
+			const maxScrollTopOriginal = scrollHeight - clientHeight
+			const perc = scrollTop / maxScrollTopOriginal
+			activeAreaRef.current.parentElement.scrollTop = maxScrollTopActiveArea * perc
+		}
+
+		activeAreaRef.current.style.background = `rgba(${activeAreaRGB}, 0.5)`
+		activeAreaRef.current.style.transform = `translateY(${(scrollTop / 10)}px)`
+
+		resetActiveArea()
+	}, [])
+
+	const text = (
+		<Text 
+			hasFacs={props.configData.extractFacsimiles != null}
+		>
+			<DocereTextView
+				customProps={props.customProps}
+				components={props.configData.components}
+				node={textLayer.element}
+				highlight={props.highlight}
+			/>
+		</Text>
+	)
+
+	return (
+		<TopWrapper>
+			<Wrapper
+				ref={textWrapperRef}
+				onScroll={handleScroll}
+			>
+				{text}
+			</Wrapper>
+			<MiniMap
+				activeAreaRef={activeAreaRef}
+				text={text}
+			/>
+		</TopWrapper>
+	)
+}
+
+export default React.memo(TextPanel)
+
+// class TextPanel extends React.PureComponent<TextPanelProps> {
+	// async componentDidMount() {
+	// 	if (this.props.searchQuery != null) this.setHighlight()
+	// }
+
+	// componentDidUpdate(prevProps: TextPanelProps) {
+	// 	if (prevProps.highlight.length && !this.props.highlight.length) {
+	// 		for (const el of this.textRef.current.querySelectorAll('mark')) {
+	// 			el.replaceWith(...el.childNodes)
+	// 		} 
+	// 	}
+	// 	if (prevProps.searchQuery !== this.props.searchQuery) this.setHighlight()
+	// }
+
+	// private async setHighlight() {
+	// 	const response = await fetchPost(`/search/${this.props.configData.config.slug}/_search`, {
+	// 		_source: false,
+	// 		query: {
+	// 			bool: {
+	// 				must: [
+	// 					{
+	// 						query_string: {
+	// 							query: this.props.searchQuery
+	// 						}
+	// 					},
+	// 					{
+	// 						match: {
+	// 							id: this.props.entry.id
+	// 						}
+	// 					}
+	// 				]
+	// 			}
+	// 		},
+	// 		highlight: {
+	// 			fields: {
+	// 				text: {}
+	// 			},
+	// 			require_field_match: false,
+	// 			fragment_size: 0,
+	// 			number_of_fragments: 1000
+	// 		}
+	// 	})
+
+	// 	let hits = []
+	// 	if (!response.hasOwnProperty('error') && response.hits.hits.length) {
+	// 		hits = response.hits.hits[0].highlight.text.reduce((set: Set<string>, hit: string) => {
+	// 			hit = hit.slice(hit.indexOf('<em>') + 4, hit.indexOf('</em>'))
+	// 			set.add(hit)
+	// 			return set
+	// 		}, new Set())
+	// 	}
+
+	// 	this.setState({ highlight: [...hits] })
+	// }
+// }
+
+// export default TextPanel

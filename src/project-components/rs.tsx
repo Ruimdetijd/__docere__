@@ -7,7 +7,7 @@ export function PersonSvg(props: SvgProps) {
 	return (
 		<svg
 			onClick={ev => props.onClick != null ? props.onClick(ev) : null}
-			style={{width: 20, height: 20, verticalAlign: 'text-top'}}
+			style={{ width: 20, height: 20, verticalAlign: 'text-top' }}
 			viewBox="0 0 64 64"
 		>
 			<path
@@ -24,12 +24,12 @@ export function PlaceSvg(props: SvgProps) {
 	return (
 		<svg
 			onClick={ev => props.onClick != null ? props.onClick(ev) : null}
-			style={{width: 20, height: 20, verticalAlign: 'text-top'}}
+			style={{ width: 20, height: 20, verticalAlign: 'text-top' }}
 			viewBox="0 0 512 512"
 		>
 			<path
 				fill={props.active ? 'white' : props.color}
-				d="M256,22.709c-85.1,0-154.334,69.234-154.334,154.333c0,34.275,21.887,90.155,66.908,170.834c31.846,57.063,63.168,104.643,64.484,106.64L256,489.291l22.941-34.774c1.318-1.998,32.641-49.578,64.484-106.64c45.023-80.68,66.908-136.559,66.908-170.834C410.334,91.943,341.1,22.709,256,22.709z M256,256c-44.182,0-80-35.817-80-80s35.818-80,80-80s80,35.817,80,80S300.182,256,256,256z"/>
+				d="M256,22.709c-85.1,0-154.334,69.234-154.334,154.333c0,34.275,21.887,90.155,66.908,170.834c31.846,57.063,63.168,104.643,64.484,106.64L256,489.291l22.941-34.774c1.318-1.998,32.641-49.578,64.484-106.64c45.023-80.68,66.908-136.559,66.908-170.834C410.334,91.943,341.1,22.709,256,22.709z M256,256c-44.182,0-80-35.817-80-80s35.818-80,80-80s80,35.817,80,80S300.182,256,256,256z" />
 		</svg>
 	)
 }
@@ -39,12 +39,14 @@ const NoWrap = styled.span`
 `
 
 function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessComponent<SvgProps>) {
-	return function (props: DocereComponentProps & { [key: string]: any }) {
+	return function (props: DocereComponentProps) {
 		const children = React.Children.toArray(props.children)
 
-		const activeId: string = rsConfig.extractor.extractionType === TextDataExtractionType.Attribute ?
-			props[rsConfig.extractor.idAttribute] :
-			children[0]
+		if (rsConfig.identifier.type === TextDataExtractionType.Milestone) console.error('Milestone extraction not implemented')
+
+		const activeId: string = rsConfig.identifier.type === TextDataExtractionType.Attribute ?
+			props.attributes[rsConfig.identifier.attribute] :
+			children[0] as string
 
 		// The RS is active when the text data list (defined by the ID), for example: person, place, theme, etc
 		// and the ID match. Only the ID is not sufficient, because two lists could have matching IDs.

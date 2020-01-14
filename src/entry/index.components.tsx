@@ -20,7 +20,6 @@ interface PWProps {
 export const PanelsWrapper = styled.div`
 	display: grid;
 	height: 100%;
-	overflow-y: auto;
 	${(p: PWProps) => {
 		if (p.orientation === Orientation.Horizontal) {
 			const textPanelSpace = TEXT_PANEL_WIDTH + (DEFAULT_SPACING * 6)
@@ -49,14 +48,8 @@ export const PanelsWrapper = styled.div`
 			`
 		}
 	}}
+	overflow-x: auto; 
 	width: 100%;
-`
-
-export const TextWrapper = styled.div`
-	display: grid;
-	grid-template-columns: auto ${TEXT_PANEL_WIDTH}px auto;
-	height: 100%;
-	overflow-y: auto;
 `
 
 export const Menu = styled.div`
@@ -82,26 +75,6 @@ export const Menu = styled.div`
 	& > div:last-of-type {
 		direction: rtl;
 	}
-`
-
-interface TextProps {
-	hasScroll: boolean
-	hasLb: boolean
-	hasFacs: boolean
-	// wordwrap: boolean
-}
-export const Text = styled.div`
-	color: #222;
-	counter-reset: linenumber notenumber;
-	font-family: serif;
-	font-size: 1.25rem;
-	grid-column: 2;
-	line-height: 2rem;
-	margin-bottom: 20vh;
-	padding-top: ${DEFAULT_SPACING}px;
-	padding-left: ${(props: TextProps) => props.hasFacs ? DEFAULT_SPACING * 2.5 : 0}px;
-	padding-bottom: ${(props: TextProps) => props.hasScroll ? '33vh' : 0};
-	position: relative;
 `
 
 export const MetadataItem = styled.li`

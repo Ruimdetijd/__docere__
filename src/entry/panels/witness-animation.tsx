@@ -1,8 +1,8 @@
 import * as React from 'react'
 import DocereTextView from 'docere-text-view'
-import { Text } from '../index.components'
 import styled from '@emotion/styled'
 import { TEXT_PANEL_WIDTH } from '../../constants'
+import { Text } from './text'
 
 const Wrapper = styled.div`
 	grid-template-rows: auto 50px;
@@ -71,9 +71,7 @@ export default class WitnessAnimationPanel extends React.PureComponent<WitnessAn
 			<Wrapper>
 				<TextWrapper>
 					<Text 
-						hasLb={this.props.configData.components.hasOwnProperty('lb')}
 						hasFacs={this.props.configData.extractFacsimiles != null}
-						hasScroll={this.props.hasScroll}
 						ref={this.textRef}
 					>
 						{/* TODO customProps should be of type DocereComponentProps */}

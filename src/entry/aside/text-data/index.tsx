@@ -1,7 +1,9 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import ExtractedItems from "./extracted-items"
+import TextDataList from "./extracted-items"
 import { GRAY_DARK } from '../../../constants'
+
+// TODO if active text data is empty, show layers which contain data
 
 interface WProps { active: boolean }
 const Wrapper = styled.div`
@@ -40,14 +42,7 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 	}
 
 	render() {
-		const textData = (!Array.isArray(this.props.config.textData) || this.props.textData == null) ? [] : this.props.config.textData
-
-		const activeTextData =	textData.filter(td =>
-			td.hasOwnProperty('textLayers') &&
-			td.textLayers.some(tl => this.props.activePanels.findIndex(ap => ap.active && ap.id === tl) > -1)
-		)
-
-		// TODO if active text data is empty, show layers which contain data
+		const listIds = Array.from(this.props.textData.keys())
 
 		return (
 			<Wrapper
@@ -55,19 +50,20 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 				ref={this.wrapperRef}
 			>
 				{
-					activeTextData
-						.map((data, index) => {
+					listIds
+						.map((listId, index) => {
 							return (
-								<ExtractedItems
-									active={this.props.activeListId === data.id || (this.props.activeListId == null && index === 0)}
+								<TextDataList
+									active={this.props.activeListId === listId || (this.props.activeListId == null && index === 0)}
 									activeItemId={this.props.activeId}
-									config={this.props.config}
-									data={data}
+									config={this.props.config.textData.find(td => td.id === listId)}
 									containerHeight={this.state.containerHeight}
-									items={this.props.textData.get(data.id)}
-									key={data.id}
+									items={this.props.textData.get(listId)}
+									key={listId}
+									listCount={listIds.length}
+									listId={listId}
 									onItemClick={this.props.onItemClick}
-									onListClick={() => this.props.onItemClick(null, data.id, null)}
+									onListClick={() => this.props.onItemClick(null, listId, null)}
 								/>
 							)
 						})

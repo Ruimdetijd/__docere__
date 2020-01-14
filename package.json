@@ -21,12 +21,14 @@
     "docere-text-view": "^2.0.0",
     "emotion": "^10.0.17",
     "huc-faceted-search": "^2.0.0",
+    "lodash.debounce": "^4.0.8",
     "openseadragon": "^2.4.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-emotion": "^10.0.0"
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.6",
     "@types/react": "^16.9.13",
     "@types/react-dom": "^16.9.4",
     "ts-loader": "^6.2.1",

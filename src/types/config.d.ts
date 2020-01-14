@@ -52,15 +52,26 @@ interface MetaDataConfig extends EntityConfig {
 	size?: number
 }
 
-interface TextDataExtractor {
-	selector: string
-	extractionType: TextDataExtractionType
-	idAttribute?: string
+interface TextDataAttributeIdentifier {
+	type: TextDataExtractionType.Attribute
+	attribute: string
 }
+
+interface TextDataMilestoneIdentifier {
+	type: TextDataExtractionType.Milestone
+	idAttribute: string // <start id="some-id" />
+	refAttribute: string // <end ref="some-id" />
+}
+
+interface TextDataTextContentIdentifier {
+	type: TextDataExtractionType.TextContent
+}
+
+type TextDataIdentifier = TextDataAttributeIdentifier | TextDataMilestoneIdentifier | TextDataTextContentIdentifier
 
 interface TextDataConfig extends MetaDataConfig {
 	color?: string
-	extractor?: TextDataExtractor
+	identifier: TextDataIdentifier
 	textLayers?: string[]
 }
 
