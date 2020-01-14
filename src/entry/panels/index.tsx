@@ -1,5 +1,4 @@
 import * as React from 'react'
-
 import { PanelsWrapper } from '../index.components'
 import { AsideTab } from '../../constants'
 import toPanel from './map-to-panel'

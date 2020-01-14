@@ -14,6 +14,10 @@ module.exports = {
 			'/search': {
 				target: 'http://localhost:9200',
 				pathRewrite: {'^/search': ''}
+			},
+			'/iiif': {
+				target: 'http://localhost:5004',
+				pathRewrite: {'^/iiif': ''}
 			}
 		}
 	},

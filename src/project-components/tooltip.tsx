@@ -1,4 +1,5 @@
 import * as React from "react"
+import styled from '@emotion/styled';
 
 // Map of polygons. The key is confusing, it is the orientation
 // of the tooltip. When the orientation of the tooltip is `bottom`
@@ -18,6 +19,12 @@ const tipBorderByOrientation = (strokeColor: string) => {
 		top: <path d="M0,0 L15,18 L30,0" stroke={strokeColor} strokeWidth="3" />
 	};
 };
+
+const Wrapper = styled.div`
+	position: absolute;
+	z-index: 999;
+	left: calc(100vw - 24px);
+`
 
 export interface IProps {
 	bodyStyle?: React.CSSProperties
@@ -66,14 +73,8 @@ class Tooltip extends React.Component<IProps, null> {
 			'white'
 
 		return (
-			<div
+			<Wrapper
 				ref={el => { this.el = el }}
-				style={{
-					position: 'absolute',
-					zIndex: 999,
-					left: 'calc(100vw - 24px)',
-					...this.props.style,
-				}}
 			>
 				<div
 					style={{
@@ -104,7 +105,7 @@ class Tooltip extends React.Component<IProps, null> {
 					{tipBorderByOrientation(borderColor)[this.props.orientation]}
 					{tipBackgroundByOrientation[this.props.orientation]}
 				</svg>
-			</div>
+			</Wrapper>
 		);
 	}
 

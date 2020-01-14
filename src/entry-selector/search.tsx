@@ -96,9 +96,6 @@ function useFields(config: DocereConfig) {
 export default function Search(props: FileExplorerProps) {
 	const fields = useFields(props.config)
 
-	// TODO remove this check. The FS should update when the fields change
-	if (!fields.length) return null
-
 	return (
 		<FS
 			disableDefaultStyle={props.searchTab === SearchTab.Results}
