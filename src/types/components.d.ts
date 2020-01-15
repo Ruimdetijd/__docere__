@@ -15,7 +15,7 @@ interface DocereComponentProps {
 	activeFacsimilePath: string
 	activeId: string
 	activeListId: string
-	attributes:	Record<string, string>
+	attributes?:	Record<string, string>
 	children?: React.ReactNode
 	config: DocereConfig
 	facsimiles: Entry['facsimiles']

@@ -62,7 +62,6 @@ export default class Panels extends React.Component<PanelsProps, PanelsState> {
 		return (
 			<PanelsWrapper
 				activePanels={activePanels}
-				orientation={this.props.orientation}
 			>
 				{
 					activePanels.map(ap => toPanel(ap, this.props, this.state))

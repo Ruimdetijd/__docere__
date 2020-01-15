@@ -14,7 +14,6 @@ export default class Entry extends React.PureComponent<EntryProps, EntryState> {
 		asideTab: null,
 		footerTab: null,
 		hasScroll: false,
-		orientation: Orientation.Horizontal,
 		setAsideTab: (asideTab: AsideTab) => {
 			if (this.state.asideTab === asideTab) asideTab = null
 			this.setState({ asideTab })
@@ -82,8 +81,6 @@ export default class Entry extends React.PureComponent<EntryProps, EntryState> {
 
 		const nextState: Partial<EntryState> = {}
 		nextState.activeFacsimilePath = facsimiles.length ? facsimiles[0].path[0] : null
-		const hasScroll = window.innerHeight < document.documentElement.scrollHeight
-		nextState.hasScroll = hasScroll
 
 		nextState.activePanels = textLayers
 

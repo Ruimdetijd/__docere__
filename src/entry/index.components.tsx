@@ -15,38 +15,29 @@ export const Main = styled.div`
 
 interface PWProps {
 	activePanels: TextLayerConfig[]
-	orientation: Orientation
 }
 export const PanelsWrapper = styled.div`
 	display: grid;
 	height: 100%;
 	${(p: PWProps) => {
-		if (p.orientation === Orientation.Horizontal) {
-			const textPanelSpace = TEXT_PANEL_WIDTH + (DEFAULT_SPACING * 6)
-			let columns = p.activePanels
-				.map(ap =>
-					ap.type === TextLayerType.Facsimile ?
-						`minmax(${DEFAULT_SPACING * 10}px, auto)` :
-						`minmax(${textPanelSpace}px, auto)`
-				)
-				.join(' ')
+		const textPanelSpace = TEXT_PANEL_WIDTH + (DEFAULT_SPACING * 6)
+		let columns = p.activePanels
+			.map(ap =>
+				ap.type === TextLayerType.Facsimile ?
+					`minmax(${DEFAULT_SPACING * 10}px, auto)` :
+					`minmax(${textPanelSpace}px, 800px)`
+			)
+			.join(' ')
 
-			// If there is no facsimile active, the text panels should fill the available
-			// space (1fr)
-			if (!p.activePanels.some(ap => ap.type === TextLayerType.Facsimile)) {
-				columns = p.activePanels.map(() => `minmax(${textPanelSpace}px, 1fr)`).join(' ')
-			}
-			return `
-				grid-template-columns: ${columns};
-				grid-template-rows: 100% auto;
-			`
+		// If there is no facsimile active, the text panels should fill the available
+		// space (1fr)
+		if (!p.activePanels.some(ap => ap.type === TextLayerType.Facsimile)) {
+			columns = p.activePanels.map(() => `minmax(${textPanelSpace}px, 1fr)`).join(' ')
 		}
-		if (p.orientation === Orientation.Vertical) { 
-			return `
-				grid-template-columns: 100%;
-				grid-template-rows: calc((100vh - ${TOP_OFFSET}px) / 2) calc((100vh - ${TOP_OFFSET}px) / 2) auto;
-			`
-		}
+		return `
+			grid-template-columns: ${columns};
+			grid-template-rows: 100% auto;
+		`
 	}}
 	overflow-x: auto; 
 	width: 100%;

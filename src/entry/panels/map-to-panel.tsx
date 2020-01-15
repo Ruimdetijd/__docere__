@@ -13,7 +13,6 @@ export default function mapToPanel(ap: TextLayerConfig, props: PanelsProps, stat
 				facsimileAreas={state.facsimileAreas}
 				facsimiles={props.entry.facsimiles}
 				key={ap.id}
-				orientation={props.orientation}
 				projectId={props.configData.config.slug}
 			/>
 		)

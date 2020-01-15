@@ -16,7 +16,6 @@ interface EntryState {
 	asideTab: AsideTab
 	footerTab: FooterTab
 	hasScroll: boolean
-	orientation: Orientation
 	setAsideTab: (asideTab: AsideTab) => void
 	setFooterTab: (footerTab: FooterTab) => void
 	togglePanel: (panelId: string) => void

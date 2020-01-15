@@ -74,10 +74,14 @@ function useHighlight(osd: any, facsimileAreas: Props['facsimileAreas'], OpenSea
 			element.classList.add('facsimile-area')
 			element.style.border = '3px solid rgba(255, 0, 0, .6)'
 
+			y = y * aspectRatio
+			h = h * aspectRatio
 			osd.addOverlay({
 				element,
-				location: new OpenSeadragon.Rect(x, y * aspectRatio, w, h * aspectRatio),
+				location: new OpenSeadragon.Rect(x, y, w, h),
 			});
+
+			osd.viewport.panTo(new OpenSeadragon.Point(x + w/2, y + h/2))
 		})
 	}, [osd, facsimileAreas])
 }
@@ -100,7 +104,7 @@ function useFacsimilePath(osd: any, activeFacsimilePath: Props['activeFacsimileP
 }
 
 type Props =
-	Pick<EntryState, 'activeFacsimilePath' | 'orientation'> &
+	Pick<EntryState, 'activeFacsimilePath'> &
 	Pick<Entry,  'facsimiles'> &
 	Pick<PanelsState, 'facsimileAreas'> &
 	{ projectId: DocereConfig['slug'] }
