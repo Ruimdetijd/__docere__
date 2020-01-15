@@ -21,6 +21,10 @@ function useOpenSeaddragon(): [any, any] {
 					constrainDuringPan: true,
 					controlsFadeDelay: 0,
 					controlsFadeLength: 300,
+					gestureSettingsMouse: {
+						clickToZoom: false,
+						dblClickToZoom: true,
+					},
 					id: "openseadragon",
 					navigatorPosition: 'BOTTOM_LEFT',
 					// TODO only for Electron, remove before commit
