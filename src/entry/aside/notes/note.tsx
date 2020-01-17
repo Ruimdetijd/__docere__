@@ -1,11 +1,10 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
+import DocereTextView from 'docere-text-view';
+import { BROWN_LIGHT } from '../../../constants';
 
-interface P {
-	active: boolean
-}
 const Li = styled.li`
-	color: ${(props: P) => props.active ? '#FFF' : '#BBB' };
+	color: ${(props: { active: boolean }) => props.active ? '#FFF' : '#BBB' };
 	cursor: pointer;
 	display: grid;
 	grid-template-columns: 1fr 9fr;
@@ -15,9 +14,53 @@ const Li = styled.li`
 	position: relative;
 `
 
-// TODO if active scrollIntoView()
-export default function Note(props: P & { children: any, onClick: () => void }) {
-	return <Li {...props}>
-		{props.children}
-	</Li>
+interface AIProps {
+	active: boolean
+	color: string
+}
+const ActiveIndicator = styled.div`
+	background: ${(props: AIProps) => props.active ? props.color : 'rgba(0, 0, 0, 0)'};
+	height: ${props => props.active ? '100%' : 0};
+	left: 8px;
+	position: absolute;
+	top: 0;
+	transition: top 120ms ease-out;
+	width: 8px;
+`
+
+interface Props {
+	active: boolean
+	components: DocereComponents
+	dispatch: React.Dispatch<EntryStateAction>
+	item: ExtractedNote
+	listId: EntryState['activeListId']
+	setEntry: AppState['setEntry']
+}
+export default function Note(props: Props) {
+	const handleClick = React.useCallback(() => {
+		props.dispatch({ type: 'SET_NOTE_ID', id: props.item.n.toString(), listId: props.listId })
+	}, [props.item, props.listId])
+
+	return (
+		<Li
+			active={props.active}
+			onClick={handleClick}
+		>
+			<div>{props.item.n}</div>
+			<div>
+				<DocereTextView
+					components={props.components}
+					customProps={{
+						insideNote: true,
+						setEntry: props.setEntry,
+					}}
+					node={props.item.el}
+				/>
+			</div>
+			<ActiveIndicator
+				active={props.active}
+				color={BROWN_LIGHT}
+			/>
+		</Li>
+	)
 }

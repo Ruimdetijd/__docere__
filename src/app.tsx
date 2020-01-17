@@ -54,7 +54,7 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 	}
 
 	render() {
-		const { configData, entry, page, searchQuery, searchTab, setEntry: setEntry, setPage, setSearchTab, viewport } = this.state
+		const { configData, entry, page, searchTab, setEntry: setEntry, setPage, setSearchTab, viewport } = this.state
 		return (
 			<>
 				<Header
@@ -80,7 +80,6 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 					entry={entry}
 					viewport={viewport}
 					searchTab={searchTab}
-					searchQuery={searchQuery}
 					setEntry={setEntry}
 				/>
 			</>
@@ -166,7 +165,7 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 		const otherLayers = this.props.configData.config.textLayers.filter(tl => textLayers.find(tl2 => tl.id === tl2.id) == null)
 
 		// The "other" layers don't have an element, so they will use the whole XMLDocument
-		textLayers = await Promise.all(otherLayers.map((ol: TextLayer) => { ol.element = doc; return ol }).concat(textLayers)
+		textLayers = await Promise.all(otherLayers.map((ol: Layer) => { ol.element = doc; return ol }).concat(textLayers)
 			.map(async (tl) => {
 				const tl2 = extendTextLayer(tl, this.props.configData.config.textLayers)
 				if (tl2.hasOwnProperty('xmlPath')) {

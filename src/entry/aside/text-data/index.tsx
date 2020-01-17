@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import TextDataList from "./extracted-items"
+import TextDataList from "./list"
 import { GRAY_DARK } from '../../../constants'
 
 // TODO if active text data is empty, show layers which contain data
@@ -18,12 +18,11 @@ const Wrapper = styled.div`
 `
 
 interface Props extends WProps, Pick<DocereConfigData, 'config'> {
-	activeId: string
-	activeListId: string
-	activePanels: EntryState['activePanels']
-	doc: XMLDocument
+	activeId: EntryState['activeId']
+	activeListId: EntryState['activeListId']
+	dispatch: React.Dispatch<EntryStateAction>
+	layers: EntryState['layers']
 	textData: ExtractedTextData
-	onItemClick: SetActiveId
 }
 interface State {
 	containerHeight: number
@@ -58,12 +57,11 @@ export default class TextDataAside extends React.PureComponent<Props, State> {
 									activeItemId={this.props.activeId}
 									config={this.props.config.textData.find(td => td.id === listId)}
 									containerHeight={this.state.containerHeight}
+									dispatch={this.props.dispatch}
 									items={this.props.textData.get(listId)}
 									key={listId}
 									listCount={listIds.length}
 									listId={listId}
-									onItemClick={this.props.onItemClick}
-									onListClick={() => this.props.onItemClick(null, listId, null)}
 								/>
 							)
 						})

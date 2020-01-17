@@ -1,29 +1,29 @@
 interface Entry {
-	id: string
 	doc: XMLDocument
 	facsimiles: ExtractedFacsimile[]
+	id: string
 	metadata: ExtractedMetadata
 	notes: ExtractedNotes
 	textData: ExtractedTextData
-	textLayers: TextLayer[]
+	textLayers: Layer[]
 }
 
 interface EntryState {
 	activeFacsimilePath: string
 	activeId: string
 	activeListId: string
-	activePanels: TextLayerConfig[]
 	asideTab: AsideTab
+	facsimileAreas: FacsimileArea[]
 	footerTab: FooterTab
-	hasScroll: boolean
-	setAsideTab: (asideTab: AsideTab) => void
-	setFooterTab: (footerTab: FooterTab) => void
-	togglePanel: (panelId: string) => void
+	layers: LayerConfig[]
 }
 
-type EntryProps = Pick<AppState, 'configData' | 'entry' | 'searchQuery' | 'searchTab' | 'setEntry' | 'viewport'>
+type EntryProps = Pick<AppState, 'configData' | 'entry' | 'searchTab' | 'setEntry' | 'viewport'>
 
-type EntryAsideProps =	Pick<EntryProps, 'configData' | 'entry' | 'setEntry'> &
-						Pick<EntryState, 'activeId' | 'activeListId' | 'activePanels' | 'asideTab' | 'setAsideTab'> &
-						{ setActiveId: SetActiveId }
+type EntryAsideProps =
+	Pick<EntryProps, 'configData' | 'entry' | 'setEntry'> &
+	Pick<EntryState, 'activeId' | 'activeListId' | 'asideTab' | 'layers'> &
+	{
+		entryStateDispatch: React.Dispatch<EntryStateAction>
+	}
 						

@@ -12,21 +12,16 @@ interface FacsimileArea {
 }
 
 interface DocereComponentProps {
-	activeFacsimilePath: string
-	activeId: string
-	activeListId: string
-	attributes?:	Record<string, string>
+	activeFacsimilePath: EntryState['activeFacsimilePath']
+	activeId: EntryState['activeId']
+	activeListId: EntryState['activeListId']
+	attributes?: Record<string, string>
 	children?: React.ReactNode
 	config: DocereConfig
+	dispatch: React.Dispatch<EntryStateAction>
 	facsimiles: Entry['facsimiles']
 	insideNote: boolean
-	setActiveFacsimile: (activeFacsimilePath: string) => void
-	setFacsimileArea: (area: FacsimileArea[]) => void
-	setActiveId: SetActiveId
-	setEntry: AppState['setEntry']
-	// TODO change to textLayerId
-	textLayer: string
-	viewport: Viewport
+	textLayerId: string
 }
 
 interface SvgProps {

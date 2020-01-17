@@ -94,9 +94,8 @@ interface Props extends WProps {
 }
 
 function Tabs(props: Props) {
-	const handleTabClick = React.useCallback(e => {
-		const tab = e.currentTarget.dataset.tab
-		props.onClick(tab)
+	const handleTabClick = React.useCallback(ev => {
+		props.onClick(ev.currentTarget.dataset.tab)
 	}, [])
 
 	return (

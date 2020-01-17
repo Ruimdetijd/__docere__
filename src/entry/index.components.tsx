@@ -3,7 +3,8 @@ import styled from '@emotion/styled'
 import { css } from '@emotion/core'
 import { TOP_OFFSET, TEXT_PANEL_WIDTH, DEFAULT_SPACING, ASIDE_WIDTH, RESULT_ASIDE_WIDTH, FOOTER_HEIGHT, FooterTab, SearchTab } from '../constants'
 
-interface MainProps { asideTab: AsideTab, footerTab: FooterTab, searchTab: SearchTab }
+// interface MainProps { asideTab: AsideTab, footerTab: FooterTab, searchTab: SearchTab }
+type MainProps = Pick<EntryState, 'asideTab' | 'footerTab'> & Pick<AppState, 'searchTab'>
 export const Main = styled.div`
 	bottom: ${(props: MainProps) => props.footerTab === FooterTab.PanelSelector ? `${FOOTER_HEIGHT}px` : 0};
 	left: ${props => props.searchTab === SearchTab.Results ? `${RESULT_ASIDE_WIDTH}px` : 0};
@@ -14,16 +15,16 @@ export const Main = styled.div`
 `
 
 interface PWProps {
-	activePanels: TextLayerConfig[]
+	activeLayers: LayerConfig[]
 }
 export const PanelsWrapper = styled.div`
 	display: grid;
 	height: 100%;
 	${(p: PWProps) => {
 		const textPanelSpace = TEXT_PANEL_WIDTH + (DEFAULT_SPACING * 6)
-		let columns = p.activePanels
+		let columns = p.activeLayers
 			.map(ap =>
-				ap.type === TextLayerType.Facsimile ?
+				ap.type === LayerType.Facsimile ?
 					`minmax(${DEFAULT_SPACING * 10}px, auto)` :
 					`minmax(${textPanelSpace}px, 800px)`
 			)
@@ -31,8 +32,8 @@ export const PanelsWrapper = styled.div`
 
 		// If there is no facsimile active, the text panels should fill the available
 		// space (1fr)
-		if (!p.activePanels.some(ap => ap.type === TextLayerType.Facsimile)) {
-			columns = p.activePanels.map(() => `minmax(${textPanelSpace}px, 1fr)`).join(' ')
+		if (!p.activeLayers.some(ap => ap.type === LayerType.Facsimile)) {
+			columns = p.activeLayers.map(() => `minmax(${textPanelSpace}px, 1fr)`).join(' ')
 		}
 		return `
 			grid-template-columns: ${columns};

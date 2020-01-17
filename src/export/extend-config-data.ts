@@ -40,12 +40,12 @@ export const defaultMetadata: MetaDataConfig = {
 	order: 9999,
 }
 
-const defaultTextLayer: TextLayerConfig = {
+const defaultTextLayer: LayerConfig = {
 	active: false,
 	id: null,
-	type: TextLayerType.TextLayer
+	type: LayerType.Text
 }
-export function extendTextLayer(extractedTextLayer: ExtractedTextLayer, textLayersConfig: DocereConfig['textLayers']): TextLayer {
+export function extendTextLayer(extractedTextLayer: ExtractedTextLayer, textLayersConfig: DocereConfig['textLayers']): Layer {
 	const textLayerConfig = textLayersConfig.find(tlc => tlc.id === extractedTextLayer.id)
 	if (textLayerConfig == null) return { title: extractedTextLayer.id, ...defaultTextLayer, ...extractedTextLayer }
 	return { title: extractedTextLayer.id, ...textLayerConfig, ...extractedTextLayer }

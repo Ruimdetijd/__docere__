@@ -1,6 +1,5 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { AsideTab } from '../constants'
 
 // Person
 export function PersonSvg(props: SvgProps) {
@@ -67,7 +66,13 @@ function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessCompo
 				{...props}
 				active={active}
 				color={rsConfig.color}
-				onClick={() => props.setActiveId(activeId, rsConfig.id, AsideTab.TextData)}
+				onClick={() => {
+					props.dispatch({
+						type: 'SET_TEXT_DATA_ID',
+						id: activeId,
+						listId: rsConfig.id,
+					})
+				}}
 			>
 				{
 					props.insideNote ?

@@ -8,7 +8,7 @@ declare const enum Orientation {
 	Vertical
 }
 
-declare const enum TextLayerType { Facsimile, TextLayer, WitnessAnimation, XML }
+declare const enum LayerType { Facsimile, Text, WitnessAnimation, XML }
 
 declare const enum TextDataExtractionType {
 	Attribute = "attribute",

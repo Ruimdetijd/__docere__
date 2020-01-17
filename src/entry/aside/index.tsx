@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled';
 import MetadataAside from './metadata'
-import Notes from './notes'
+import NotesAside from './notes'
 import TextDataAside from './text-data'
 import { ASIDE_HANDLE_WIDTH, GRAY_DARK, ASIDE_WIDTH, TOP_OFFSET, AsideTab } from '../../constants'
 import Tabs from '../../ui/tabs';
@@ -34,63 +34,62 @@ function isEmpty(obj: Object) {
 	return Object.keys(obj).length === 0
 }
 
-export default class Aside extends React.PureComponent<EntryAsideProps> {
-	render() {
-		const hasMetadata = !isEmpty(this.props.entry.metadata)
-		const hasTextData = this.props.entry.textData.size > 0
-		const hasNotes = !isEmpty(this.props.entry.notes)
+function Aside(props: EntryAsideProps) {
+	if (props.entry == null) return
 
-		const tabs = []
-		if (hasMetadata) tabs.push(AsideTab.Metadata)
-		if (hasTextData) tabs.push(AsideTab.TextData)
-		if (hasNotes) tabs.push(AsideTab.Notes)
+	const hasMetadata = !isEmpty(props.entry.metadata)
+	const hasTextData = props.entry.textData.size > 0
+	const hasNotes = !isEmpty(props.entry.notes)
 
-		return (
-			<Wrapper>
-				<Tabs
-					onClick={(tab: AsideTab) => this.props.setAsideTab(tab)}
-					tab={this.props.asideTab}
-					tabs={tabs}
-				/>
-				<Body>
-					{
-						hasMetadata &&
-						<MetadataAside
-							active={this.props.asideTab === AsideTab.Metadata}
-							config={this.props.configData.config}
-							metadata={this.props.entry.metadata}
-						/>
-					}
-					{
-						hasTextData &&
-						<TextDataAside
-							active={this.props.asideTab === AsideTab.TextData}
-							activeId={this.props.activeId}
-							activeListId={this.props.activeListId}
-							activePanels={this.props.activePanels}
-							config={this.props.configData.config}
-							doc={this.props.entry.doc}
-							textData={this.props.entry.textData}
-							onItemClick={this.props.setActiveId}
-						/>
-					}
-					{
-						hasNotes &&
-						<Notes
-							active={this.props.asideTab === AsideTab.Notes}
-							activeId={this.props.activeId}
-							activeListId={this.props.activeListId}
-							activePanels={this.props.activePanels}
-							configData={this.props.configData}
-							doc={this.props.entry.doc}
-							items={this.props.entry.notes}
-							// itemsConfig={this.props.config.notes}
-							onItemClick={this.props.setActiveId}
-							setEntry={this.props.setEntry}
-						/>
-					}
-				</Body>
-			</Wrapper>
-		)
-	}
+	const tabs = []
+	if (hasMetadata) tabs.push(AsideTab.Metadata)
+	if (hasTextData) tabs.push(AsideTab.TextData)
+	if (hasNotes) tabs.push(AsideTab.Notes)
+
+	return (
+		<Wrapper>
+			<Tabs
+				onClick={(tab: AsideTab) => props.entryStateDispatch({ type: 'SET_ASIDE_TAB', asideTab: tab })}
+				tab={props.asideTab}
+				tabs={tabs}
+			/>
+			<Body>
+				{
+					hasMetadata &&
+					<MetadataAside
+						active={props.asideTab === AsideTab.Metadata}
+						config={props.configData.config}
+						metadata={props.entry.metadata}
+					/>
+				}
+				{
+					hasTextData &&
+					<TextDataAside
+						active={props.asideTab === AsideTab.TextData}
+						activeId={props.activeId}
+						activeListId={props.activeListId}
+						dispatch={props.entryStateDispatch}
+						layers={props.layers}
+						config={props.configData.config}
+						textData={props.entry.textData}
+					/>
+				}
+				{
+					hasNotes &&
+					<NotesAside
+						active={props.asideTab === AsideTab.Notes}
+						activeId={props.activeId}
+						activeListId={props.activeListId}
+						dispatch={props.entryStateDispatch}
+						layers={props.layers}
+						configData={props.configData}
+						items={props.entry.notes}
+						setEntry={props.setEntry}
+					/>
+				}
+			</Body>
+		</Wrapper>
+	)
 }
+
+export default React.memo(Aside)

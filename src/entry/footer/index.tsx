@@ -62,14 +62,14 @@ interface PIWProps {
 	active: boolean
 }
 interface PIProps {
-	textLayer: TextLayerConfig
-	togglePanel: EntryState['togglePanel']
+	textLayer: LayerConfig
+	togglePanel: (ev: React.MouseEvent<HTMLLIElement>) => void
 }
 function PanelItem(props: PIProps) {
 	return (
 		<PanelItemWrapper
 			active={props.textLayer.active}
-			onClick={() => props.togglePanel(props.textLayer.id)}
+			onClick={props.togglePanel}
 		>
 			<div>{props.textLayer.title.slice(0, 1)}</div>
 			<div>{props.textLayer.title}</div>
@@ -77,12 +77,25 @@ function PanelItem(props: PIProps) {
 	)
 }
 
-type Props = EntryProps & EntryState
+interface Props {
+	footerTab: EntryState['footerTab']
+	layers: EntryState['layers']
+	dispatch: React.Dispatch<EntryStateAction>
+}
 function Footer(props: Props) {
+	const handleTabClick = React.useCallback(footerTab => {
+		props.dispatch({ type: 'SET_FOOTER_TAB', footerTab })			
+	}, [])
+
+	const togglePanel = React.useCallback(ev => {
+		props.dispatch({ type: 'TOGGLE_LAYER' , id: ev.currentTarget.dataset.id })			
+	}, [])
+
 	return (
 		<Wrapper>
 			<Tabs
-				onClick={props.setFooterTab}
+				data-tab={props.footerTab}
+				onClick={handleTabClick}
 				position={TabPosition.Bottom}
 				tab={props.footerTab}
 				tabs={[FooterTab.PanelSelector]}
@@ -90,11 +103,12 @@ function Footer(props: Props) {
 			<Body>
 				<PanelList>
 					{
-						props.activePanels.map(tl =>
+						props.layers.map(tl =>
 							<PanelItem
+								data-id={tl.id}
 								key={tl.id}
 								textLayer={tl}
-								togglePanel={props.togglePanel}
+								togglePanel={togglePanel}
 							/>
 						)
 					}

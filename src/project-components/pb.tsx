@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { BROWN_LIGHT } from '../constants';
+import { BROWN_LIGHT } from '../constants'
 
 const Img = styled.img`
 	position: absolute;
@@ -19,8 +19,8 @@ const Img = styled.img`
 	}}
 `
 
-export default function getPb(extractPbId: (props: DocereComponentProps) => string) {
-	return function pb(props: DocereComponentProps) {
+export default function getPb(extractPbId: (props: DocereComponentProps) => string): React.FC<DocereComponentProps> {
+	return function Pb(props: DocereComponentProps) {
 		const id = extractPbId(props)
 		const facsimile = props.facsimiles.find(f => f.id === id)
 		if (facsimile == null) return null
@@ -30,8 +30,11 @@ export default function getPb(extractPbId: (props: DocereComponentProps) => stri
 		return (
 			<span
 				className="pb"
+				// onClick={() => {
+				// 	if (!active) props.setActiveFacsimile(src)
+				// }}
 				onClick={() => {
-					if (!active) props.setActiveFacsimile(src)
+					if (!active) props.dispatch({ type: 'SET_ACTIVE_FACSIMILE_PATH', src })
 				}}
 			>
 				<Img

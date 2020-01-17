@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import ItemInText from './item-in-text'
+import ItemInText from './item'
 import { small } from '../../index.components';
 import { GRAY_LIGHT, GRAY_DARK } from '../../../constants';
 
@@ -73,23 +73,26 @@ interface Props {
 	activeItemId: string
 	config: TextDataConfig
 	containerHeight: number
+	dispatch: React.Dispatch<EntryStateAction>
 	items: Map<string, TextDataValue>
 	listCount: number // Number of lists (persons, locations, etc), needed for height calculation
 	listId: string
-	onItemClick: SetActiveId
-	onListClick: (listId: string) => void
 }
 
 function TextDataList(props: Props) {
 	const entries = Array.from(props.items.entries())
 
 	const title = props.config?.title || props.listId
-	const color = props.config?.color || 'black';
+	const color = props.config?.color || 'black'
+
+	const handleTitleClick = React.useCallback(() => {
+		props.dispatch({ type: 'SET_ACTIVE_LIST_ID', id: props.listId })
+	}, [props.listId])
 
 	return (
 		<>
 			<H2
-				onClick={() => props.onListClick(props.listId)}
+				onClick={handleTitleClick}
 			>
 				{title}
 				<small>({props.items.size})</small>
@@ -108,12 +111,12 @@ function TextDataList(props: Props) {
 						.map(([key, item], i) =>
 							<ItemInText
 								active={key === props.activeItemId}
-								count={item.count}
+								item={item}
+								dispatch={props.dispatch}
+								id={key}
 								key={key + i}
-								onClick={() => props.onItemClick(key, props.listId, null)}
-							>
-								{item.value}
-							</ItemInText>
+								listId={props.listId}
+							/>
 						)
 				}
 			</Ul>

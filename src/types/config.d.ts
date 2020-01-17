@@ -12,7 +12,7 @@ interface ExtractedNote {
 type ExtractedNotes = Record<string, ExtractedNote[]>
 type ExtractedMetadata = Record<string, number | boolean | string | string[]>
 type ExtractedTextData = Map<string, Map<string, TextDataValue>>
-type ExtractedTextLayer = Pick<TextLayer, 'element'> & Pick<TextLayerConfig, 'id'> & Partial<TextLayerConfig>
+type ExtractedTextLayer = Pick<Layer, 'element'> & Pick<LayerConfig, 'id'> & Partial<LayerConfig>
 
 interface ExtractedFacsimile {
 	id: string
@@ -27,7 +27,7 @@ interface DocereConfig {
 	searchResultCount?: number
 	slug: string
 	textData?: TextDataConfig[]
-	textLayers?: TextLayerConfig[]
+	textLayers?: LayerConfig[]
 	title: string
 }
 
@@ -42,7 +42,7 @@ interface DocereConfigData {
 	extractNotes: (doc: XMLDocument) => ExtractedNotes
 	extractTextData: (doc: XMLDocument, config: DocereConfig) => ExtractedTextData
 	extractTextLayers: (doc: XMLDocument, config: DocereConfig) => ExtractedTextLayer[]
-	prepareDocument: (doc: XMLDocument, config: DocereConfig, id: string, textLayer?: TextLayer) => XMLDocument
+	prepareDocument: (doc: XMLDocument, config: DocereConfig, id: string, textLayer?: Layer) => XMLDocument
 }
 
 interface MetaDataConfig extends EntityConfig {
@@ -85,13 +85,13 @@ interface PageConfig extends EntityConfig {
 	children?: PageConfig[]
 }
 
-interface TextLayerConfig extends EntityConfig {
+interface LayerConfig extends EntityConfig {
 	active: boolean
-	type: TextLayerType
+	type: LayerType
 	xmlPath?: (id: string) => string
 }
 
-interface TextLayer extends TextLayerConfig {
+interface Layer extends LayerConfig {
 	element: Element | XMLDocument
 }
 

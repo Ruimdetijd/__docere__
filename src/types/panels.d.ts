@@ -1,16 +1,9 @@
 type PanelsProps = EntryProps & EntryState & {
-	setActiveId: SetActiveId
-	setActiveFacsimile: (path: string) => void
+	dispatch: React.Dispatch<EntryStateAction>
 }
-interface PanelsState {
-	customProps: DocereComponentProps
-	facsimileAreas: FacsimileArea[]
-	highlight: string[]
-}
-type TextPanelBaseProps = Pick<PanelsProps, 'configData' | 'entry' | 'hasScroll' | 'searchQuery'> & Pick<PanelsState, 'highlight'>
+type TextPanelBaseProps = Pick<PanelsProps, 'activeFacsimilePath' | 'activeId' | 'activeListId' | 'configData' | 'dispatch' | 'entry'>
 interface TextPanelProps extends TextPanelBaseProps {
-	customProps: DocereComponentProps
-	textLayerConfig: TextLayerConfig
+	textLayerConfig: LayerConfig
 }
 
-type WitnessAnimationPanelProps = Omit<TextPanelProps, 'customProps' | 'highlight' | 'searchQuery'> & Pick<PanelsProps, 'setActiveFacsimile'>
+type WitnessAnimationPanelProps = TextPanelProps

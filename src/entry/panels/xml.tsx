@@ -16,7 +16,7 @@ const Wrapper = styled.div`
 `
 
 interface Props {
-	config: TextLayerConfig
+	config: LayerConfig
 	doc: XMLDocument
 }
 export default class XmlPanel extends React.PureComponent<Props> {

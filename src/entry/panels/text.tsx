@@ -1,6 +1,5 @@
 import * as React from 'react'
 import DocereTextView from 'docere-text-view'
-// import { fetchPost } from '../../utils'
 import styled from '@emotion/styled'
 import { TEXT_PANEL_WIDTH, DEFAULT_SPACING } from '../../constants'
 // @ts-ignore
@@ -83,20 +82,10 @@ const ActiveArea = styled.div`
 	transition: background 600ms;
 `
 
-function useSetVisibleMiniMapAreaHeight(textWrapperEl: HTMLDivElement, activeAreaRef: HTMLDivElement) {
-	React.useEffect(() => {
-		if (textWrapperEl != null && activeAreaRef != null) {
-			activeAreaRef.style.height = textWrapperEl.clientHeight / 10 + 'px'
-		}
-	}, [textWrapperEl, activeAreaRef])
-}
-
 function TextPanel(props: TextPanelProps) {
 	const textWrapperRef = React.useRef<HTMLDivElement>()
 	const activeAreaRef = React.useRef<HTMLDivElement>()
 	const textLayer = props.entry.textLayers.find(tl => tl.id === props.textLayerConfig.id)
-
-	useSetVisibleMiniMapAreaHeight(textWrapperRef.current, activeAreaRef.current)
 
 	const resetActiveArea = debounce(() => {
 		activeAreaRef.current.style.background = `rgba(${activeAreaRGB}, 0)`
@@ -112,21 +101,34 @@ function TextPanel(props: TextPanelProps) {
 			activeAreaRef.current.parentElement.scrollTop = maxScrollTopActiveArea * perc
 		}
 
+		if (activeAreaRef.current.style.height === '') {
+			activeAreaRef.current.style.height = textWrapperRef.current.clientHeight / 10 + 'px'
+		}
 		activeAreaRef.current.style.background = `rgba(${activeAreaRGB}, 0.5)`
 		activeAreaRef.current.style.transform = `translateY(${(scrollTop / 10)}px)`
 
 		resetActiveArea()
 	}, [])
 
+	const customProps: DocereComponentProps = {
+		activeFacsimilePath: props.activeFacsimilePath,
+		activeId: props.activeId,
+		activeListId: props.activeListId,
+		config: props.configData.config,
+		dispatch: props.dispatch,
+		facsimiles: props.entry.facsimiles,
+		insideNote: false,
+		textLayerId: props.textLayerConfig.id
+	}
+
 	const text = (
 		<Text 
-			hasFacs={props.configData.extractFacsimiles != null}
+			hasFacs={props.entry.facsimiles.length > 0}
 		>
 			<DocereTextView
-				customProps={props.customProps}
+				customProps={customProps}
 				components={props.configData.components}
 				node={textLayer.element}
-				highlight={props.highlight}
 			/>
 		</Text>
 	)

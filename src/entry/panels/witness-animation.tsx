@@ -39,9 +39,9 @@ const Marker = styled.li`
 `
 
 interface State {
-	textLayer: TextLayerConfig
-	prevTextLayer: TextLayerConfig
-	textLayers: TextLayerConfig[]
+	textLayer: LayerConfig
+	prevTextLayer: LayerConfig
+	textLayers: LayerConfig[]
 }
 export default class WitnessAnimationPanel extends React.PureComponent<WitnessAnimationPanelProps, State> {
 	private textRef: React.RefObject<HTMLDivElement>
@@ -50,8 +50,8 @@ export default class WitnessAnimationPanel extends React.PureComponent<WitnessAn
 	// TODO move to constructor
 	state: State = {
 		prevTextLayer: null,
-		textLayer: this.props.entry.textLayers.filter(tl => tl.type === TextLayerType.TextLayer)[0],
-		textLayers: this.props.entry.textLayers.filter(tl => tl.type === TextLayerType.TextLayer)
+		textLayer: this.props.entry.textLayers.filter(tl => tl.type === LayerType.Text)[0],
+		textLayers: this.props.entry.textLayers.filter(tl => tl.type === LayerType.Text)
 	}
 
 	componentDidMount() {
@@ -108,7 +108,7 @@ export default class WitnessAnimationPanel extends React.PureComponent<WitnessAn
 		const index = this.state.textLayers.findIndex(tl => tl.id === textLayerId)
 		const textLayer = this.state.textLayers[index]
 		const firstFacs = this.props.entry.facsimiles.find(f => f.id === `${textLayer.id}-1`.toLowerCase())
-		if (firstFacs) this.props.setActiveFacsimile(firstFacs.path[0])
+		if (firstFacs) this.props.dispatch({ type: 'SET_ACTIVE_FACSIMILE_PATH', src: firstFacs.path[0] })
 		this.setState({
 			prevTextLayer: this.state.textLayers[index - 1],
 			textLayer
