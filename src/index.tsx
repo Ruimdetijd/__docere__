@@ -58,7 +58,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 // Search
 // TODO add sort
 // TODO when clicking facsimile in search results, activate and scroll to that facsimile in entry view
-// TODO add middle page in search result pagination ie: 1 2 3 ... 10 ... 18 19 20 (add the 10)
 
 // Rest
 // TODO i8n, user interface + pages

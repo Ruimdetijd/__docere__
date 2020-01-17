@@ -34,15 +34,19 @@ interface DocereConfig {
 type DocereConfigDataRaw = Partial<Omit<DocereConfigData, 'components'>> &
 	{ getComponents?: (config: DocereConfig) => DocereComponents }
 
-interface DocereConfigData {
-	components: DocereComponents
-	config: DocereConfig
+interface DocereConfigFunctions {
 	extractFacsimiles: (doc: XMLDocument) => ExtractedFacsimile[]
+	extractFacsimileAreas: (doc: XMLDocument, config: DocereConfig) => FacsimileArea[]
 	extractMetadata: (doc: XMLDocument, config: DocereConfig, id: string) => ExtractedMetadata
 	extractNotes: (doc: XMLDocument) => ExtractedNotes
 	extractTextData: (doc: XMLDocument, config: DocereConfig) => ExtractedTextData
 	extractTextLayers: (doc: XMLDocument, config: DocereConfig) => ExtractedTextLayer[]
 	prepareDocument: (doc: XMLDocument, config: DocereConfig, id: string, textLayer?: Layer) => XMLDocument
+}
+
+interface DocereConfigData extends DocereConfigFunctions {
+	components: DocereComponents
+	config: DocereConfig
 }
 
 interface MetaDataConfig extends EntityConfig {

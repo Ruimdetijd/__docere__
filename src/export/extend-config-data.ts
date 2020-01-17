@@ -1,4 +1,3 @@
-// import extractTextData from './textdata'
 import * as React from 'react'
 
 const defaultConfig: DocereConfig = {
@@ -9,7 +8,6 @@ const defaultConfig: DocereConfig = {
 	slug: 'unknown-project',
 	title: 'Unknown project',
 	textData: [],
-	// textLayers: []
 	textLayers: [
 		// {
 		// 	active: true,
@@ -51,9 +49,10 @@ export function extendTextLayer(extractedTextLayer: ExtractedTextLayer, textLaye
 	return { title: extractedTextLayer.id, ...textLayerConfig, ...extractedTextLayer }
 }
 
-const defaultDocereFunctions: Pick<DocereConfigData, 'prepareDocument' | 'extractFacsimiles' | 'extractMetadata' | 'extractNotes' | 'extractTextData' | 'extractTextLayers'> = {
+const defaultDocereFunctions: DocereConfigFunctions = {
 	prepareDocument: function prepareDocument(doc) { return doc },
 	extractFacsimiles: function extractFacsimiles(_doc) { return [] },
+	extractFacsimileAreas: function extractFacsimileAreas(_doc, _config) { return [] },
 	extractMetadata: function extractMetadata(_doc) { return {} },
 	extractNotes: function extractNotes(_doc) { return {} },
 	extractTextData: function extractTextData(_doc) { return new Map() },

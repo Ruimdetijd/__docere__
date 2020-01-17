@@ -76,6 +76,21 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 				facsimileAreas: action.facsimileAreas,
 			}
 		}
+
+		case 'TOGGLE_LAYER': {
+			return {
+				...entryState,
+				layers: entryState.layers.map(l => {
+					if (l.id === action.id) {
+						l.active = !l.active
+					}
+					return l
+				})
+			}
+		}
+
+		default:
+			break
 	}
 
 	return entryState
