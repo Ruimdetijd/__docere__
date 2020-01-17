@@ -11,6 +11,8 @@ interface FacsimileArea {
 	unit: 'px' | 'perc'
 }
 
+type DocereComponentAction = EntryStateAction | { type: 'SET_ENTRY', id: string }
+
 interface DocereComponentProps {
 	activeFacsimilePath: EntryState['activeFacsimilePath']
 	activeId: EntryState['activeId']
@@ -18,7 +20,7 @@ interface DocereComponentProps {
 	attributes?: Record<string, string>
 	children?: React.ReactNode
 	config: DocereConfig
-	dispatch: React.Dispatch<EntryStateAction>
+	dispatch: React.Dispatch<DocereComponentAction>
 	facsimiles: Entry['facsimiles']
 	insideNote: boolean
 	textLayerId: string

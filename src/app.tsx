@@ -78,7 +78,6 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 				<EntryComp 
 					configData={configData}
 					entry={entry}
-					viewport={viewport}
 					searchTab={searchTab}
 					setEntry={setEntry}
 				/>

@@ -18,7 +18,7 @@ interface EntryState {
 	layers: LayerConfig[]
 }
 
-type EntryProps = Pick<AppState, 'configData' | 'entry' | 'searchTab' | 'setEntry' | 'viewport'>
+type EntryProps = Pick<AppState, 'configData' | 'entry' | 'searchTab' | 'setEntry'>
 
 type EntryAsideProps =
 	Pick<EntryProps, 'configData' | 'entry' | 'setEntry'> &

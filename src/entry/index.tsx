@@ -29,7 +29,6 @@ function Entry(props: EntryProps) {
 				layers={entryState.layers}
 				searchTab={props.searchTab}
 				setEntry={props.setEntry}
-				viewport={props.viewport}
 			/>
 			<Aside
 				activeId={entryState.activeId}

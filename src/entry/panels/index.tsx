@@ -1,12 +1,82 @@
 import * as React from 'react'
 import { PanelsWrapper } from '../index.components'
-// import { AsideTab } from '../../constants'
-// import toPanel from './map-to-panel'
-// import * as React from 'react'
 import FacsimilePanel from './facsimile'
 import TextPanel from './text'
 import WitnessAnimationPanel from './witness-animation'
 import XmlPanel from './xml'
+
+function Panels(props: PanelsProps) {
+	const activeLayers = props.layers.filter(ap => ap.active)
+
+	const dispatch = React.useCallback((action: DocereComponentAction) => {
+		if (action.type === 'SET_ENTRY') props.setEntry(action.id)
+		else props.dispatch(action)
+	}, [])
+
+	return (
+		<PanelsWrapper
+			activeLayers={activeLayers}
+		>
+			{
+				activeLayers.map(ap => {
+					if (ap.type === LayerType.Facsimile) {
+						return (
+							<FacsimilePanel
+								activeFacsimilePath={props.activeFacsimilePath}
+								facsimileAreas={props.facsimileAreas}
+								key={ap.id}
+								projectId={props.configData.config.slug}
+							/>
+						)
+					}
+
+					if (ap.type === LayerType.Text) {
+						return (
+							<TextPanel
+								activeFacsimilePath={props.activeFacsimilePath}
+								activeId={props.activeId}
+								activeListId={props.activeListId}
+								configData={props.configData}
+								dispatch={dispatch}
+								entry={props.entry}
+								key={ap.id}
+								textLayerConfig={ap}
+							/>
+						)
+					}
+
+					if (ap.type === LayerType.WitnessAnimation) {
+						return (
+							<WitnessAnimationPanel
+								activeFacsimilePath={props.activeFacsimilePath}
+								activeId={props.activeId}
+								activeListId={props.activeListId}
+								configData={props.configData}
+								dispatch={props.dispatch}
+								entry={props.entry}
+								key={ap.id}
+								textLayerConfig={ap}
+							/>
+						)
+					}
+
+					if (ap.type === LayerType.XML) {
+						return (
+							<XmlPanel
+								config={ap}
+								key={ap.id}
+								doc={props.entry.doc}
+							/>
+						)
+					}
+				})
+			}
+		</PanelsWrapper>
+	)
+}
+
+export default React.memo(Panels)
+
 
 // export default class Panels extends React.Component<PanelsProps, PanelsState> {
 	// private setFacsimileArea: DocereComponentProps['setFacsimileArea'] = (facsimileAreas: FacsimileArea[]) => {
@@ -60,70 +130,3 @@ import XmlPanel from './xml'
 
 	// 	return this.state.customProps
 	// }
-
-function Panels(props: PanelsProps) {
-	const activeLayers = props.layers.filter(ap => ap.active)
-
-	return (
-		<PanelsWrapper
-			activeLayers={activeLayers}
-		>
-			{
-				activeLayers.map(ap => {
-					if (ap.type === LayerType.Facsimile) {
-						return (
-							<FacsimilePanel
-								activeFacsimilePath={props.activeFacsimilePath}
-								facsimileAreas={props.facsimileAreas}
-								key={ap.id}
-								projectId={props.configData.config.slug}
-							/>
-						)
-					}
-
-					if (ap.type === LayerType.Text) {
-						return (
-							<TextPanel
-								activeFacsimilePath={props.activeFacsimilePath}
-								activeId={props.activeId}
-								activeListId={props.activeListId}
-								configData={props.configData}
-								dispatch={props.dispatch}
-								entry={props.entry}
-								key={ap.id}
-								textLayerConfig={ap}
-							/>
-						)
-					}
-
-					if (ap.type === LayerType.WitnessAnimation) {
-						return (
-							<WitnessAnimationPanel
-								activeFacsimilePath={props.activeFacsimilePath}
-								activeId={props.activeId}
-								activeListId={props.activeListId}
-								configData={props.configData}
-								dispatch={props.dispatch}
-								entry={props.entry}
-								key={ap.id}
-								textLayerConfig={ap}
-							/>
-						)
-					}
-
-					if (ap.type === LayerType.XML) {
-						return (
-							<XmlPanel
-								config={ap}
-								key={ap.id}
-								doc={props.entry.doc}
-							/>
-						)
-					}
-				})
-			}
-		</PanelsWrapper>
-	)
-}
-
-export default React.memo(Panels)
