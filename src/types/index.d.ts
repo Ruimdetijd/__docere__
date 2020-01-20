@@ -3,7 +3,7 @@
 /// <reference path="./config.d.ts" />
 /// <reference path="./components.d.ts" />
 /// <reference path="./panels.d.ts" />
-/// <reference path="../entry/reducers/entry-state.d.ts" />
+/// <reference path="../entry/state/index.d.ts" />
 
 declare module 'openseadragon'
 

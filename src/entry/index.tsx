@@ -3,7 +3,7 @@ import { Main } from './index.components'
 import Panels from './panels'
 import Aside from './aside'
 import Footer from './footer'
-import useEntryState from './reducers/entry-state'
+import useEntryState from './state'
 
 function Entry(props: EntryProps) {
 	if (props.entry == null) return null
