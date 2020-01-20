@@ -25,7 +25,7 @@ interface Props {
 }
 export default function ItemInText(props: Props) {
 	const handleClick = React.useCallback(() => {
-		props.dispatch({ type: 'SET_TEXT_DATA_ID', id: props.id, listId: props.listId })
+		props.dispatch({ type: 'SET_TEXT_DATA_ID', activeId: props.id, activeListId: props.listId })
 	}, [props.id, props.listId])
 
 	return (

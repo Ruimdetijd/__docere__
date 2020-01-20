@@ -21,7 +21,7 @@ function Entry(props: EntryProps) {
 				activeId={entryState.activeId}
 				activeListId={entryState.activeListId}
 				asideTab={entryState.asideTab}
-				facsimileAreas={entryState.facsimileAreas}
+				activeFacsimileAreas={entryState.activeFacsimileAreas}
 				configData={props.configData}
 				dispatch={entryStateDispatch}
 				entry={props.entry}

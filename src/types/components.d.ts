@@ -4,16 +4,20 @@ type DocereComponents = Record<string, (props: Partial<DocereComponentProps>) =>
 type GetComponents = (config: DocereConfig) => DocereComponents
 
 interface FacsimileArea {
+	h: number
+	id: string
+	showOnHover?: boolean
+	target?: Pick<EntryState, 'activeId' | 'activeListId' | 'asideTab'>
+	unit?: 'px' | 'perc'
+	w: number
 	x: number
 	y: number
-	w: number
-	h: number
-	unit: 'px' | 'perc'
 }
 
 type DocereComponentAction = EntryStateAction | { type: 'SET_ENTRY', id: string }
 
 interface DocereComponentProps {
+	activeFacsimileAreas: EntryState['activeFacsimileAreas']
 	activeFacsimilePath: EntryState['activeFacsimilePath']
 	activeId: EntryState['activeId']
 	activeListId: EntryState['activeListId']

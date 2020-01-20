@@ -71,7 +71,7 @@ interface Props {
 
 function Notes(props: Props) {
 	const handleTitleClick = React.useCallback(() => {
-		props.dispatch({ type: 'SET_ACTIVE_LIST_ID', id: props.itemConfig.id })
+		props.dispatch({ type: 'SET_ACTIVE_LIST_ID', activeListId: props.itemConfig.id })
 	}, [props.itemConfig.id])
 
 	return (

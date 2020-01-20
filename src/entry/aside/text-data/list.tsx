@@ -86,7 +86,7 @@ function TextDataList(props: Props) {
 	const color = props.config?.color || 'black'
 
 	const handleTitleClick = React.useCallback(() => {
-		props.dispatch({ type: 'SET_ACTIVE_LIST_ID', id: props.listId })
+		props.dispatch({ type: 'SET_ACTIVE_LIST_ID', activeListId: props.listId })
 	}, [props.listId])
 
 	return (

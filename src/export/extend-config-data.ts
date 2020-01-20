@@ -30,6 +30,12 @@ const defaultConfig: DocereConfig = {
 	]
 }
 
+export const defaultFacsimileArea: Pick<FacsimileArea, 'showOnHover' | 'target' | 'unit'> = {
+	showOnHover: true,
+	target: null,
+	unit: 'px'
+}
+
 export const defaultMetadata: MetaDataConfig = {
 	aside: true,
 	datatype: EsDataType.Keyword,

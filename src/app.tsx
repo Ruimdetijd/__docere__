@@ -4,7 +4,7 @@ import PageView from './page'
 import { SearchTab, Viewport } from './constants'
 import EntrySelector from './entry-selector'
 import Header from './header'
-import { extendTextLayer } from './export/extend-config-data'
+import { extendTextLayer, defaultFacsimileArea } from './export/extend-config-data'
 
 // TODO move to types.d.ts, but first replace EntrySelector
 type AppProps = Pick<AppState, 'configData'> & { entryId: string, EntrySelector: typeof EntrySelector, pageId: string }
@@ -149,13 +149,8 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 	}
 	protected async getEntry(id: string): Promise<Entry> {
 		let doc = await this.getEntryDoc(id)
-
 		doc = this.props.configData.prepareDocument(doc, this.props.configData.config, id)
 
-		const facsimiles = this.props.configData.extractFacsimiles(doc)
-		const metadata = this.props.configData.extractMetadata(doc, this.props.configData.config, id)
-		const notes = this.props.configData.extractNotes(doc)
-		const textData = this.props.configData.extractTextData(doc, this.props.configData.config)
 		let textLayers = this.props.configData.extractTextLayers(doc, this.props.configData.config)
 			// Extend the extracted text layers with their config
 			.map(tl => extendTextLayer(tl, this.props.configData.config.textLayers))
@@ -180,10 +175,11 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 		return {
 			id,
 			doc,
-			facsimiles,
-			metadata,
-			notes,
-			textData,
+			facsimiles: this.props.configData.extractFacsimiles(doc),
+			metadata: this.props.configData.extractMetadata(doc, this.props.configData.config, id),
+			notes: this.props.configData.extractNotes(doc),
+			textData: this.props.configData.extractTextData(doc, this.props.configData.config),
+			facsimileAreas: this.props.configData.extractFacsimileAreas(doc, this.props.configData.config).map(fa => ({ ...defaultFacsimileArea, ...fa })),
 			textLayers
 		}
 	}

@@ -5,7 +5,8 @@ const initialEntryState: EntryState = {
 	activeFacsimilePath: null,
 	activeId: null,
 	activeListId: null,
-	facsimileAreas: [],
+	activeFacsimileAreas: [],
+	entry: null,
 	layers: [],
 	asideTab: null,
 	footerTab: null,
@@ -18,15 +19,33 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			return {
 				...initialEntryState,
 				activeFacsimilePath: action.activeFacsimilePath,
+				entry: action.entry,
 				layers: action.layers,
 			}
 		}
 
-		case 'SET_TEXT_DATA_ID': {
+		case 'SET_ACTIVE_ID': {
+			const activeFacsimileAreas = entryState.entry.facsimileAreas
+				.filter(fa => fa.target?.activeId === action.activeId)
+
 			return {
 				...entryState,
-				activeId: action.id,
-				activeListId: action.listId,
+				activeFacsimileAreas,
+				activeId: action.activeId,
+				activeListId: action.activeListId,
+				asideTab: action.asideTab,
+			}
+		}
+
+		case 'SET_TEXT_DATA_ID': {
+			const activeFacsimileAreas = entryState.entry.facsimileAreas
+				.filter(fa => fa.target?.activeId === action.activeId)
+
+			return {
+				...entryState,
+				activeFacsimileAreas,
+				activeId: action.activeId,
+				activeListId: action.activeListId,
 				asideTab: AsideTab.TextData
 			}
 		}
@@ -34,8 +53,8 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 		case 'SET_NOTE_ID': {
 			return {
 				...entryState,
-				activeId: action.id,
-				activeListId: action.listId,
+				activeId: action.activeId,
+				activeListId: action.activeListId,
 				asideTab: AsideTab.Notes
 			}
 		}
@@ -43,7 +62,7 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 		case 'SET_ACTIVE_LIST_ID': {
 			return {
 				...entryState,
-				activeListId: action.id
+				activeListId: action.activeListId
 			}
 		}
 
@@ -71,9 +90,15 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 		}
 
 		case 'SET_FACSIMILE_AREAS': {
+			const activeFacsimileAreas = entryState.entry.facsimileAreas
+				.filter(fa => action.ids.indexOf(fa.id) > -1)
+
 			return {
 				...entryState,
-				facsimileAreas: action.facsimileAreas,
+				activeFacsimileAreas,
+				activeId: null,
+				activeListId: null,
+				asideTab: null
 			}
 		}
 
@@ -106,6 +131,7 @@ export default function useEntryState(entry: Entry) {
 		// x[1] = dispatch
 		x[1]({
 			activeFacsimilePath: entry.facsimiles.length ? entry.facsimiles[0].path[0] : null,
+			entry,
 			layers: entry.textLayers,
 			type: 'ENTRY_CHANGED',
 		})

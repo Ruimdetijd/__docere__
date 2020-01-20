@@ -38,7 +38,7 @@ interface Props {
 }
 export default function Note(props: Props) {
 	const handleClick = React.useCallback(() => {
-		props.dispatch({ type: 'SET_NOTE_ID', id: props.item.n.toString(), listId: props.listId })
+		props.dispatch({ type: 'SET_NOTE_ID', activeId: props.item.n.toString(), activeListId: props.listId })
 	}, [props.item, props.listId])
 
 	return (

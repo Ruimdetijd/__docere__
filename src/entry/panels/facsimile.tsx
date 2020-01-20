@@ -12,15 +12,25 @@ const Wrapper = styled.div`
 
 	.facsimile-area {
 		border: 3px solid rgba(255, 0, 0, 0);
+		pointer-events: none;
 		transition: border-color 600ms;
 
 		&.active {
 			border-color: rgba(255, 0, 0, .6);
 		}
+
+		&.show {
+			pointer-events: all;
+
+			&:hover {
+				border-color: rgba(255, 0, 0, .3);
+			}
+
+		}
 	}
 `
 
-function useOpenSeaddragon(): [any, any] {
+function useOpenSeaddragon(facsimileAreas: FacsimileArea[], dispatch: React.Dispatch<EntryStateAction>): [any, any] {
 	const [OpenSeadragon, setOpenSeadragon] = React.useState([null, null] as [any, any])
 
 	React.useEffect(() => {
@@ -48,50 +58,77 @@ function useOpenSeaddragon(): [any, any] {
 					visibilityRatio: 1.0,
 				})
 				setOpenSeadragon([osdInstance, OpenSeadragon])
+				osdInstance.addHandler('open', () => {
+					renderFacsimileAreas(osdInstance, facsimileAreas, OpenSeadragon, dispatch)
+				})
 			})
 	}, [])
 
 	return OpenSeadragon
 }
 
-function useHighlight(osd: any, facsimileAreas: Props['facsimileAreas'], OpenSeadragon: any) {
+function renderFacsimileAreas(osd: any, facsimileAreas: Props['facsimileAreas'], OpenSeadragon: any, dispatch: React.Dispatch<EntryStateAction>) {
+	const { width: imgWidthRatio, height: imgHeightRatio } = osd.world.getHomeBounds()
+	const aspectRatio = imgHeightRatio / imgWidthRatio
+
+	const { x: imgWidth, y: imgHeight } = osd.world._contentSize
+
+	facsimileAreas.forEach(area => {
+		let { x, y, w, h, unit } = area
+		if (unit === 'px') {
+			x = x / imgWidth
+			y = y / imgHeight
+			w = w / imgWidth
+			h = h / imgHeight
+		} 
+
+		var element = document.createElement("div")
+		element.classList.add('facsimile-area')
+		element.dataset.id = area.id
+		if (area.showOnHover) {
+			element.classList.add('show')
+			element.addEventListener('click', () => {
+				area.target != null ?
+					dispatch({ type: 'SET_ACTIVE_ID', ...area.target }) :
+					dispatch({ type: 'SET_FACSIMILE_AREAS', ids: [area.id] })
+			})
+		}
+
+		y = y * aspectRatio
+		h = h * aspectRatio
+		osd.addOverlay({
+			element,
+			location: new OpenSeadragon.Rect(x, y, w, h),
+		})
+	})
+}
+
+function getAreaCenter(area: FacsimileArea, osd: any, OpenSeadragon: any) {
+	let { x, y, w, h, unit } = area
+	if (unit === 'px') {
+		const { x: imgWidth, y: imgHeight } = osd.world._contentSize
+		x = x / imgWidth
+		y = y / imgHeight
+		w = w / imgWidth
+		h = h / imgHeight
+	}
+	return new OpenSeadragon.Point(x + w/2, y + h/2)
+}
+
+function useActiveFacsimileAreas(osd: any, activeFacsimileAreas: FacsimileArea[], OpenSeadragon: any) {
 	React.useEffect(() => {
 		if (osd == null) return
 
-		for (const areaEl of osd.container.querySelectorAll('.facsimile-area')) {
+		for (const areaEl of osd.container.querySelectorAll('.facsimile-area.active')) {
 			areaEl.classList.remove('active')
-			setTimeout(() => osd.removeOverlay(areaEl), 1000)
 		}
 
-		const { width: imgWidthRatio, height: imgHeightRatio } = osd.world.getHomeBounds()
-		const aspectRatio = imgHeightRatio / imgWidthRatio
-
-		facsimileAreas.forEach(area => {
-			let { x, y, w, h, unit } = area
-			if (unit === 'px') {
-				const { x: imgWidth, y: imgHeight } = osd.world._contentSize
-				x = x / imgWidth
-				y = y / imgHeight
-				w = w / imgWidth
-				h = h / imgHeight
-			} 
-
-			var element = document.createElement("div")
-			element.classList.add('facsimile-area')
-			setTimeout(() => {
-				element.classList.add('active')
-			}, 10)
-
-			y = y * aspectRatio
-			h = h * aspectRatio
-			osd.addOverlay({
-				element,
-				location: new OpenSeadragon.Rect(x, y, w, h),
-			});
-
-			osd.viewport.panTo(new OpenSeadragon.Point(x + w/2, y + h/2))
+		activeFacsimileAreas.forEach(area => {
+			const element = osd.container.querySelector(`[data-id="${area.id}"]`)
+			element.classList.add('active')
+			osd.viewport.panTo(getAreaCenter(area, osd, OpenSeadragon))
 		})
-	}, [osd, facsimileAreas])
+	}, [osd, activeFacsimileAreas])
 }
 
 function useFacsimilePath(osd: any, activeFacsimilePath: Props['activeFacsimilePath'], projectId: Props['projectId']) {
@@ -112,16 +149,17 @@ function useFacsimilePath(osd: any, activeFacsimilePath: Props['activeFacsimileP
 }
 
 type Props =
-	Pick<EntryState, 'activeFacsimilePath'> &
+	Pick<EntryState, 'activeFacsimileAreas' | 'activeFacsimilePath'> &
+	Pick<Entry, 'facsimileAreas'> &
 	{
-		facsimileAreas: FacsimileArea[]
+		dispatch: React.Dispatch<EntryStateAction>
 		projectId: DocereConfig['slug']
 	}
 
 function FacsimilePanel(props: Props) {
-	const [osd, OpenSeadragon] = useOpenSeaddragon()
+	const [osd, OpenSeadragon] = useOpenSeaddragon(props.facsimileAreas, props.dispatch)
 	useFacsimilePath(osd, props.activeFacsimilePath, props.projectId)
-	useHighlight(osd, props.facsimileAreas, OpenSeadragon)
+	useActiveFacsimileAreas(osd, props.activeFacsimileAreas, OpenSeadragon)
 
 	return (
 		<Wrapper>

@@ -69,8 +69,8 @@ function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessCompo
 				onClick={() => {
 					props.dispatch({
 						type: 'SET_TEXT_DATA_ID',
-						id: activeId,
-						listId: rsConfig.id,
+						activeId,
+						activeListId: rsConfig.id,
 					})
 				}}
 			>

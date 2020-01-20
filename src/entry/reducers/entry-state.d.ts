@@ -1,7 +1,5 @@
-interface ESA_Entry_Changed {
+interface ESA_Entry_Changed extends Pick<EntryState, 'activeFacsimilePath' | 'entry' | 'layers'> {
 	type: "ENTRY_CHANGED",
-	activeFacsimilePath: string
-	layers: EntryState['layers']
 }
 
 interface ESA_Toggle_Layer {
@@ -9,31 +7,28 @@ interface ESA_Toggle_Layer {
 	id: string
 }
 
-interface ESA_Set_Aside_Tab {
+interface ESA_Set_Aside_Tab extends Pick<EntryState, 'asideTab'> {
 	type: 'SET_ASIDE_TAB'
-	asideTab: EntryState['asideTab']
 }
 
-interface ESA_Set_Footer_Tab {
+interface ESA_Set_Footer_Tab extends Pick<EntryState, 'footerTab'> {
 	type: 'SET_FOOTER_TAB'
-	footerTab: EntryState['footerTab']
 }
 
-interface ESA_Set_Text_Data_Id {
+interface ESA_Set_Active_Id extends Pick<EntryState, 'activeId' | 'activeListId' | 'asideTab'> {
+	type: 'SET_ACTIVE_ID'
+}
+
+interface ESA_Set_Text_Data_Id extends Pick<EntryState, 'activeId' | 'activeListId'> {
 	type: 'SET_TEXT_DATA_ID'
-	id: string
-	listId: string
 }
 
-interface ESA_Set_Note_Id {
+interface ESA_Set_Note_Id extends Pick<EntryState, 'activeId' | 'activeListId'> {
 	type: 'SET_NOTE_ID'
-	id: string
-	listId?: string
 }
 
-interface ESA_Set_Active_List_Id {
+interface ESA_Set_Active_List_Id extends Pick<EntryState, 'activeListId'> {
 	type: 'SET_ACTIVE_LIST_ID'
-	id: string
 }
 
 interface ESA_Set_Active_Facsimile_Path {
@@ -43,12 +38,13 @@ interface ESA_Set_Active_Facsimile_Path {
 
 interface ESA_Set_Facsimile_Areas {
 	type: 'SET_FACSIMILE_AREAS'
-	facsimileAreas: FacsimileArea[]
+	ids: string[]
 }
 
 type EntryStateAction = 
 	ESA_Entry_Changed |
 	ESA_Set_Active_Facsimile_Path |
+	ESA_Set_Active_Id |
 	ESA_Set_Active_List_Id |
 	ESA_Set_Aside_Tab |
 	ESA_Set_Facsimile_Areas |

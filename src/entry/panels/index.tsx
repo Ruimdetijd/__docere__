@@ -23,7 +23,9 @@ function Panels(props: PanelsProps) {
 						return (
 							<FacsimilePanel
 								activeFacsimilePath={props.activeFacsimilePath}
-								facsimileAreas={props.facsimileAreas}
+								activeFacsimileAreas={props.activeFacsimileAreas}
+								dispatch={dispatch}
+								facsimileAreas={props.entry.facsimileAreas}
 								key={ap.id}
 								projectId={props.configData.config.slug}
 							/>
@@ -33,6 +35,7 @@ function Panels(props: PanelsProps) {
 					if (ap.type === LayerType.Text) {
 						return (
 							<TextPanel
+								activeFacsimileAreas={props.activeFacsimileAreas}
 								activeFacsimilePath={props.activeFacsimilePath}
 								activeId={props.activeId}
 								activeListId={props.activeListId}
@@ -48,6 +51,7 @@ function Panels(props: PanelsProps) {
 					if (ap.type === LayerType.WitnessAnimation) {
 						return (
 							<WitnessAnimationPanel
+								activeFacsimileAreas={props.activeFacsimileAreas}
 								activeFacsimilePath={props.activeFacsimilePath}
 								activeId={props.activeId}
 								activeListId={props.activeListId}

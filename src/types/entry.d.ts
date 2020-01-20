@@ -1,6 +1,7 @@
 interface Entry {
 	doc: XMLDocument
 	facsimiles: ExtractedFacsimile[]
+	facsimileAreas: FacsimileArea[]
 	id: string
 	metadata: ExtractedMetadata
 	notes: ExtractedNotes
@@ -9,11 +10,12 @@ interface Entry {
 }
 
 interface EntryState {
+	activeFacsimileAreas: FacsimileArea[]
 	activeFacsimilePath: string
 	activeId: string
 	activeListId: string
 	asideTab: AsideTab
-	facsimileAreas: FacsimileArea[]
+	entry: Entry
 	footerTab: FooterTab
 	layers: LayerConfig[]
 }
