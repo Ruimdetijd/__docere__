@@ -49,7 +49,10 @@ function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessCompo
 
 		// The RS is active when the text data list (defined by the ID), for example: person, place, theme, etc
 		// and the ID match. Only the ID is not sufficient, because two lists could have matching IDs.
-		const active = props.activeListId === rsConfig.id && props.activeId === activeId
+		const active = 
+			props.activeEntity != null &&
+			props.activeEntity.type === rsConfig.id &&
+			props.activeEntity.id === activeId
 
 		// To prevent a wrap between the icon and the first word the first word is extracted.
 		// The icon and the first word are placed inside a span with white-space: nowrap.
@@ -68,9 +71,8 @@ function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessCompo
 				color={rsConfig.color}
 				onClick={() => {
 					props.dispatch({
-						type: 'SET_TEXT_DATA_ID',
-						activeId,
-						activeListId: rsConfig.id,
+						type: 'SET_ENTITY',
+						id: activeId
 					})
 				}}
 			>

@@ -19,21 +19,19 @@ const Li = styled.li`
 interface Props {
 	active: boolean
 	dispatch: React.Dispatch<EntryStateAction>
-	id: EntryState['activeId']
-	item: TextDataValue
-	listId: EntryState['activeListId']
+	entity: Entity
 }
 export default function ItemInText(props: Props) {
 	const handleClick = React.useCallback(() => {
-		props.dispatch({ type: 'SET_TEXT_DATA_ID', activeId: props.id, activeListId: props.listId })
-	}, [props.id, props.listId])
+		props.dispatch({ type: 'SET_ENTITY', id: props.entity.id })
+	}, [props.entity])
 
 	return (
 		<Li
-			count={props.item.count}
+			count={props.entity.count}
 			onClick={handleClick}
 		>
-			{props.item.value}
+			{props.entity.value}
 		</Li>
 	)
 }

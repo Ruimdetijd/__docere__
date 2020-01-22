@@ -19,6 +19,9 @@ module.exports = {
 				target: 'http://localhost:5004',
 				pathRewrite: {'^/iiif': ''}
 			}
+		},
+		watchOptions: {
+			ignored: /node_modules/
 		}
 	},
 	entry: ['./src/index.tsx', './src/export/index.ts'],

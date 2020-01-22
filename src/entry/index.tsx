@@ -17,9 +17,9 @@ function Entry(props: EntryProps) {
 			searchTab={props.searchTab}
 		>
 			<Panels
+				activeEntity={entryState.activeEntity}
+				activeNote={entryState.activeNote}
 				activeFacsimilePath={entryState.activeFacsimilePath}
-				activeId={entryState.activeId}
-				activeListId={entryState.activeListId}
 				asideTab={entryState.asideTab}
 				activeFacsimileAreas={entryState.activeFacsimileAreas}
 				configData={props.configData}
@@ -31,11 +31,11 @@ function Entry(props: EntryProps) {
 				setEntry={props.setEntry}
 			/>
 			<Aside
-				activeId={entryState.activeId}
-				activeListId={entryState.activeListId}
+				activeEntity={entryState.activeEntity}
+				activeNote={entryState.activeNote}
 				asideTab={entryState.asideTab}
 				configData={props.configData}
-				entryStateDispatch={entryStateDispatch}
+				dispatch={entryStateDispatch}
 				entry={props.entry}
 				layers={entryState.layers}
 				setEntry={props.setEntry}

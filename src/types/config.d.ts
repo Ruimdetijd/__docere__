@@ -1,17 +1,23 @@
 /// <reference types="huc-faceted-search" />
 
-interface TextDataValue {
-	count: number
-	value: string
-}
-interface ExtractedNote {
-	n: string | number
-	el: Element
+interface TextData {
+	count?: number
+	id: string
+	type: string
 }
 
-type ExtractedNotes = Record<string, ExtractedNote[]>
+interface Entity extends TextData {
+	value: string
+}
+
+interface Note extends TextData {
+	el: Element
+	n: string | number
+}
+
+// type NotesByType = Record<string, Note[]>
+
 type ExtractedMetadata = Record<string, number | boolean | string | string[]>
-type ExtractedTextData = Map<string, Map<string, TextDataValue>>
 type ExtractedTextLayer = Pick<Layer, 'element'> & Pick<LayerConfig, 'id'> & Partial<LayerConfig>
 
 interface ExtractedFacsimile {
@@ -38,8 +44,8 @@ interface DocereConfigFunctions {
 	extractFacsimiles: (doc: XMLDocument) => ExtractedFacsimile[]
 	extractFacsimileAreas: (doc: XMLDocument, config: DocereConfig) => FacsimileArea[]
 	extractMetadata: (doc: XMLDocument, config: DocereConfig, id: string) => ExtractedMetadata
-	extractNotes: (doc: XMLDocument) => ExtractedNotes
-	extractTextData: (doc: XMLDocument, config: DocereConfig) => ExtractedTextData
+	extractNotes: (doc: XMLDocument) => Note[]
+	extractTextData: (doc: XMLDocument, config: DocereConfig) => Entity[]
 	extractTextLayers: (doc: XMLDocument, config: DocereConfig) => ExtractedTextLayer[]
 	prepareDocument: (doc: XMLDocument, config: DocereConfig, id: string, textLayer?: Layer) => XMLDocument
 }

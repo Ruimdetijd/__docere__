@@ -38,18 +38,18 @@ function Aside(props: EntryAsideProps) {
 	if (props.entry == null) return
 
 	const hasMetadata = !isEmpty(props.entry.metadata)
-	const hasTextData = props.entry.textData.size > 0
+	const hasEntities = props.entry.entities.length > 0
 	const hasNotes = !isEmpty(props.entry.notes)
 
 	const tabs = []
 	if (hasMetadata) tabs.push(AsideTab.Metadata)
-	if (hasTextData) tabs.push(AsideTab.TextData)
+	if (hasEntities) tabs.push(AsideTab.TextData)
 	if (hasNotes) tabs.push(AsideTab.Notes)
 
 	return (
 		<Wrapper>
 			<Tabs
-				onClick={(tab: AsideTab) => props.entryStateDispatch({ type: 'SET_ASIDE_TAB', asideTab: tab })}
+				onClick={(tab: AsideTab) => props.dispatch({ type: 'TOGGLE_ASIDE_TAB', asideTab: tab })}
 				tab={props.asideTab}
 				tabs={tabs}
 			/>
@@ -63,27 +63,25 @@ function Aside(props: EntryAsideProps) {
 					/>
 				}
 				{
-					hasTextData &&
+					hasEntities &&
 					<TextDataAside
 						active={props.asideTab === AsideTab.TextData}
-						activeId={props.activeId}
-						activeListId={props.activeListId}
-						dispatch={props.entryStateDispatch}
+						activeEntity={props.activeEntity}
+						dispatch={props.dispatch}
 						layers={props.layers}
 						config={props.configData.config}
-						textData={props.entry.textData}
+						entities={props.entry.entities}
 					/>
 				}
 				{
 					hasNotes &&
 					<NotesAside
 						active={props.asideTab === AsideTab.Notes}
-						activeId={props.activeId}
-						activeListId={props.activeListId}
-						dispatch={props.entryStateDispatch}
+						activeNote={props.activeNote}
+						dispatch={props.dispatch}
 						layers={props.layers}
 						configData={props.configData}
-						items={props.entry.notes}
+						notes={props.entry.notes}
 						setEntry={props.setEntry}
 					/>
 				}

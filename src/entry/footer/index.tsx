@@ -36,7 +36,7 @@ interface Props {
 }
 function Footer(props: Props) {
 	const handleTabClick = React.useCallback(footerTab => {
-		props.dispatch({ type: 'SET_FOOTER_TAB', footerTab })			
+		props.dispatch({ type: 'TOGGLE_FOOTER_TAB', footerTab })			
 	}, [])
 
 	return (

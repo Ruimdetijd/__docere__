@@ -89,7 +89,7 @@ function renderFacsimileAreas(osd: any, facsimileAreas: Props['facsimileAreas'],
 			element.classList.add('show')
 			element.addEventListener('click', () => {
 				area.target != null ?
-					dispatch({ type: 'SET_ACTIVE_ID', ...area.target }) :
+					dispatch({ type: 'SET_ENTITY', id: area.target.id }) :
 					dispatch({ type: 'SET_FACSIMILE_AREAS', ids: [area.id] })
 			})
 		}

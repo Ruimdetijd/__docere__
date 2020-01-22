@@ -60,8 +60,8 @@ const defaultDocereFunctions: DocereConfigFunctions = {
 	extractFacsimiles: function extractFacsimiles(_doc) { return [] },
 	extractFacsimileAreas: function extractFacsimileAreas(_doc, _config) { return [] },
 	extractMetadata: function extractMetadata(_doc) { return {} },
-	extractNotes: function extractNotes(_doc) { return {} },
-	extractTextData: function extractTextData(_doc) { return new Map() },
+	extractNotes: function extractNotes(_doc) { return [] },
+	extractTextData: function extractTextData(_doc) { return [] },
 	extractTextLayers: function extractTextLayers(_doc) { return [] }
 }
 

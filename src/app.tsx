@@ -178,7 +178,7 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 			facsimiles: this.props.configData.extractFacsimiles(doc),
 			metadata: this.props.configData.extractMetadata(doc, this.props.configData.config, id),
 			notes: this.props.configData.extractNotes(doc),
-			textData: this.props.configData.extractTextData(doc, this.props.configData.config),
+			entities: this.props.configData.extractTextData(doc, this.props.configData.config),
 			facsimileAreas: this.props.configData.extractFacsimileAreas(doc, this.props.configData.config).map(fa => ({ ...defaultFacsimileArea, ...fa })),
 			textLayers
 		}

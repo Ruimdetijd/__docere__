@@ -37,8 +37,8 @@ function Panels(props: PanelsProps) {
 							<TextPanel
 								activeFacsimileAreas={props.activeFacsimileAreas}
 								activeFacsimilePath={props.activeFacsimilePath}
-								activeId={props.activeId}
-								activeListId={props.activeListId}
+								activeEntity={props.activeEntity}
+								activeNote={props.activeNote}
 								configData={props.configData}
 								dispatch={dispatch}
 								entry={props.entry}
@@ -53,8 +53,8 @@ function Panels(props: PanelsProps) {
 							<WitnessAnimationPanel
 								activeFacsimileAreas={props.activeFacsimileAreas}
 								activeFacsimilePath={props.activeFacsimilePath}
-								activeId={props.activeId}
-								activeListId={props.activeListId}
+								activeEntity={props.activeEntity}
+								activeNote={props.activeNote}
 								configData={props.configData}
 								dispatch={props.dispatch}
 								entry={props.entry}

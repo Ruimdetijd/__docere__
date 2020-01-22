@@ -32,13 +32,13 @@ interface Props {
 	active: boolean
 	components: DocereComponents
 	dispatch: React.Dispatch<EntryStateAction>
-	item: ExtractedNote
-	listId: EntryState['activeListId']
+	item: Note
+	listId: string
 	setEntry: AppState['setEntry']
 }
 export default function Note(props: Props) {
 	const handleClick = React.useCallback(() => {
-		props.dispatch({ type: 'SET_NOTE_ID', activeId: props.item.n.toString(), activeListId: props.listId })
+		props.dispatch({ type: 'SET_NOTE', id: props.item.n.toString() })
 	}, [props.item, props.listId])
 
 	return (

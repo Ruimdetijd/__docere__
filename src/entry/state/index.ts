@@ -3,8 +3,8 @@ import { AsideTab } from '../../constants'
 
 const initialEntryState: EntryState = {
 	activeFacsimilePath: null,
-	activeId: null,
-	activeListId: null,
+	activeEntity: null,
+	activeNote: null,
 	activeFacsimileAreas: [],
 	entry: null,
 	layers: [],
@@ -14,59 +14,38 @@ const initialEntryState: EntryState = {
 
 function entryStateReducer(entryState: EntryState, action: EntryStateAction): EntryState {
 	console.log(action)
+	const { type, ...payload } = action
 	switch (action.type) {
 		case 'ENTRY_CHANGED': {
 			return {
 				...initialEntryState,
-				activeFacsimilePath: action.activeFacsimilePath,
-				entry: action.entry,
-				layers: action.layers,
+				...payload,
 			}
 		}
 
-		case 'SET_ACTIVE_ID': {
+		case 'SET_ENTITY': {
 			const activeFacsimileAreas = entryState.entry.facsimileAreas
-				.filter(fa => fa.target?.activeId === action.activeId)
+				.filter(fa => fa.target?.id === action.id)
 
+			const activeEntity = entryState.entry.entities.find(e => e.id === action.id)
+			
 			return {
 				...entryState,
+				activeEntity,
 				activeFacsimileAreas,
-				activeId: action.activeId,
-				activeListId: action.activeListId,
-				asideTab: action.asideTab,
-			}
-		}
-
-		case 'SET_TEXT_DATA_ID': {
-			const activeFacsimileAreas = entryState.entry.facsimileAreas
-				.filter(fa => fa.target?.activeId === action.activeId)
-
-			return {
-				...entryState,
-				activeFacsimileAreas,
-				activeId: action.activeId,
-				activeListId: action.activeListId,
 				asideTab: AsideTab.TextData
 			}
 		}
 
-		case 'SET_NOTE_ID': {
+		case 'SET_NOTE': {
 			return {
 				...entryState,
-				activeId: action.activeId,
-				activeListId: action.activeListId,
+				activeNote: entryState.entry.notes.find(n => n.id === action.id),
 				asideTab: AsideTab.Notes
 			}
 		}
 
-		case 'SET_ACTIVE_LIST_ID': {
-			return {
-				...entryState,
-				activeListId: action.activeListId
-			}
-		}
-
-		case 'SET_ASIDE_TAB': {
+		case 'TOGGLE_ASIDE_TAB': {
 			const asideTab: AsideTab = (entryState.asideTab === action.asideTab) ? null : action.asideTab
 			return {
 				...entryState,
@@ -74,7 +53,7 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			}
 		}
 
-		case 'SET_FOOTER_TAB': {
+		case 'TOGGLE_FOOTER_TAB': {
 			const footerTab: FooterTab = (entryState.footerTab === action.footerTab) ? null : action.footerTab
 			return {
 				...entryState,
@@ -96,8 +75,8 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			return {
 				...entryState,
 				activeFacsimileAreas,
-				activeId: null,
-				activeListId: null,
+				activeEntity: null,
+				activeNote: null,
 				asideTab: null
 			}
 		}

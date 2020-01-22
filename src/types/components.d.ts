@@ -7,7 +7,11 @@ interface FacsimileArea {
 	h: number
 	id: string
 	showOnHover?: boolean
-	target?: Pick<EntryState, 'activeId' | 'activeListId' | 'asideTab'>
+	target?: {
+		id: string,
+		listId: string,
+		asideTab: AsideTab
+	}
 	unit?: 'px' | 'perc'
 	w: number
 	x: number
@@ -16,19 +20,17 @@ interface FacsimileArea {
 
 type DocereComponentAction = EntryStateAction | { type: 'SET_ENTRY', id: string }
 
-interface DocereComponentProps {
-	activeFacsimileAreas: EntryState['activeFacsimileAreas']
-	activeFacsimilePath: EntryState['activeFacsimilePath']
-	activeId: EntryState['activeId']
-	activeListId: EntryState['activeListId']
-	attributes?: Record<string, string>
-	children?: React.ReactNode
-	config: DocereConfig
-	dispatch: React.Dispatch<DocereComponentAction>
-	facsimiles: Entry['facsimiles']
-	insideNote: boolean
-	textLayerId: string
-}
+type DocereComponentProps =
+	Pick<EntryState, 'activeEntity' | 'activeFacsimileAreas' | 'activeFacsimilePath' | 'activeNote'> &
+	{
+		attributes?: Record<string, string>
+		children?: React.ReactNode
+		config: DocereConfig
+		dispatch: React.Dispatch<DocereComponentAction>
+		facsimiles: Entry['facsimiles']
+		insideNote: boolean
+		textLayerId: string
+	}
 
 interface SvgProps {
 	active: boolean,

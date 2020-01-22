@@ -4,16 +4,16 @@ interface Entry {
 	facsimileAreas: FacsimileArea[]
 	id: string
 	metadata: ExtractedMetadata
-	notes: ExtractedNotes
-	textData: ExtractedTextData
+	notes: Note[]
+	entities: Entity[]
 	textLayers: Layer[]
 }
 
 interface EntryState {
 	activeFacsimileAreas: FacsimileArea[]
 	activeFacsimilePath: string
-	activeId: string
-	activeListId: string
+	activeEntity: Entity,
+	activeNote: Note,
 	asideTab: AsideTab
 	entry: Entry
 	footerTab: FooterTab
@@ -24,8 +24,8 @@ type EntryProps = Pick<AppState, 'configData' | 'entry' | 'searchTab' | 'setEntr
 
 type EntryAsideProps =
 	Pick<EntryProps, 'configData' | 'entry' | 'setEntry'> &
-	Pick<EntryState, 'activeId' | 'activeListId' | 'asideTab' | 'layers'> &
+	Pick<EntryState, 'activeEntity' | 'activeNote' | 'asideTab' | 'layers'> &
 	{
-		entryStateDispatch: React.Dispatch<EntryStateAction>
+		dispatch: React.Dispatch<EntryStateAction>
 	}
 						

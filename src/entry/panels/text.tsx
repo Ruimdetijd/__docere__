@@ -113,8 +113,8 @@ function TextPanel(props: TextPanelProps) {
 	const customProps: DocereComponentProps = {
 		activeFacsimileAreas: props.activeFacsimileAreas,
 		activeFacsimilePath: props.activeFacsimilePath,
-		activeId: props.activeId,
-		activeListId: props.activeListId,
+		activeEntity: props.activeEntity,
+		activeNote: props.activeNote,
 		config: props.configData.config,
 		dispatch: props.dispatch,
 		facsimiles: props.entry.facsimiles,
