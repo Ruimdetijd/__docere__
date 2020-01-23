@@ -11,14 +11,14 @@ const tipBackgroundByOrientation = {
 	top: <polygon points="0,0 30,0 15,18 0,0"/>
 };
 
-const tipBorderByOrientation = (strokeColor: string) => {
+function tipBorderByOrientation(strokeColor: string) {
 	return {
 		bottom: <path d="M0,30 L15,12 L30,30" stroke={strokeColor} strokeWidth="3" />,
 		left: <path d="M0,0 L18,15 L0,30" stroke={strokeColor} strokeWidth="3" />,
 		right: <path d="M30,0 L12,15 L30,30" stroke={strokeColor} strokeWidth="3" />,
 		top: <path d="M0,0 L15,18 L30,0" stroke={strokeColor} strokeWidth="3" />
-	};
-};
+	}
+}
 
 const Wrapper = styled.div`
 	position: absolute;
@@ -26,132 +26,121 @@ const Wrapper = styled.div`
 	left: calc(100vw - 24px);
 `
 
-export interface IProps {
+function useSvgTopLeft(orientation: Orientation, wrapperEl: HTMLDivElement, svgEl: SVGElement) {
+	React.useEffect(() => {
+		if (wrapperEl == null || svgEl == null) return
+
+		if (orientation === 'top' || orientation === 'bottom') {
+			const svgRect = svgEl.getBoundingClientRect()
+			const elRect = wrapperEl.getBoundingClientRect()
+			if (svgRect.left < elRect.left) svgEl.style.left = '1px'
+			if (svgRect.left + svgRect.width > elRect.left + elRect.width) {
+				svgEl.style.left = (elRect.width - 21) + 'px'
+			}
+		}
+		else if (orientation === 'left' || orientation === 'right') {
+			const svgRect = svgEl.getBoundingClientRect()
+			const elRect = wrapperEl.getBoundingClientRect()
+			if (svgRect.top < elRect.top) svgEl.style.top = '1px'
+			if (svgRect.top + svgRect.height > elRect.top + elRect.height) {
+				svgEl.style.top = (elRect.height - 21) + 'px'
+			}
+		}
+
+	}, [orientation, wrapperEl, svgEl])
+}
+
+function useTipStyle(orientation: Props['orientation'], shift: Props['shift']) {
+	const [style, setStyle] = React.useState<React.CSSProperties>(null)
+
+	React.useEffect(() => {
+		if (orientation === 'bottom' || orientation === 'top') {
+			const prop = (orientation === 'bottom') ? 'top' : 'bottom'
+			setStyle({
+				left: `calc(${100 * shift}% - 10px)`,
+				position: 'absolute',
+				[prop]: '-19px',
+			})
+		} else {
+			const prop = (orientation === 'right') ? 'left' : 'right'
+			setStyle({
+				position: 'absolute',
+				top: `calc(${100 * shift}% - 10px)`,
+				[prop]: '-19px',
+			})
+		}
+
+	}, [orientation, shift])
+
+	return style
+}
+
+type Orientation = "top" | "right" | "bottom" | "left"
+interface Props {
 	bodyStyle?: React.CSSProperties
-	orientation?: "top" | "right" | "bottom" | "left"
+	children: React.ReactNode
+	orientation?: Orientation
 	shift?: number
 	style?: React.CSSProperties
 }
+function Tooltip(props: Props) {		
+	const svgRef: React.RefObject<SVGSVGElement> = React.useRef()
+	const wrapperRef: React.RefObject<HTMLDivElement> = React.useRef()
 
-class Tooltip extends React.Component<IProps, null> {
-	private svgEl: SVGElement
-	private el: HTMLElement
+	useSvgTopLeft(props.orientation, wrapperRef.current, svgRef.current)
+	const tipStyle = useTipStyle(props.orientation, props.shift)
 
-	static defaultProps: IProps = {
-		bodyStyle: {},
-		orientation: "bottom",
-		shift: .5,
-		style: {},
-	};
+	const borderColor = props.bodyStyle.hasOwnProperty('borderColor') ?
+		props.bodyStyle.borderColor :
+		'#aaa'
 
-	componentDidMount() {
-		if (this.props.orientation === 'top' || this.props.orientation === 'bottom') {
-			const svgRect = this.svgEl.getBoundingClientRect()
-			const elRect = this.el.getBoundingClientRect()
-			if (svgRect.left < elRect.left) this.svgEl.style.left = '1px'
-			if (svgRect.left + svgRect.width > elRect.left + elRect.width) {
-				this.svgEl.style.left = (elRect.width - 21) + 'px'
-			}
-		}
-		else if (this.props.orientation === 'left' || this.props.orientation === 'right') {
-			const svgRect = this.svgEl.getBoundingClientRect()
-			const elRect = this.el.getBoundingClientRect()
-			if (svgRect.top < elRect.top) this.svgEl.style.top = '1px'
-			if (svgRect.top + svgRect.height > elRect.top + elRect.height) {
-				this.svgEl.style.top = (elRect.height - 21) + 'px'
-			}
-		}
-	}
+	const backgroundColor = props.bodyStyle.hasOwnProperty('backgroundColor') ?
+		props.bodyStyle.backgroundColor :
+		'white'
 
-	render() {
-		const borderColor = this.props.bodyStyle.hasOwnProperty('borderColor') ?
-			this.props.bodyStyle.borderColor :
-			'#aaa'
-
-		const backgroundColor = this.props.bodyStyle.hasOwnProperty('backgroundColor') ?
-			this.props.bodyStyle.backgroundColor :
-			'white'
-
-		return (
-			<Wrapper
-				ref={el => { this.el = el }}
+	return (
+		<Wrapper
+			ref={wrapperRef}
+			style={props.style}
+		>
+			<div
+				style={{
+					backgroundColor,
+					borderColor,
+					fontFamily: "'Roboto', sans-serif",
+					fontWeight: 300,
+					borderRadius: '2px',
+					borderStyle: 'solid',
+					borderWidth: '1px',
+					color: '#666',
+					height: '100%',
+					padding: '1em',
+					...props.bodyStyle,
+				}}
 			>
-				<div
-					style={{
-						backgroundColor,
-						borderColor,
-						fontFamily: "'Roboto', sans-serif",
-						fontWeight: 300,
-						borderRadius: '2px',
-						borderStyle: 'solid',
-						borderWidth: '1px',
-						color: '#666',
-						height: '100%',
-						padding: '1em',
-						// boxShadow: '3px 3px 9px #ccc',
-						...this.props.bodyStyle,
-					}}
-				>
-					{this.props.children}
-				</div>
-				<svg
-					fill={backgroundColor}
-					height="20px"
-					ref={el => { this.svgEl = el }}
-					style={this.getTipStyle()}
-					viewBox="0 0 30 30"
-					width="20px"
-				>
-					{tipBorderByOrientation(borderColor)[this.props.orientation]}
-					{tipBackgroundByOrientation[this.props.orientation]}
-				</svg>
-			</Wrapper>
-		);
-	}
-
-	private getTipStyle = () => {
-		let style;
-
-		const bottomOrTop: React.CSSProperties = {
-			left: `calc(${100 * this.props.shift}% - 10px)`,
-		};
-
-		const leftOrRight: React.CSSProperties = {
-			top: `calc(${100 * this.props.shift}% - 10px)`,
-		};
-
-		switch (this.props.orientation) {
-			case "bottom":
-				bottomOrTop.top = "-19px";
-				style = bottomOrTop;
-
-				break;
-
-			case "top":
-				bottomOrTop.bottom = "-19px";
-				style = bottomOrTop;
-
-				break;
-
-			case "left":
-				leftOrRight.right = "-19px";
-				style = leftOrRight;
-
-				break;
-
-			case "right":
-				leftOrRight.left = "-19px";
-				style = leftOrRight;
-
-				break;
-
-		}
-
-		style.position = 'absolute'
-
-		return style
-	}
-
+				{props.children}
+			</div>
+			<svg
+				fill={backgroundColor}
+				height="20px"
+				ref={svgRef}
+				style={tipStyle}
+				viewBox="0 0 30 30"
+				width="20px"
+			>
+				{tipBorderByOrientation(borderColor)[props.orientation]}
+				{tipBackgroundByOrientation[props.orientation]}
+			</svg>
+		</Wrapper>
+	);
 }
 
-export default Tooltip
+Tooltip.defaultProps = {
+	bodyStyle: {},
+	orientation: "bottom",
+	shift: .5,
+	style: {},
+	some: 'bull,',
+} as Partial<Props>
+
+export default React.memo(Tooltip)

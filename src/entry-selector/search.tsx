@@ -29,9 +29,13 @@ const FS = styled(HucFacetedSearch)`
 				section#huc-fs-search-results {
 					padding: 0 ${DEFAULT_SPACING}px ${DEFAULT_SPACING * 2}px ${DEFAULT_SPACING}px;
 
-					& > header > div:first-of-type {
-						display: none;
+					& > header {
+						& > div:first-of-type,
+						& > div:nth-of-type(2) {
+							display: none;
+						}
 					}
+
 
 					.pagenumbers {
 						& > div:not(.active) {
