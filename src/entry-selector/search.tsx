@@ -53,22 +53,6 @@ const FS = styled(HucFacetedSearch)`
 	}}
 `
 
-
-// function getResultBodyComponent(projectId: string) {
-// 	return async function() {
-// 		let ResultBodyComponent: React.FunctionComponent<ResultBodyProps>
-
-// 		try {
-// 			ResultBodyComponent = await import(`../project-components/${projectId}/result-body.tsx`)
-// 		} catch (err) {
-// 			ResultBodyComponent = await import('../project-components/generic-result-body') as any
-// 		}
-
-// 		// @ts-ignore
-// 		return ResultBodyComponent.default
-// 	}
-// }
-
 function useFields(config: DocereConfig) {
 	const [fields, setFields] = React.useState<MetaDataConfig[]>([])
 
@@ -116,3 +100,20 @@ export default function Search(props: FileExplorerProps) {
 		/>
 	)
 }
+
+
+
+// function getResultBodyComponent(projectId: string) {
+// 	return async function() {
+// 		let ResultBodyComponent: React.FunctionComponent<ResultBodyProps>
+
+// 		try {
+// 			ResultBodyComponent = await import(`../project-components/${projectId}/result-body.tsx`)
+// 		} catch (err) {
+// 			ResultBodyComponent = await import('../project-components/generic-result-body') as any
+// 		}
+
+// 		// @ts-ignore
+// 		return ResultBodyComponent.default
+// 	}
+// }

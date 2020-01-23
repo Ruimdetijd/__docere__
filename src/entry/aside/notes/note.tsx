@@ -38,7 +38,7 @@ interface Props {
 }
 export default function Note(props: Props) {
 	const handleClick = React.useCallback(() => {
-		props.dispatch({ type: 'SET_NOTE', id: props.item.n.toString() })
+		props.dispatch({ type: 'SET_NOTE', id: props.item.id })
 	}, [props.item, props.listId])
 
 	return (
@@ -46,7 +46,7 @@ export default function Note(props: Props) {
 			active={props.active}
 			onClick={handleClick}
 		>
-			<div>{props.item.n}</div>
+			<div>{props.item.targetId}</div>
 			<div>
 				<DocereTextView
 					components={props.components}

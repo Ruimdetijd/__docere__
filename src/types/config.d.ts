@@ -12,7 +12,7 @@ interface Entity extends TextData {
 
 interface Note extends TextData {
 	el: Element
-	n: string | number
+	targetId: string | number
 }
 
 // type NotesByType = Record<string, Note[]>

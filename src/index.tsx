@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 // BUGS
 // TODO order of text layers should represent config (see Van Gogh)
+// TODO minimap should resize when bottom menu is toggled
 
 // Asides
 // TODO replace first letter of tab with icon + tooltip text

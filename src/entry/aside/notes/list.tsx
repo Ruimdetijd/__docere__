@@ -30,7 +30,7 @@ function NotesList(props: Props) {
 			{
 				notes.map(note =>
 					<Note
-						active={note.n === props.activeNote?.id}
+						active={note.id === props.activeNote?.id}
 						components={props.components}
 						dispatch={props.dispatch}
 						item={note}
