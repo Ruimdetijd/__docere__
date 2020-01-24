@@ -16,6 +16,7 @@ module.exports = {
 				pathRewrite: {'^/search': ''}
 			},
 			'/iiif': {
+				changeOrigin: true,
 				target: 'http://localhost:5004',
 				pathRewrite: {'^/iiif': ''}
 			}

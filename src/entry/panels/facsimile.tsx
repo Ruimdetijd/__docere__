@@ -82,7 +82,6 @@ function renderFacsimileAreas(osd: any, facsimileAreas: Props['facsimileAreas'],
 			h = h / imgHeight
 		} 
 
-		console.log(x, y, w, h, area)
 		var element = document.createElement("div")
 		element.classList.add('facsimile-area')
 		element.dataset.id = area.id
