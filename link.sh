@@ -1,2 +1,4 @@
 #!/bin/bash
-npm link docere-projects
+
+cd node_modules
+ln -s ../../docere-projects docere-projects

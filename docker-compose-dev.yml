@@ -21,10 +21,8 @@ services:
     ports:
       - 5004:5004
     volumes:
-      # - ./public/facsimile:/opt/loris/tests/img
-      - /home/gijs/Projects/docere-projects/src/achterdeschermen/facsimiles:/opt/loris/tests/img/achterdeschermen
-      - /home/gijs/Projects/docere-projects/src/gheys/facsimiles:/opt/loris/tests/img/gheys
-      # - /home/gijs/Projects/docere-config/projects/ode/facsimiles:/opt/loris/tests/img/ode
+      - ./node_modules/docere-projects/src/achterdeschermen/facsimiles:/opt/loris/tests/img/achterdeschermen
+      - ./node_modules/docere-projects/src/gheys/facsimiles:/opt/loris/tests/img/gheys
 
 volumes:
   docere_es2:
