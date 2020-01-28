@@ -64,10 +64,11 @@ function useFields(config: DocereConfig) {
 					.filter(key => key !== 'text' && key !== 'facsimiles' && key !== 'id')
 					.map(key => {
 						let mdConfig = config.metadata.find(md => md.id === key)
-						if (mdConfig == null) config.textData.find(td => td.id === key)
+						if (mdConfig == null) mdConfig = config.textData.find(td => td.id === key)
 						if (mdConfig == null) mdConfig = {
 							...defaultMetadata,
-							id: key
+							id: key,
+							title: key.charAt(0).toUpperCase() + key.slice(1)
 						}
 						return mdConfig
 					})

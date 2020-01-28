@@ -85,6 +85,7 @@ export default function extendConfigData(configDataRaw: DocereConfigDataRaw): Do
 		const metadataConfig = {...defaultMetadata, ...md} as MetadataConfig
 		return setTitle(metadataConfig)
 	})
+
 	config.textData = config.textData.map(td => {
 		const textDataConfig = {...defaultMetadata, ...td } as TextDataConfig
 		if (!Array.isArray(td.textLayers)) {
