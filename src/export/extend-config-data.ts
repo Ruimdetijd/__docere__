@@ -36,7 +36,7 @@ export const defaultFacsimileArea: Pick<FacsimileArea, 'showOnHover' | 'target' 
 	unit: 'px'
 }
 
-export const defaultMetadata: MetaDataConfig = {
+export const defaultMetadata: MetadataConfig = {
 	aside: true,
 	datatype: EsDataType.Keyword,
 	id: null,
@@ -65,7 +65,7 @@ const defaultDocereFunctions: DocereConfigFunctions = {
 	extractTextLayers: function extractTextLayers(_doc) { return [] }
 }
 
-function setTitle<T extends EntityConfig>(entityConfig: T): T {
+function setTitle<T extends FacetConfig>(entityConfig: T): T {
 	if (entityConfig.title == null) {
 		entityConfig.title = entityConfig.id.charAt(0).toUpperCase() + entityConfig.id.slice(1)
 	}
@@ -81,13 +81,16 @@ export default function extendConfigData(configDataRaw: DocereConfigDataRaw): Do
 	const config = {...defaultConfig, ...configDataRaw.config}
 	config.textLayers = config.textLayers.map(setTitle)
 
-	config.metadata = config.metadata.map(md => setTitle({...defaultMetadata, ...md}))
+	config.metadata = config.metadata.map(md => {
+		const metadataConfig = {...defaultMetadata, ...md} as MetadataConfig
+		return setTitle(metadataConfig)
+	})
 	config.textData = config.textData.map(td => {
-		td = {...defaultMetadata, ...td }
+		const textDataConfig = {...defaultMetadata, ...td } as TextDataConfig
 		if (!Array.isArray(td.textLayers)) {
-			td.textLayers = config.textLayers.map(tl => tl.id)
+			textDataConfig.textLayers = config.textLayers.map(tl => tl.id)
 		}
-		return setTitle(td)
+		return setTitle(textDataConfig)
 	})
 
 	config.notes = config.notes.map(setTitle)

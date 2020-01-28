@@ -54,7 +54,7 @@ const FS = styled(HucFacetedSearch)`
 `
 
 function useFields(config: DocereConfig) {
-	const [fields, setFields] = React.useState<MetaDataConfig[]>([])
+	const [fields, setFields] = React.useState<MetadataConfig[]>([])
 
 	React.useEffect(() => {
 		fetchJson(`/search/${config.slug}/_mapping`)

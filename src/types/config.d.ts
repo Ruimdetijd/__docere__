@@ -27,7 +27,7 @@ interface ExtractedFacsimile {
 
 interface DocereConfig {
 	data?: Record<string, any>
-	metadata?: MetaDataConfig[]
+	metadata?: MetadataConfig[]
 	notes?: NotesConfig[]
 	pages?: PageConfig[]
 	searchResultCount?: number
@@ -55,11 +55,8 @@ interface DocereConfigData extends DocereConfigFunctions {
 	config: DocereConfig
 }
 
-interface MetaDataConfig extends EntityConfig {
+type MetadataConfig = FacetConfig & {
 	aside?: boolean
-	datatype?: EsDataType
-	order?: number
-	size?: number
 }
 
 interface TextDataAttributeIdentifier {
@@ -79,7 +76,7 @@ interface TextDataTextContentIdentifier {
 
 type TextDataIdentifier = TextDataAttributeIdentifier | TextDataMilestoneIdentifier | TextDataTextContentIdentifier
 
-interface TextDataConfig extends MetaDataConfig {
+type TextDataConfig = MetadataConfig & {
 	color?: string
 	identifier: TextDataIdentifier
 	textLayers?: string[]
