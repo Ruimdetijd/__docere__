@@ -10,7 +10,6 @@ declare module 'openseadragon'
 type Page = PageConfig & { doc: XMLDocument }
 
 interface AppState {
-	configData: DocereConfigData
 	entry: Entry
 	page: Page
 	searchQuery: string
@@ -21,4 +20,4 @@ interface AppState {
 	viewport: Viewport
 }
 
-type FileExplorerProps = Pick<DocereConfigData, 'config'> & Pick<AppState, 'entry' | 'searchTab' | 'setEntry' | 'viewport'>
+type FileExplorerProps = Pick<AppState, 'entry' | 'searchTab' | 'setEntry' | 'viewport'>

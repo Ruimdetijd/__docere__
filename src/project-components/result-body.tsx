@@ -11,7 +11,7 @@ interface WProps {
 	small: boolean
 }
 const Wrapper = styled.div`
-	background: #f6f6f6;
+	border-top: 1px solid #EEE;
 	display: grid;
 	font-size: ${(props: WProps) => props.small ? '.8em' : '1em'};
 	grid-column-gap: ${(props: WProps) => props.small ? DEFAULT_SPACING / 2 : DEFAULT_SPACING}px;
@@ -19,9 +19,8 @@ const Wrapper = styled.div`
 		`${props.small ? '64px 0' : '128px auto'}` :
 		'auto'
 	};
-	margin-bottom: ${(props: WProps) => props.small ? DEFAULT_SPACING / 2 : DEFAULT_SPACING}px;
-	padding: ${(props: WProps) => props.small ? DEFAULT_SPACING / 2 : DEFAULT_SPACING}px;
-	text-decoration: none;
+	margin-top: 1.5em;
+	padding-top: 1.5em;
 
 	&:before {
 		content: '';
@@ -50,16 +49,6 @@ const Wrapper = styled.div`
 			 `
 		}
 	}}
-`
-
-const Metadata = styled.div`
-	& > div {
-		margin-bottom: 1rem;
-
-		&:last-of-type {
-			margin-bottom: 0;
-		}
-	}
 `
 
 const Snippets = styled.ul`
@@ -114,6 +103,7 @@ function FacsimileThumbs(props: { facsimiles: string[], small: boolean }) {
 // TODO there are two implementations of ResultBodyProps
 export interface ResultBodyProps {
 	activeId?: string
+	children?: React.ReactNode
 	result: Hit
 	searchTab?: SearchTab
 	viewport?: Viewport
@@ -123,61 +113,55 @@ export interface State {
 	tooltipTop: number
 }
 
-const getResultBody = (MetadataItems: React.FunctionComponent<ResultBodyProps>) => 
-	React.memo(function ResultBody(props: ResultBodyProps) {
-		const [active, setActive] = React.useState(false)
-		const [tooltipTop, setTooltipTop] = React.useState(0)
+function ResultBody(props: ResultBodyProps) {
+	const [active, setActive] = React.useState(false)
+	const [tooltipTop, setTooltipTop] = React.useState(0)
 
-		return (
-			<Wrapper
-				active={props.result.id === props.activeId}
-				hasFacsimile={props.result.hasOwnProperty('facsimiles') && props.result.facsimiles.length > 0}
-				onMouseEnter={(ev) => {
-					const top = ev.currentTarget.getBoundingClientRect().top - MAINHEADER_HEIGHT - 32
-					setActive(true)
-					setTooltipTop(top)
-				}}
-				onMouseLeave={() => setActive(false)}
+	return (
+		<Wrapper
+			active={props.result.id === props.activeId}
+			hasFacsimile={props.result.hasOwnProperty('facsimiles') && props.result.facsimiles.length > 0}
+			onMouseEnter={(ev) => {
+				const top = ev.currentTarget.getBoundingClientRect().top - MAINHEADER_HEIGHT - 32
+				setActive(true)
+				setTooltipTop(top)
+			}}
+			onMouseLeave={() => setActive(false)}
+			small={props.viewport === Viewport.Entry}
+		>
+			<FacsimileThumbs
+				facsimiles={props.result.facsimiles}
 				small={props.viewport === Viewport.Entry}
-			>
-				<FacsimileThumbs
-					facsimiles={props.result.facsimiles}
-					small={props.viewport === Viewport.Entry}
-				/>
-				{
-					props.viewport === Viewport.Entry && props.searchTab === SearchTab.Results ?
-						<Tooltip
-							orientation="right"
-							style={{
-								width: '360px',
-								display: active ? 'block' : 'none',
-								top: `${tooltipTop}px`,
-							}}
-							bodyStyle={{ 
-								backgroundColor: '#212830',
-								color: '#EEE',
-							}}
-							shift={.15}
-						>
-							<Metadata>
-								<MetadataItems {...props} />
-							</Metadata>
-						</Tooltip> :
-						<Metadata>
-							<MetadataItems {...props} />
-						</Metadata>
-				}
-				{
-					props.result.snippets.length > 0 &&
-					<Snippets>
-						{props.result.snippets.map((snippet, index) =>
-							<li dangerouslySetInnerHTML={{ __html: `...${snippet}...` }}  key={index} />
-						)}
-					</Snippets>
-				}
-			</Wrapper>
-		)
-	})
+			/>
+			{
+				props.viewport === Viewport.Entry && props.searchTab === SearchTab.Results ?
+					<Tooltip
+						orientation="right"
+						style={{
+							width: '360px',
+							display: active ? 'block' : 'none',
+							top: `${tooltipTop}px`,
+						}}
+						bodyStyle={{ 
+							backgroundColor: '#212830',
+							color: '#EEE',
+						}}
+						shift={.15}
+					>
+						{props.children}
+					</Tooltip> :
+					<div>{props.children}</div>
+			}
+			{
+				props.result.snippets.length > 0 &&
+				<Snippets>
+					{props.result.snippets.map((snippet, index) =>
+						<li dangerouslySetInnerHTML={{ __html: `...${snippet}...` }}  key={index} />
+					)}
+				</Snippets>
+			}
+		</Wrapper>
+	)
+}
 
-
-export default getResultBody
+export default React.memo(ResultBody)

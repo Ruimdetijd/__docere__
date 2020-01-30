@@ -5,7 +5,7 @@ type FooterTab = import('../constants').FooterTab
 
 declare const enum Orientation {
 	Horizontal,
-	Vertical
+	Vertical,
 }
 
 declare const enum LayerType { Facsimile, Text, WitnessAnimation, XML }
@@ -14,4 +14,14 @@ declare const enum TextDataExtractionType {
 	Attribute = "attribute",
 	TextContent = "textcontent",
 	Milestone = "milestone",
+}
+
+declare const enum DocereComponentContainer {
+	Layer = 'layer',
+	Notes = 'notes',
+	Page = 'page',
+}
+
+declare const enum UIComponentType {
+	SearchResult = 'search-result'
 }

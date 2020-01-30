@@ -20,10 +20,10 @@ interface EntryState {
 	layers: LayerConfig[]
 }
 
-type EntryProps = Pick<AppState, 'configData' | 'entry' | 'searchTab' | 'setEntry'>
+type EntryProps = Pick<AppState, 'entry' | 'searchTab' | 'setEntry'>
 
 type EntryAsideProps =
-	Pick<EntryProps, 'configData' | 'entry' | 'setEntry'> &
+	Pick<EntryProps, 'entry' | 'setEntry'> &
 	Pick<EntryState, 'activeEntity' | 'activeNote' | 'asideTab' | 'layers'> &
 	{
 		dispatch: React.Dispatch<EntryStateAction>

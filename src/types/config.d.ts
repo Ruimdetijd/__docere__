@@ -37,9 +37,6 @@ interface DocereConfig {
 	title: string
 }
 
-type DocereConfigDataRaw = Partial<Omit<DocereConfigData, 'components'>> &
-	{ getComponents?: (config: DocereConfig) => DocereComponents }
-
 interface DocereConfigFunctions {
 	extractFacsimiles: (doc: XMLDocument) => ExtractedFacsimile[]
 	extractFacsimileAreas: (doc: XMLDocument, config: DocereConfig) => FacsimileArea[]
@@ -50,8 +47,15 @@ interface DocereConfigFunctions {
 	prepareDocument: (doc: XMLDocument, config: DocereConfig, id: string, textLayer?: Layer) => XMLDocument
 }
 
+type GetComponents = (container: DocereComponentContainer, id?: string) => Promise<DocereComponents>
+type GetUIComponent = (componentType: UIComponentType, id?: string) => Promise<React.FC<any>>
+type DocereConfigDataRaw = Partial<DocereConfigData>
+	// getComponents?: (config: DocereConfig) => GetComponents
+// }
 interface DocereConfigData extends DocereConfigFunctions {
-	components: DocereComponents
+	// getComponents: GetComponents
+	getComponents?: (config: DocereConfig) => GetComponents
+	getUIComponent?: (config: DocereConfig) => GetUIComponent
 	config: DocereConfig
 }
 

@@ -1,9 +1,9 @@
 import * as React from 'react'
 import EntityList from "./list"
 import { useTextData, Wrapper } from '../list'
+import AppContext from '../../../app-context'
 
 type Props =
-	Pick<DocereConfigData, 'config'> &
 	Pick<EntryState, 'activeEntity' | 'layers'> &
 	{
 		active: boolean
@@ -12,6 +12,7 @@ type Props =
 	}
 
 function EntitiesAside(props: Props) {
+	const appContext = React.useContext(AppContext)
 	const wrapperRef: React.RefObject<HTMLDivElement> = React.useRef()
 	const [entitiesByType, types, activeType, setActiveType] = useTextData(props.entities, props.activeEntity)
 
@@ -25,7 +26,7 @@ function EntitiesAside(props: Props) {
 					<EntityList
 						active={activeType === type}
 						activeEntity={props.activeEntity}
-						config={props.config.textData.find(td => td.id === type)}
+						config={appContext.config.textData.find(td => td.id === type)}
 						containerHeight={wrapperRef.current.getBoundingClientRect().height}
 						dispatch={props.dispatch}
 						entitiesByType={entitiesByType}

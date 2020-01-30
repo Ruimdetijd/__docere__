@@ -1,5 +1,3 @@
-import * as React from 'react'
-
 const defaultConfig: DocereConfig = {
 	metadata: [],
 	notes: [],
@@ -104,19 +102,22 @@ export default function extendConfigData(configDataRaw: DocereConfigDataRaw): Do
 
 	// Separate getComponents from raw configData, because we don't want to include it in de final map
 	// getComponents is only used to generate a map of components
-	const { getComponents, ...configData } = configDataRaw
+	// const { getComponents, ...configData } = configDataRaw
 
-	const componentMap = getComponents ? getComponents(config) : {}
-	const components = Object.keys(componentMap).reduce((prev, curr) => {
-		prev[curr] = React.memo(componentMap[curr])
-		return prev
-	}, {} as any)
+	// const getComponents: GetComponents = componentsGetter ? componentsGetter(config) : async () => ({})
 
-	// TODO getComponents is added to docereCOnfigData, but should not
+	// const components = Object.keys(componentMap).reduce((prev, curr) => {
+	// 	prev[curr] = React.memo(componentMap[curr])
+	// 	return prev
+	// }, {} as any)
+
+	// TODO getComponents is added to docereConfigData, but should not
 	return {
+		getComponents: () => async () => ({}),
+		getUIComponent: () => async () => null,
 		...defaultDocereFunctions,
-		...configData,
+		...configDataRaw,
 		config,
-		components,
+		// getComponents,
 	}
 }

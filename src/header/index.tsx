@@ -2,6 +2,7 @@ import * as React from 'react'
 import styled from '@emotion/styled'
 import { ASIDE_HANDLE_WIDTH, MAINHEADER_HEIGHT, TOP_OFFSET, DEFAULT_SPACING } from '../constants'
 import PagesMenu from './pages'
+import AppContext from '../app-context'
 
 const Wrapper = styled.header`
 	background: linear-gradient(to right, #988258, #c7aa71);
@@ -66,8 +67,9 @@ const H1 = styled('h1')`
 `
 
 
-type Props = { config: DocereConfig } & Pick<AppState, 'setEntry' | 'setPage'>
+type Props = Pick<AppState, 'setEntry' | 'setPage'>
 export default React.memo(function Header(props: Props) {
+	const appContext = React.useContext(AppContext)
 	const setEntry = React.useCallback(() => props.setEntry(), [])
 	return (
 		<Wrapper>
@@ -75,10 +77,9 @@ export default React.memo(function Header(props: Props) {
 				<H1
 					onClick={setEntry}
 				>
-					{props.config.title}
+					{appContext.config.title}
 				</H1>
 				<PagesMenu
-					config={props.config}
 					setPage={props.setPage}
 				/>
 			</TopMenu>

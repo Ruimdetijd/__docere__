@@ -7,7 +7,7 @@ import Header from './header'
 import { extendTextLayer, defaultFacsimileArea } from './export/extend-config-data'
 
 // TODO move to types.d.ts, but first replace EntrySelector
-type AppProps = Pick<AppState, 'configData'> & { entryId: string, EntrySelector: typeof EntrySelector, pageId: string }
+type AppProps = { configData: DocereConfigData } & { entryId: string, EntrySelector: typeof EntrySelector, pageId: string }
 
 export default abstract class App extends React.PureComponent<AppProps, AppState> {
 	// Remember the last entry. When user closes a Page, we can return
@@ -16,7 +16,6 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 	private lastEntryId: string
 
 	state: AppState = {
-		...this.props,
 		entry: null,
 		page: null,
 		searchQuery: null,
@@ -54,21 +53,18 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 	}
 
 	render() {
-		const { configData, entry, page, searchTab, setEntry: setEntry, setPage, setSearchTab, viewport } = this.state
+		const { entry, page, searchTab, setEntry: setEntry, setPage, setSearchTab, viewport } = this.state
 		return (
 			<>
 				<Header
-					config={configData.config}
 					setPage={setPage}
 					setEntry={setEntry}
 				/>
 				<PageView
-					config={configData.config}
 					page={page}
 					setPage={setPage}
 				/>
 				<this.props.EntrySelector
-					config={configData.config}
 					entry={entry}
 					searchTab={searchTab}
 					setEntry={setEntry}
@@ -76,7 +72,6 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 					viewport={viewport}
 				/>
 				<EntryComp 
-					configData={configData}
 					entry={entry}
 					searchTab={searchTab}
 					setEntry={setEntry}
@@ -161,15 +156,14 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 		// The "other" layers don't have an element, so they will use the whole XMLDocument
 		textLayers = await Promise.all(otherLayers.map((ol: Layer) => { ol.element = doc; return ol }).concat(textLayers)
 			.map(async (tl) => {
-				const tl2 = extendTextLayer(tl, this.props.configData.config.textLayers)
-				if (tl2.hasOwnProperty('xmlPath')) {
-					const doc = await this.getEntryDoc(tl2.xmlPath(id))
+				const etl = extendTextLayer(tl, this.props.configData.config.textLayers)
+				if (etl.hasOwnProperty('xmlPath')) {
+					const doc = await this.getEntryDoc(etl.xmlPath(id))
 					if (doc != null) {
-						const element = this.props.configData.prepareDocument(doc, this.props.configData.config, id, tl2)
-						tl2.element = element
+						etl.element = this.props.configData.prepareDocument(doc, this.props.configData.config, id, etl)
 					}
 				}
-				return tl2
+				return etl
 			}))
 
 		return {

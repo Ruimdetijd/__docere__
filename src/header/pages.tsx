@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { DEFAULT_SPACING } from '../constants'
+import AppContext from '../app-context'
 
 const Wrapper = styled.ul`
 	text-align: right;
@@ -74,12 +75,13 @@ function PageMenuItem(props: PageMenuItemProps) {
 	)
 }
 
-type Props = { config: DocereConfig } & Pick<AppState, 'setPage'>
+type Props = Pick<AppState, 'setPage'>
 export default React.memo(function PagesMenu(props: Props) {
+	const appContext = React.useContext(AppContext)
 	return (
 		<Wrapper>
 			{
-				props.config.pages.map(page =>
+				appContext.config.pages.map(page =>
 					page.hasOwnProperty('children') ?
 						<li key={page.id}>
 							<span>{page.title} ▾</span>

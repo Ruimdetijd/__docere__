@@ -6,6 +6,7 @@ import BrowserApp from './browser-app'
 import EntrySelector from './entry-selector'
 import configDatas from 'docere-projects'
 import { analyzeWindowLocation } from './utils'
+import AppContext from './app-context'
 
 document.addEventListener('DOMContentLoaded', async function() {
 	const { documentId, documentType, projectId } = analyzeWindowLocation()
@@ -17,13 +18,21 @@ document.addEventListener('DOMContentLoaded', async function() {
 	// TODO redirect to 404 if projectSlug does not exist
 	const { default: configData } = await configDatas[projectId]()
 
+	const contextValue: AppContext = {
+		config: configData.config,
+		getComponents: configData.getComponents(configData.config),
+		getUIComponent: configData.getUIComponent(configData.config)
+	}
+
 	ReactDOM.render(
-		<BrowserApp
-			configData={configData}
-			entryId={entryId}
-			pageId={pageId}
-			EntrySelector={EntrySelector}
-		/>
+		<AppContext.Provider value={contextValue}>
+			<BrowserApp
+				configData={configData}
+				entryId={entryId}
+				pageId={pageId}
+				EntrySelector={EntrySelector}
+			/>
+		</AppContext.Provider>
 		,
 		document.getElementById('container')
 	)

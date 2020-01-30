@@ -8,6 +8,7 @@ import App from '../app'
 import getPb from '../project-components/pb'
 import * as rs from '../project-components/rs'
 import { hi, lb } from '../project-components'
+import ResultBody from '../project-components/result-body'
 
 const components = {
 	getPb,
@@ -22,5 +23,6 @@ export {
 	constants,
 	extendConfigData,
 	Entry,
+	ResultBody,
 	wrapAsFileExplorer,
 }

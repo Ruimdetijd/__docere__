@@ -1,5 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
+import AppContext from '../../app-context'
 
 // TODO change facsimile when user scroll past a <pb />
 
@@ -131,7 +132,7 @@ function useActiveFacsimileAreas(osd: any, activeFacsimileAreas: FacsimileArea[]
 	}, [osd, activeFacsimileAreas])
 }
 
-function useFacsimilePath(osd: any, activeFacsimilePath: Props['activeFacsimilePath'], projectId: Props['projectId']) {
+function useFacsimilePath(osd: any, activeFacsimilePath: Props['activeFacsimilePath'], projectId: DocereConfig['slug']) {
 	React.useEffect(() => {
 		if (osd == null) return
 		// const facsimile = this.props.facsimiles.find(f => f.id === this.props.activeFacsimilePath)
@@ -139,6 +140,7 @@ function useFacsimilePath(osd: any, activeFacsimilePath: Props['activeFacsimileP
 		// TODO find the paths in this.props.facsimiles with activeFacsimileID
 		let path = activeFacsimilePath as any
 		
+		// TODO Move logic to vangogh facsimileExtractor (path should be a string of a tileSource)
 		if (projectId === 'vangogh') {
 			path = { tileSource: { type: 'image', url: path.slice(0, -5).concat('f.png'), buildPyramid: false } }
 		}
@@ -153,12 +155,12 @@ type Props =
 	Pick<Entry, 'facsimileAreas'> &
 	{
 		dispatch: React.Dispatch<EntryStateAction>
-		projectId: DocereConfig['slug']
 	}
 
 function FacsimilePanel(props: Props) {
+	const appContext = React.useContext(AppContext)
 	const [osd, OpenSeadragon] = useOpenSeaddragon(props.facsimileAreas, props.dispatch)
-	useFacsimilePath(osd, props.activeFacsimilePath, props.projectId)
+	useFacsimilePath(osd, props.activeFacsimilePath, appContext.config.slug)
 	useActiveFacsimileAreas(osd, props.activeFacsimileAreas, OpenSeadragon)
 
 	return (

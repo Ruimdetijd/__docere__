@@ -1,7 +1,7 @@
 type SetActiveId = (id: string, listId: string, asideTab: AsideTab) => void
 
 type DocereComponents = Record<string, (props: Partial<DocereComponentProps>) => JSX.Element>
-type GetComponents = (config: DocereConfig) => DocereComponents
+// type GetComponents = (config: DocereConfig) => DocereComponents
 
 interface FacsimileArea {
 	h: number
@@ -40,6 +40,6 @@ interface SvgProps {
 type RsProps = DocereComponentProps & SvgProps
 
 
-interface HiProps extends DocereComponentProps {
-	rend: string
-}
+// interface HiProps extends DocereComponentProps {
+// 	rend: string
+// }

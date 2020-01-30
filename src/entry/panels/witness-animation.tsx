@@ -3,6 +3,7 @@ import DocereTextView from 'docere-text-view'
 import styled from '@emotion/styled'
 import { TEXT_PANEL_WIDTH } from '../../constants'
 import { Text } from './text'
+import AppContext from '../../app-context'
 
 const Wrapper = styled.div`
 	grid-template-rows: auto 50px;
@@ -39,6 +40,7 @@ const Marker = styled.li`
 `
 
 interface State {
+	components: DocereComponents
 	textLayer: LayerConfig
 	prevTextLayer: LayerConfig
 	textLayers: LayerConfig[]
@@ -49,12 +51,16 @@ export default class WitnessAnimationPanel extends React.PureComponent<WitnessAn
 
 	// TODO move to constructor
 	state: State = {
+		components: {},
 		prevTextLayer: null,
 		textLayer: this.props.entry.textLayers.filter(tl => tl.type === LayerType.Text)[0],
 		textLayers: this.props.entry.textLayers.filter(tl => tl.type === LayerType.Text)
 	}
 
 	componentDidMount() {
+		// TODO set components
+		// this.context.getComponents(DocereComponentContainer.Layer)
+		// 	.then(components => this.setState({ components }))
 		let i = 0
 		this.interval = setInterval(() => {
 			if (i < this.state.textLayers.length) {
@@ -80,7 +86,7 @@ export default class WitnessAnimationPanel extends React.PureComponent<WitnessAn
 								prevTextLayer: this.state.prevTextLayer?.id,
 								textLayer: this.state.textLayer.id
 							}}
-							components={this.props.configData.components}
+							components={this.state.components}
 							node={this.props.entry.textLayers[3].element}
 						/>
 					</Text>
@@ -115,4 +121,6 @@ export default class WitnessAnimationPanel extends React.PureComponent<WitnessAn
 		})
 	}
 }
+
+WitnessAnimationPanel.contextType = AppContext
 

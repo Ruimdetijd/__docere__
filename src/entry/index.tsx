@@ -22,7 +22,6 @@ function Entry(props: EntryProps) {
 				activeFacsimilePath={entryState.activeFacsimilePath}
 				asideTab={entryState.asideTab}
 				activeFacsimileAreas={entryState.activeFacsimileAreas}
-				configData={props.configData}
 				dispatch={entryStateDispatch}
 				entry={props.entry}
 				footerTab={entryState.footerTab}
@@ -34,7 +33,6 @@ function Entry(props: EntryProps) {
 				activeEntity={entryState.activeEntity}
 				activeNote={entryState.activeNote}
 				asideTab={entryState.asideTab}
-				configData={props.configData}
 				dispatch={entryStateDispatch}
 				entry={props.entry}
 				layers={entryState.layers}

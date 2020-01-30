@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import getResultBody, { ResultBodyProps } from './result-body'
+import ResultBody, { ResultBodyProps } from './result-body'
 
 export const Label = styled.div`
 	color: #888;
@@ -8,24 +8,43 @@ export const Label = styled.div`
 	text-transform: uppercase;
 `
 
+const Metadata = styled.div`
+	& > div {
+		margin-bottom: 1rem;
+
+		&:last-of-type {
+			margin-bottom: 0;
+		}
+	}
+`
+
 const ignoredKeys = ['facsimiles', 'snippets', 'text']
 
-function MetadataItems(props: ResultBodyProps) {
+function GenericResultBody(props: ResultBodyProps) {
 	return (
-		<>
-			{
-				Object.keys(props.result)
-					.filter(key => ignoredKeys.indexOf(key) === -1)
-					.map(key =>
-						<div key={key}>
-							<Label>{key}</Label>
-							<div>{props.result[key]}</div>
-						</div>
-					)
-			}
-		</>
+		<ResultBody {...props}>
+			<Metadata>
+				{
+					Object.keys(props.result)
+						.filter(key => ignoredKeys.indexOf(key) === -1)
+						.map(key => {
+							const value = props.result[key]
+							return (
+								<div key={key}>
+									<Label>{key}</Label>
+									{
+										Array.isArray(value) ?
+											<ul>{value.map((v, i) => <li key={i}>{v}</li>)}</ul> :
+											<div>{value}</div>
+									}
+								</div>
+							)
+						})
+				}
+			</Metadata>
+		</ResultBody>
 	)
 }
 
 
-export default getResultBody(MetadataItems)
+export default React.memo(GenericResultBody)

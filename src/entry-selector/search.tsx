@@ -4,7 +4,7 @@ import HucFacetedSearch  from 'huc-faceted-search'
 import { DEFAULT_SPACING, TOP_OFFSET, RESULT_ASIDE_WIDTH, SearchTab } from '../constants'
 import { defaultMetadata } from '../export/extend-config-data'
 import { fetchJson } from '../utils'
-import GenericResultBodyComponent from '../project-components/generic-result-body'
+import AppContext, { useUIComponent } from '../app-context'
 
 const FS = styled(HucFacetedSearch)`
 	background: white;
@@ -83,21 +83,24 @@ function useFields(config: DocereConfig) {
 }
 
 export default function Search(props: FileExplorerProps) {
-	const fields = useFields(props.config)
+	const appContext = React.useContext(AppContext)
+	const fields = useFields(appContext.config)
+	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
+	if (ResultBodyComponent == null) return null
 
 	return (
 		<FS
 			disableDefaultStyle={props.searchTab === SearchTab.Results}
 			fields={fields}
-			ResultBodyComponent={GenericResultBodyComponent}
+			ResultBodyComponent={ResultBodyComponent}
 			onClickResult={result => props.setEntry(result.id)}
 			resultBodyProps={{
 				activeId: props.entry == null ? null : props.entry.id,
 				searchTab: props.searchTab,
 				viewport: props.viewport,
 			}}
-			resultsPerPage={props.config.searchResultCount}
-			url={`/search/${props.config.slug}/_search`}
+			resultsPerPage={appContext.config.searchResultCount}
+			url={`/search/${appContext.config.slug}/_search`}
 		/>
 	)
 }

@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import { TEXT_PANEL_WIDTH, DEFAULT_SPACING } from '../../constants'
 // @ts-ignore
 import debounce from 'lodash.debounce'
+import AppContext, { useComponents } from '../../app-context'
 
 const TopWrapper = styled.div`
 	position: relative;
@@ -83,9 +84,11 @@ const ActiveArea = styled.div`
 `
 
 function TextPanel(props: TextPanelProps) {
+	const appContext = React.useContext(AppContext)
 	const textWrapperRef = React.useRef<HTMLDivElement>()
 	const activeAreaRef = React.useRef<HTMLDivElement>()
 	const textLayer = props.entry.textLayers.find(tl => tl.id === props.textLayerConfig.id)
+	const components = useComponents(DocereComponentContainer.Layer, textLayer.id)
 
 	const resetActiveArea = debounce(() => {
 		activeAreaRef.current.style.background = `rgba(${activeAreaRGB}, 0)`
@@ -115,7 +118,7 @@ function TextPanel(props: TextPanelProps) {
 		activeFacsimilePath: props.activeFacsimilePath,
 		activeEntity: props.activeEntity,
 		activeNote: props.activeNote,
-		config: props.configData.config,
+		config: appContext.config,
 		dispatch: props.dispatch,
 		facsimiles: props.entry.facsimiles,
 		insideNote: false,
@@ -128,7 +131,7 @@ function TextPanel(props: TextPanelProps) {
 		>
 			<DocereTextView
 				customProps={customProps}
-				components={props.configData.components}
+				components={components}
 				node={textLayer.element}
 			/>
 		</Text>

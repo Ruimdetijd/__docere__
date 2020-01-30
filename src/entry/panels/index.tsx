@@ -2,7 +2,7 @@ import * as React from 'react'
 import { PanelsWrapper } from '../index.components'
 import FacsimilePanel from './facsimile'
 import TextPanel from './text'
-import WitnessAnimationPanel from './witness-animation'
+// import WitnessAnimationPanel from './witness-animation'
 import XmlPanel from './xml'
 
 function Panels(props: PanelsProps) {
@@ -27,7 +27,6 @@ function Panels(props: PanelsProps) {
 								dispatch={dispatch}
 								facsimileAreas={props.entry.facsimileAreas}
 								key={ap.id}
-								projectId={props.configData.config.slug}
 							/>
 						)
 					}
@@ -39,7 +38,6 @@ function Panels(props: PanelsProps) {
 								activeFacsimilePath={props.activeFacsimilePath}
 								activeEntity={props.activeEntity}
 								activeNote={props.activeNote}
-								configData={props.configData}
 								dispatch={dispatch}
 								entry={props.entry}
 								key={ap.id}
@@ -48,21 +46,21 @@ function Panels(props: PanelsProps) {
 						)
 					}
 
-					if (ap.type === LayerType.WitnessAnimation) {
-						return (
-							<WitnessAnimationPanel
-								activeFacsimileAreas={props.activeFacsimileAreas}
-								activeFacsimilePath={props.activeFacsimilePath}
-								activeEntity={props.activeEntity}
-								activeNote={props.activeNote}
-								configData={props.configData}
-								dispatch={props.dispatch}
-								entry={props.entry}
-								key={ap.id}
-								textLayerConfig={ap}
-							/>
-						)
-					}
+					// if (ap.type === LayerType.WitnessAnimation) {
+					// 	return (
+					// 		<WitnessAnimationPanel
+					// 			activeFacsimileAreas={props.activeFacsimileAreas}
+					// 			activeFacsimilePath={props.activeFacsimilePath}
+					// 			activeEntity={props.activeEntity}
+					// 			activeNote={props.activeNote}
+					// 			configData={props.configData}
+					// 			dispatch={props.dispatch}
+					// 			entry={props.entry}
+					// 			key={ap.id}
+					// 			textLayerConfig={ap}
+					// 		/>
+					// 	)
+					// }
 
 					if (ap.type === LayerType.XML) {
 						return (

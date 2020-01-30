@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import { DEFAULT_SPACING, TOP_OFFSET } from '../../constants'
 import { MetadataItem } from '../index.components'
 import { defaultMetadata } from '../../export/extend-config-data'
+import AppContext from '../../app-context'
 
 interface WProps { active: boolean }
 const Wrapper = styled.ul`
@@ -19,16 +20,16 @@ const Wrapper = styled.ul`
 `
 
 interface Props extends WProps {
-	config: DocereConfig
 	metadata: ExtractedMetadata
 }
 export default function MetadataAside(props: Props) {
+	const appContext = React.useContext(AppContext)
 	return (
 		<Wrapper active={props.active}>
 			{
 				Object.keys(props.metadata)
 					.map(id => {
-						const data = props.config.metadata.find(md => md.id === id)
+						const data = appContext.config.metadata.find(md => md.id === id)
 						const value = props.metadata[id]
 						if (data == null) return { ...defaultMetadata, title: id, value }
 						else return { ...defaultMetadata, ...data, value }

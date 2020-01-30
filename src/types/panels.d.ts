@@ -2,7 +2,7 @@ type PanelsProps = EntryProps & EntryState & {
 	dispatch: React.Dispatch<EntryStateAction>
 }
 
-type TextPanelBaseProps = Pick<PanelsProps, 'activeEntity' | 'activeNote' | 'activeFacsimileAreas' | 'activeFacsimilePath' | 'configData' | 'dispatch' | 'entry'>
+type TextPanelBaseProps = Pick<PanelsProps, 'activeEntity' | 'activeNote' | 'activeFacsimileAreas' | 'activeFacsimilePath' | 'dispatch' | 'entry'>
 interface TextPanelProps extends TextPanelBaseProps {
 	textLayerConfig: LayerConfig
 }

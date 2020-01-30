@@ -40,9 +40,9 @@ export const damage = styled.span``
 // 	}
 // `
 export const hi = styled.span`
-	${(props: HiProps) => {
-		if (!props.hasOwnProperty('rend')) return ''
-		const has = (rendStyle: string) => props.rend.indexOf(rendStyle) > -1
+	${(props: DocereComponentProps) => {
+		if (!props.attributes.hasOwnProperty('rend')) return ''
+		const has = (rendStyle: string) => props.attributes.rend.indexOf(rendStyle) > -1
 		const rules = []
 		if (has('underline')) rules.push('text-decoration: underline;')
 		if (has('super')) rules.push('font-style: italic;')

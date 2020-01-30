@@ -58,7 +58,6 @@ function Aside(props: EntryAsideProps) {
 					hasMetadata &&
 					<MetadataAside
 						active={props.asideTab === AsideTab.Metadata}
-						config={props.configData.config}
 						metadata={props.entry.metadata}
 					/>
 				}
@@ -69,7 +68,6 @@ function Aside(props: EntryAsideProps) {
 						activeEntity={props.activeEntity}
 						dispatch={props.dispatch}
 						layers={props.layers}
-						config={props.configData.config}
 						entities={props.entry.entities}
 					/>
 				}
@@ -80,7 +78,6 @@ function Aside(props: EntryAsideProps) {
 						activeNote={props.activeNote}
 						dispatch={props.dispatch}
 						layers={props.layers}
-						configData={props.configData}
 						notes={props.entry.notes}
 						setEntry={props.setEntry}
 					/>
