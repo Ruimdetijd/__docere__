@@ -11,7 +11,7 @@ interface WProps {
 	small: boolean
 }
 const Wrapper = styled.div`
-	border-top: 1px solid #EEE;
+	border-bottom: 1px solid #EEE;
 	display: grid;
 	font-size: ${(props: WProps) => props.small ? '.8em' : '1em'};
 	grid-column-gap: ${(props: WProps) => props.small ? DEFAULT_SPACING / 2 : DEFAULT_SPACING}px;
@@ -19,8 +19,7 @@ const Wrapper = styled.div`
 		`${props.small ? '64px 0' : '128px auto'}` :
 		'auto'
 	};
-	margin-top: 1.5em;
-	padding-top: 1.5em;
+	padding: 1.5em 0;
 
 	&:before {
 		content: '';

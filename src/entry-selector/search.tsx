@@ -12,7 +12,6 @@ const FS = styled(HucFacetedSearch)`
 	height: calc(100vh - ${TOP_OFFSET}px);
 	overflow-y: auto;
 	overflow-x: hidden;
-	padding-top: ${DEFAULT_SPACING * 2}px;
 	width: 100vw;
 
 	${props => {
