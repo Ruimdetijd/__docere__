@@ -1,5 +1,5 @@
 import * as React from "react"
-import styled from '@emotion/styled';
+import styled from '@emotion/styled'
 
 // Map of polygons. The key is confusing, it is the orientation
 // of the tooltip. When the orientation of the tooltip is `bottom`
