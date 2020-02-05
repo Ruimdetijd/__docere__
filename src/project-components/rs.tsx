@@ -7,7 +7,7 @@ export function PersonSvg(props: SvgProps) {
 		<svg
 			onClick={ev => props.onClick != null ? props.onClick(ev) : null}
 			style={{ width: 20, height: 20, verticalAlign: 'text-top' }}
-			viewBox="0 0 64 64"
+			viewBox="0 0 64 54"
 		>
 			<path
 				fill={props.active ? 'white' : props.color}
@@ -99,16 +99,11 @@ export const Rs = styled.span`
 	background-color: ${(props: RsProps) => {
 		return props.active ? props.color : 'rgba(0, 0, 0, 0)'
 	}};
-	border-bottom: ${props => props.insideNote ? 1 : 3}px solid ${props => props.color};
+	border-bottom: ${props => props.active ? 'none' : `3px solid ${props.color}`};
 	color: ${props => props.active ? 'white' : 'inherit'};
 	cursor: pointer;
-	padding: ${props => props.active ? '.1em .25em' : '0 .25em'};
+	padding: ${props => props.active ? '.1em .25em' : '0'};
 	transition: all 300ms;
-
-	${props => props.insideNote ? `&:hover {
-		border-bottom: 3px solid ${props.color};
-		color: white;
-	};` : ''}
 `
 
 export const rsPerson = (rsConfig: TextDataConfig) => rsWithIcon(rsConfig, PersonSvg)
