@@ -32,12 +32,15 @@ type DocereComponentProps =
 		textLayerId: string
 	}
 
-interface SvgProps {
-	active: boolean,
-	color: string
+declare const enum RsType { Date, Location, None, Person }
+interface RsProps {
+	active?: boolean,
+	children: React.ReactNode
+	color?: string
 	onClick?: (ev: any) => void
+	revealOnHover?: boolean
+	icon?: RsType
 }
-type RsProps = DocereComponentProps & SvgProps
 
 
 // interface HiProps extends DocereComponentProps {

@@ -21,6 +21,13 @@ export const GRAY_DARK = '#212830'
 export const BROWN_LIGHT = '#c7aa71'
 export const BROWN_DARK = '#988258'
 
+export enum Colors {
+	Green = '#5fb53f',
+	Orange = 'orange',
+	Blue = '#8080ff',
+	Red = '#DB4437'
+}
+
 export enum Viewport {
 	Search = 'Search',
 	Entry = 'Entry',

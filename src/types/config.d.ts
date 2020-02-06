@@ -84,6 +84,7 @@ type TextDataConfig = MetadataConfig & {
 	color?: string
 	identifier: TextDataIdentifier
 	textLayers?: string[]
+	type: RsType
 }
 
 interface EntityConfig {

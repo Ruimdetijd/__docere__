@@ -24,10 +24,15 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 		}
 
 		case 'SET_ENTITY': {
-			const activeFacsimileAreas = entryState.entry.facsimileAreas
+			let activeFacsimileAreas = entryState.entry.facsimileAreas
 				.filter(fa => fa.target?.id === action.id)
 
-			const activeEntity = entryState.entry.entities.find(e => e.id === action.id)
+			let activeEntity = entryState.entry.entities.find(e => e.id === action.id)
+
+			if (action.id === entryState.activeEntity?.id) {
+				activeEntity = null
+				activeFacsimileAreas = []
+			}
 			
 			return {
 				...entryState,
@@ -69,8 +74,12 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 		}
 
 		case 'SET_FACSIMILE_AREAS': {
-			const activeFacsimileAreas = entryState.entry.facsimileAreas
+			let activeFacsimileAreas = entryState.entry.facsimileAreas
 				.filter(fa => action.ids.indexOf(fa.id) > -1)
+
+			if (JSON.stringify(action.ids) === JSON.stringify(entryState.activeFacsimileAreas.map(afa => afa.id))) {
+				activeFacsimileAreas = []
+			}
 
 			return {
 				...entryState,

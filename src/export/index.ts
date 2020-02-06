@@ -6,7 +6,7 @@ import * as constants from '../constants'
 import extendConfigData from './extend-config-data'
 import App from '../app'
 import getPb from '../project-components/pb'
-import * as rs from '../project-components/rs'
+import Rs from '../project-components/rs'
 import { hi, lb } from '../project-components'
 import ResultBody from '../project-components/result-body'
 
@@ -14,7 +14,7 @@ const components = {
 	getPb,
 	hi,
 	lb,
-	...rs,
+	Rs,
 }
 
 export {

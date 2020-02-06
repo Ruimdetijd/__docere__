@@ -1,8 +1,9 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
+import { Colors } from '../constants'
 
 // Person
-export function PersonSvg(props: SvgProps) {
+function PersonSvg(props: Pick<RsProps, 'active' | 'color' | 'onClick'>) {
 	return (
 		<svg
 			onClick={ev => props.onClick != null ? props.onClick(ev) : null}
@@ -19,7 +20,7 @@ export function PersonSvg(props: SvgProps) {
 
 
 // Place
-export function PlaceSvg(props: SvgProps) {
+function LocationSvg(props: Pick<RsProps, 'active' | 'color' | 'onClick'>) {
 	return (
 		<svg
 			onClick={ev => props.onClick != null ? props.onClick(ev) : null}
@@ -33,78 +34,157 @@ export function PlaceSvg(props: SvgProps) {
 	)
 }
 
+// function DateSvg(props: Pick<RsProps, 'active' | 'color' | 'onClick'>) {
+// 	const bgColor = props.active ? props.color : 'white'
+// 	const fgColor = props.active ? 'white' : props.color
+
+// 	return (
+// 		<svg
+// 			height="100"
+// 			style={{ width: 16, height: 16, verticalAlign: 'text-top' }}
+// 			viewBox="0 0 100 100"
+// 			width="100"
+// 		>
+// 			<rect x="0" y="0" width="100" height="100" rx="0" ry="0" fill={fgColor} />
+// 			<rect x="10" y="20" width="80" height="70" fill={bgColor} rx="0" ry="0" />
+
+// 			<rect x="40" y="30" height="10" width="40" fill={fgColor} />
+// 			<rect x="20" y="50" height="10" width="60" fill={fgColor} />
+// 			<rect x="20" y="70" height="10" width="40" fill={fgColor} />
+// 		</svg>
+// 	)
+// }
+
+function DateSvg(props: Pick<RsProps, 'active' | 'color' | 'onClick'>) {
+	const bgColor = props.active ? props.color : 'white'
+	const fgColor = props.active ? 'white' : props.color
+
+	return (
+		<svg
+			style={{ width: 18, height: 18, marginRight: '.35em' }}
+			viewBox="0 0 150 150"
+		>
+			<rect x="0" y="0" width="150" height="150" rx="0" ry="0" fill={bgColor} />
+
+			<rect x="40" y="0" height="30" width="30" fill={fgColor} />
+			<rect x="80" y="0" height="30" width="30" fill={fgColor} />
+			<rect x="120" y="0" height="30" width="30" fill={fgColor} />
+
+			<rect x="0" y="40" height="30" width="30" fill={fgColor} />
+			<rect x="40" y="40" height="30" width="30" fill={fgColor} />
+			<rect x="80" y="40" height="30" width="30" fill={fgColor} />
+			<rect x="120" y="40" height="30" width="30" fill={fgColor} />
+
+			<rect x="0" y="80" height="30" width="30" fill={fgColor} />
+			<rect x="40" y="80" height="30" width="30" fill={fgColor} />
+			<rect x="80" y="80" height="30" width="30" fill={fgColor} />
+			<rect x="120" y="80" height="30" width="30" fill={fgColor} />
+
+			<rect x="0" y="120" height="30" width="30" fill={fgColor} />
+			<rect x="40" y="120" height="30" width="30" fill={fgColor} />
+		</svg>
+	)
+}
+
+const svgByType: Record<RsType, React.FC<Pick<RsProps, 'active' | 'color' | 'onClick'>>> = {
+	[RsType.Date]: DateSvg,
+	[RsType.Location]: LocationSvg,
+	[RsType.Person]: PersonSvg,
+	[RsType.None]: null,
+}
+
 const NoWrap = styled.span`
 	white-space: nowrap;
 `
 
-function rsWithIcon(rsConfig: TextDataConfig, SvgComponent: React.StatelessComponent<SvgProps>) {
-	return function (props: DocereComponentProps) {
-		const children = React.Children.toArray(props.children)
+	// if (rsConfig.identifier.type === TextDataExtractionType.Milestone) console.error('Milestone extraction not implemented')
 
-		if (rsConfig.identifier.type === TextDataExtractionType.Milestone) console.error('Milestone extraction not implemented')
+	// const activeId: string = rsConfig.identifier.type === TextDataExtractionType.Attribute ?
+	// 	props.attributes[rsConfig.identifier.attribute] :
+	// 	children[0] as string
 
-		const activeId: string = rsConfig.identifier.type === TextDataExtractionType.Attribute ?
-			props.attributes[rsConfig.identifier.attribute] :
-			children[0] as string
+	// // The RS is active when the text data list (defined by the ID), for example: person, place, theme, etc
+	// // and the ID match. Only the ID is not sufficient, because two lists could have matching IDs.
+	// const active = 
+	// 	props.activeEntity != null &&
+	// 	props.activeEntity.type === rsConfig.id &&
+	// 	props.activeEntity.id === activeId
 
-		// The RS is active when the text data list (defined by the ID), for example: person, place, theme, etc
-		// and the ID match. Only the ID is not sufficient, because two lists could have matching IDs.
-		const active = 
-			props.activeEntity != null &&
-			props.activeEntity.type === rsConfig.id &&
-			props.activeEntity.id === activeId
-
-		// To prevent a wrap between the icon and the first word the first word is extracted.
-		// The icon and the first word are placed inside a span with white-space: nowrap.
-		let firstWord: string
-		let restOfFirstChild: string
-		if (children.length && typeof children[0] === 'string') {
-			const [fw, ...rofc] = children[0].split(/\s/)
-			firstWord = fw
-			restOfFirstChild = ' '.concat(rofc.join(' '))
-		}
-
-		return (
-			<Rs
-				{...props}
-				active={active}
-				color={rsConfig.color}
-				onClick={() => {
-					props.dispatch({
-						type: 'SET_ENTITY',
-						id: activeId
-					})
-				}}
-			>
-				{
-					props.insideNote ?
-						firstWord :
-						<NoWrap>
-							<SvgComponent
-								active={active}
-								color={rsConfig.color}
-							/>
-							{firstWord}
-						</NoWrap>
-				}
-				{restOfFirstChild}
-				{children.slice(1)}
-			</Rs>
-		)
-
-	}
-}
-
-export const Rs = styled.span`
-	background-color: ${(props: RsProps) => {
+const RsWrapper = styled.span`
+	background-color: ${(props: Pick<RsProps, 'active' | 'color' | 'revealOnHover'>) => {
 		return props.active ? props.color : 'rgba(0, 0, 0, 0)'
 	}};
-	border-bottom: ${props => props.active ? 'none' : `3px solid ${props.color}`};
+	${props => 
+		props.active ?
+			`border-bottom: 1px solid ${props.color};` :
+			props.revealOnHover ?
+				`&:hover {
+					border-bottom: 3px solid ${props.color};
+				}` :
+				`border-bottom: 3px solid ${props.color};`
+	}
 	color: ${props => props.active ? 'white' : 'inherit'};
 	cursor: pointer;
 	padding: ${props => props.active ? '.1em .25em' : '0'};
 	transition: all 300ms;
 `
 
-export const rsPerson = (rsConfig: TextDataConfig) => rsWithIcon(rsConfig, PersonSvg)
-export const rsPlace = (rsConfig: TextDataConfig) => rsWithIcon(rsConfig, PlaceSvg)
+export default function Rs(props: RsProps) {
+	const children = React.Children.toArray(props.children)
+
+	const Icon = svgByType[props.icon]
+
+	// To prevent a wrap between the icon and the first word the first word is extracted.
+	// The icon and the first word are placed inside a span with white-space: nowrap.
+	let firstWord: string
+	let restOfFirstChild: string
+	if (children.length && typeof children[0] === 'string') {
+		const [fw, ...rofc] = children[0].split(/\s/)
+		firstWord = fw
+		restOfFirstChild = ' '.concat(rofc.join(' '))
+	}
+
+	return (
+		<RsWrapper
+			active={props.active}
+			color={props.color}
+			onClick={props.onClick}
+			revealOnHover={props.revealOnHover}
+		>
+			{
+				Icon != null ?
+				<>
+					<NoWrap>
+						<Icon
+							active={props.active}
+							color={props.color}
+						/>
+						{firstWord}
+					</NoWrap>
+					{restOfFirstChild}
+					{children.slice(1)}
+				</> :
+				props.children
+
+			}
+		</RsWrapper>
+	)
+}
+
+const defaultProps: Partial<RsProps> = {
+	active: false,
+	color: Colors.Blue,
+	icon: RsType.None,
+	revealOnHover: false,
+}
+Rs.defaultProps = defaultProps
+
+// () => {
+// 				props.dispatch({
+// 					type: 'SET_ENTITY',
+// 					id: props.id
+// 				})
+// 			}
+
+// export const rsPerson = (rsConfig: TextDataConfig) => rsWithIcon(rsConfig, PersonSvg)
+// export const rsPlace = (rsConfig: TextDataConfig) => rsWithIcon(rsConfig, PlaceSvg)

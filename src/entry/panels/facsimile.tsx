@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import AppContext from '../../app-context'
+import { Colors } from '../../constants'
 
 // TODO change facsimile when user scroll past a <pb />
 
@@ -13,11 +14,12 @@ const Wrapper = styled.div`
 
 	.facsimile-area {
 		border: 3px solid rgba(255, 0, 0, 0);
+		cursor: pointer;
 		pointer-events: none;
 		transition: border-color 600ms;
 
 		&.active {
-			border-color: rgba(255, 0, 0, .6);
+			border-color: ${Colors.Red}
 		}
 
 		&.show {
