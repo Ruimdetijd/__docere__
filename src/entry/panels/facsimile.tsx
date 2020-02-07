@@ -13,20 +13,22 @@ const Wrapper = styled.div`
 	z-index: 1;
 
 	.facsimile-area {
-		border: 3px solid rgba(255, 0, 0, 0);
+		border-width: 3px;
+		border-style: solid;
 		cursor: pointer;
+		opacity: 0;
 		pointer-events: none;
-		transition: border-color 600ms;
+		transition: opacity 600ms;
 
 		&.active {
-			border-color: ${Colors.Red}
+			opacity: 1;
 		}
 
 		&.show {
 			pointer-events: all;
 
 			&:hover {
-				border-color: rgba(255, 0, 0, .3);
+				opacity: .3;
 			}
 
 		}
@@ -88,6 +90,7 @@ function renderFacsimileAreas(osd: any, facsimileAreas: Props['facsimileAreas'],
 		var element = document.createElement("div")
 		element.classList.add('facsimile-area')
 		element.dataset.id = area.id
+		element.style.borderColor = area.target?.color != null ? area.target.color : Colors.Red
 		if (area.showOnHover) {
 			element.classList.add('show')
 			element.addEventListener('click', () => {
