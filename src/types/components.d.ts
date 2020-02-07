@@ -8,9 +8,10 @@ interface FacsimileArea {
 	id: string
 	showOnHover?: boolean
 	target?: {
+		asideTab: AsideTab
+		color: string,
 		id: string,
 		listId: string,
-		asideTab: AsideTab
 	}
 	unit?: 'px' | 'perc'
 	w: number
@@ -46,3 +47,4 @@ interface RsProps {
 // interface HiProps extends DocereComponentProps {
 // 	rend: string
 // }
+

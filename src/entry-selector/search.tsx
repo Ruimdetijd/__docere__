@@ -6,6 +6,8 @@ import { defaultMetadata } from '../export/extend-config-data'
 import { fetchJson } from '../utils'
 import AppContext, { useUIComponent } from '../app-context'
 
+const searchBaseUrl = '/search/'
+
 const FS = styled(HucFacetedSearch)`
 	background: white;
 	box-sizing: border-box;
@@ -52,15 +54,16 @@ const FS = styled(HucFacetedSearch)`
 	}}
 `
 
+const ignoreKeys = ['text', 'text_suggest', 'facsimiles', 'id']
 function useFields(config: DocereConfig) {
 	const [fields, setFields] = React.useState<MetadataConfig[]>([])
 
 	React.useEffect(() => {
-		fetchJson(`/search/${config.slug}/_mapping`)
+		fetchJson(`${searchBaseUrl}${config.slug}/_mapping`)
 			.then(json => {
 				const { properties } = json[config.slug].mappings
 				const tmpFields = Object.keys(properties)
-					.filter(key => key !== 'text' && key !== 'facsimiles' && key !== 'id')
+					.filter(key => ignoreKeys.indexOf(key) === -1)
 					.map(key => {
 						let mdConfig = config.metadata.find(md => md.id === key)
 						if (mdConfig == null) mdConfig = config.textData.find(td => td.id === key)
@@ -81,14 +84,46 @@ function useFields(config: DocereConfig) {
 	return fields
 }
 
+
+function useAutoSuggest(projectId: string) {
+	const url = `${searchBaseUrl}${projectId}/_search`
+	return async function autoSuggest(query: string) {
+		const r = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify({
+				suggest: {
+					mysuggest: {
+						text: query,
+						completion: {
+							field: 'text_suggest',
+							size: 10,
+							skip_duplicates: true,
+						}
+					}
+				}
+			})
+		})
+
+		const json = await r.json()
+		return json.suggest.mysuggest[0].options
+			.map((s: any) => s.text)
+			.filter((item: string, index: number, arr: string[]) => arr.indexOf(item) === index)
+	}
+}
+
 export default function Search(props: FileExplorerProps) {
 	const appContext = React.useContext(AppContext)
+	const autoSuggest = useAutoSuggest(appContext.config.slug)
 	const fields = useFields(appContext.config)
 	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
 	if (ResultBodyComponent == null) return null
 
 	return (
 		<FS
+			autoSuggest={autoSuggest}
 			disableDefaultStyle={props.searchTab === SearchTab.Results}
 			fields={fields}
 			ResultBodyComponent={ResultBodyComponent}
@@ -99,7 +134,7 @@ export default function Search(props: FileExplorerProps) {
 				viewport: props.viewport,
 			}}
 			resultsPerPage={appContext.config.searchResultCount}
-			url={`/search/${appContext.config.slug}/_search`}
+			url={`${searchBaseUrl}${appContext.config.slug}/_search`}
 		/>
 	)
 }
