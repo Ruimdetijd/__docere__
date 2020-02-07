@@ -28,12 +28,6 @@ export enum Colors {
 	Red = '#DB4437'
 }
 
-export enum Viewport {
-	Search = 'Search',
-	Entry = 'Entry',
-	Page = 'Page',
-}
-
 export enum AsideTab {
 	Metadata = 'Metadata',
 	Notes = 'Notes',

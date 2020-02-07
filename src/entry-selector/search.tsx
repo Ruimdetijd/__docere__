@@ -114,7 +114,7 @@ function useAutoSuggest(projectId: string) {
 	}
 }
 
-export default function Search(props: FileExplorerProps) {
+function Search(props: FileExplorerProps) {
 	const appContext = React.useContext(AppContext)
 	const autoSuggest = useAutoSuggest(appContext.config.slug)
 	const fields = useFields(appContext.config)
@@ -131,7 +131,6 @@ export default function Search(props: FileExplorerProps) {
 			resultBodyProps={{
 				activeId: props.entry == null ? null : props.entry.id,
 				searchTab: props.searchTab,
-				viewport: props.viewport,
 			}}
 			resultsPerPage={appContext.config.searchResultCount}
 			url={`${searchBaseUrl}${appContext.config.slug}/_search`}
@@ -139,19 +138,4 @@ export default function Search(props: FileExplorerProps) {
 	)
 }
 
-
-
-// function getResultBodyComponent(projectId: string) {
-// 	return async function() {
-// 		let ResultBodyComponent: React.FunctionComponent<ResultBodyProps>
-
-// 		try {
-// 			ResultBodyComponent = await import(`../project-components/${projectId}/result-body.tsx`)
-// 		} catch (err) {
-// 			ResultBodyComponent = await import('../project-components/generic-result-body') as any
-// 		}
-
-// 		// @ts-ignore
-// 		return ResultBodyComponent.default
-// 	}
-// }
+export default React.memo(Search)

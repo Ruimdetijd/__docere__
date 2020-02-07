@@ -1,7 +1,7 @@
 import * as React from 'react'
 import EntryComp from './entry'
 import PageView from './page'
-import { SearchTab, Viewport } from './constants'
+import { SearchTab } from './constants'
 import EntrySelector from './entry-selector'
 import Header from './header'
 import { extendTextLayer, defaultFacsimileArea } from './export/extend-config-data'
@@ -23,7 +23,6 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 		setEntry: (id: string) => this.setEntry(id),
 		setPage: (id: string) => this.setPage(id),
 		setSearchTab: (tab: SearchTab) => this.setSearchTab(tab),
-		viewport: Viewport.Search
 	}
 
 	protected abstract async getEntryDoc(entryId: string): Promise<XMLDocument>
@@ -32,28 +31,26 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 	async componentDidMount() {
 		let title = this.props.configData.config.title
 
-		const nextState: Pick<AppState, 'entry' | 'page' | 'viewport'> = {
+		const nextState: Partial<AppState> = {
 			entry: null,
 			page: null,
-			viewport: Viewport.Search,
+			searchTab: SearchTab.Search
 		}
 
 		if (this.props.pageId != null) {
-			nextState.viewport = Viewport.Page
 			nextState.page = await this.getPage(this.props.pageId)
 			document.title = `${title} - ${nextState.page.title}`
 		}
 		else if (this.props.entryId != null) {
-			nextState.viewport = Viewport.Entry
 			nextState.entry = await this.getEntry(this.props.entryId)
 			document.title = `${title} - ${nextState.entry.id}`
 		}
 
-		this.setState(nextState, () => this.afterComponentDidMount())
+		this.setState(nextState as AppState, () => this.afterComponentDidMount())
 	}
 
 	render() {
-		const { entry, page, searchTab, setEntry: setEntry, setPage, setSearchTab, viewport } = this.state
+		const { entry, page, searchTab, setEntry: setEntry, setPage, setSearchTab } = this.state
 		return (
 			<>
 				<Header
@@ -69,7 +66,6 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 					searchTab={searchTab}
 					setEntry={setEntry}
 					setSearchTab={setSearchTab}
-					viewport={viewport}
 				/>
 				<EntryComp 
 					entry={entry}
@@ -94,12 +90,11 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 		const nextState: Partial<AppState> = {
 			entry,
 			page: null,
-			viewport: Viewport.Entry,
+			searchTab: null
 		}
 
 		if (entryId == null) {
-			nextState.viewport = Viewport.Search
-			nextState.searchTab = null
+			nextState.searchTab = SearchTab.Search
 		}
 
 		this.setState(

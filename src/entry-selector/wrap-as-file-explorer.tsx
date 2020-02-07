@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { TOP_OFFSET, ASIDE_HANDLE_WIDTH, RESULT_ASIDE_WIDTH, Viewport, TabPosition, SearchTab } from '../constants'
+import { TOP_OFFSET, ASIDE_HANDLE_WIDTH, RESULT_ASIDE_WIDTH, TabPosition, SearchTab } from '../constants'
 import Tabs from '../ui/tabs';
 
 const Wrapper = styled.div`
@@ -9,7 +9,7 @@ const Wrapper = styled.div`
 	grid-template-columns: 100vw ${ASIDE_HANDLE_WIDTH}px;
 	position: fixed;
 	top: ${TOP_OFFSET}px;
-	transform: translateX(${(props: { searchTab: SearchTab, viewport: Viewport }) => props.viewport === Viewport.Search ?
+	transform: translateX(${(props: { searchTab: SearchTab }) => props.searchTab === SearchTab.Search ?
 		0 :
 		props.searchTab === SearchTab.Results ?
 			`calc(-100vw + ${RESULT_ASIDE_WIDTH}px)` :
@@ -25,7 +25,6 @@ export default function wrapAsFileExplorer(FileExplorer: React.FC<FileExplorerPr
 		return (
 			<Wrapper
 				searchTab={props.searchTab}
-				viewport={props.viewport}
 			>
 				<FileExplorer {...props} />
 				<Tabs

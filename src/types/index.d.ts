@@ -17,7 +17,6 @@ interface AppState {
 	setEntry: (id?: string) => void
 	setPage: (id?: string) => void
 	setSearchTab: (tab: SearchTab) => void
-	viewport: Viewport
 }
 
-type FileExplorerProps = Pick<AppState, 'entry' | 'searchTab' | 'setEntry' | 'viewport'>
+type FileExplorerProps = Pick<AppState, 'entry' | 'searchTab' | 'setEntry'>

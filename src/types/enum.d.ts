@@ -1,4 +1,3 @@
-type Viewport = import('../constants').Viewport
 type AsideTab = import('../constants').AsideTab
 type SearchTab = import('../constants').SearchTab
 type FooterTab = import('../constants').FooterTab

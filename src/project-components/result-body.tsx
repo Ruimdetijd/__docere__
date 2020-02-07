@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { DEFAULT_SPACING, Viewport, BROWN_LIGHT, SearchTab, MAINHEADER_HEIGHT } from '../constants'
+import { DEFAULT_SPACING, BROWN_LIGHT, SearchTab, MAINHEADER_HEIGHT } from '../constants'
 import Tooltip from './tooltip'
 
 interface WProps {
@@ -105,7 +105,6 @@ export interface ResultBodyProps {
 	children?: React.ReactNode
 	result: Hit
 	searchTab?: SearchTab
-	viewport?: Viewport
 }
 export interface State {
 	active: boolean
@@ -115,6 +114,7 @@ export interface State {
 function ResultBody(props: ResultBodyProps) {
 	const [active, setActive] = React.useState(false)
 	const [tooltipTop, setTooltipTop] = React.useState(0)
+	const small = props.searchTab === SearchTab.Results
 
 	return (
 		<Wrapper
@@ -126,14 +126,14 @@ function ResultBody(props: ResultBodyProps) {
 				setTooltipTop(top)
 			}}
 			onMouseLeave={() => setActive(false)}
-			small={props.viewport === Viewport.Entry}
+			small={small}
 		>
 			<FacsimileThumbs
 				facsimiles={props.result.facsimiles}
-				small={props.viewport === Viewport.Entry}
+				small={small}
 			/>
 			{
-				props.viewport === Viewport.Entry && props.searchTab === SearchTab.Results ?
+				small ?
 					<Tooltip
 						orientation="right"
 						style={{
