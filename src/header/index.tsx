@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { ASIDE_HANDLE_WIDTH, MAINHEADER_HEIGHT, TOP_OFFSET, DEFAULT_SPACING } from '../constants'
+import { ASIDE_HANDLE_WIDTH, MAINHEADER_HEIGHT, TOP_OFFSET, DEFAULT_SPACING, SearchTab } from '../constants'
 import PagesMenu from './pages'
 import AppContext from '../app-context'
 
@@ -67,15 +67,15 @@ const H1 = styled('h1')`
 `
 
 
-type Props = Pick<AppState, 'setEntry' | 'setPage'>
+type Props = Pick<AppState, 'setSearchTab' | 'setPage'>
 export default React.memo(function Header(props: Props) {
 	const appContext = React.useContext(AppContext)
-	const setEntry = React.useCallback(() => props.setEntry(), [])
+	const setSearchTab = React.useCallback(() => props.setSearchTab(SearchTab.Search), [])
 	return (
 		<Wrapper>
 			<TopMenu>
 				<H1
-					onClick={setEntry}
+					onClick={setSearchTab}
 				>
 					{appContext.config.title}
 				</H1>

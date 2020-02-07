@@ -55,7 +55,7 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 			<>
 				<Header
 					setPage={setPage}
-					setEntry={setEntry}
+					setSearchTab={setSearchTab}
 				/>
 				<PageView
 					page={page}
@@ -78,8 +78,8 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 
 	private setSearchTab(searchTab: SearchTab) {
 		if (searchTab === SearchTab.Results && this.state.searchTab === SearchTab.Results) this.setState({ searchTab: null })
-		else if (searchTab === SearchTab.Results) this.setState({ searchTab })
-		else if (searchTab === SearchTab.Search) this.setEntry()
+		else this.setState({ searchTab })
+		// else if (searchTab === SearchTab.Search) this.setEntry()
 	}
 
 	protected async setEntry(entryId?: string, push = true) {

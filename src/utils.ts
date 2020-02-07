@@ -37,7 +37,6 @@ export async function fetchEntryXml(projectSlug: string, documentId: string) {
 	let doc: XMLDocument
 
 	try {
-		// doc = await fetchEntryXml(this.props.configData.config.slug, documentId)
 		doc = await fetchXml(getEntryXmlPath(projectSlug, documentId))
 	} catch (err) {
 		doc = null			
@@ -70,4 +69,11 @@ export async function fetchJson(url: string) {
 	return await result.json()
 }
 
-
+// Used for debugging and performance improvements
+export function compareProps(prevProps: any, nextProps: any) {
+	Object.keys(prevProps).forEach(key =>
+		console.log(`${key}\t\t${prevProps[key] === nextProps[key]}`)
+	)
+	console.log('=-=-=-=-=-=-=-=')
+	return false
+}

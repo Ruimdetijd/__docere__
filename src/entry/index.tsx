@@ -51,7 +51,6 @@ function Entry(props: EntryProps) {
 export default React.memo(Entry)
 
 
-
 // import useDocereComponentState from './reducers/docere-component-state'
 
 			// activeFacsimilePath: this.props.activeFacsimilePath,
