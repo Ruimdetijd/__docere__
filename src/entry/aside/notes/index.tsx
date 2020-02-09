@@ -1,14 +1,13 @@
 import * as React from 'react'
 import NoteList from "./list"
 import { useTextData, Wrapper } from '../list'
-import AppContext, { useComponents } from '../../../app-context'
+import AppContext, { useComponents } from '../../../app/context'
 
 type Props =
-	Pick<AppState, 'setEntry'> &
 	Pick<EntryState,  'activeNote' | 'layers'> &
 	{
 		active: boolean
-		dispatch: React.Dispatch<EntryStateAction>
+		entryDispatch: React.Dispatch<EntryStateAction>
 		notes: Entry['notes']
 
 	}
@@ -32,11 +31,10 @@ function NotesAside(props: Props) {
 						components={components}
 						config={appContext.config.notes.find(nc => nc.id === noteType)}
 						containerHeight={wrapperRef.current.getBoundingClientRect().height}
-						dispatch={props.dispatch}
+						entryDispatch={props.entryDispatch}
 						notesByType={notesByType}
 						key={noteType}
 						setActiveType={setActiveType}
-						setEntry={props.setEntry}
 						type={noteType}
 					/>
 				)

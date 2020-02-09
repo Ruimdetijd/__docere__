@@ -24,14 +24,14 @@ export default function getPb(extractPbId: (props: DocereComponentProps) => stri
 		const id = extractPbId(props)
 		const facsimile = props.facsimiles.find(f => f.id === id)
 		if (facsimile == null) return null
-		let src = facsimile.path[0]
-		const active = props.activeFacsimilePath === src
+		let src = facsimile.versions[0].path
+		const active = props.activeFacsimile.id === id
 
 		return (
 			<span
 				className="pb"
 				onClick={() => {
-					if (!active) props.dispatch({ type: 'SET_ACTIVE_FACSIMILE_PATH', src })
+					if (!active) props.entryDispatch({ type: 'SET_ACTIVE_FACSIMILE', id })
 				}}
 			>
 				<Img

@@ -1,13 +1,21 @@
 import App from './app'
-import { fetchEntryXml, fetchXml, getPageXmlPath } from './utils'
+import { fetchEntryXml, fetchXml, getPageXmlPath, analyzeWindowLocation } from './utils'
 
 export default class BrowserApp extends App {
 	afterComponentDidMount() {
 		window.addEventListener('popstate', () => {
-			const [, ,entryId, pageId] = document.location.pathname.split('/')
-			if (entryId == null && this.state.entry.id != null) this.setEntry(null, false)
-			else if (entryId === 'pages' && pageId != null) this.setPage(pageId, false)
-			else if (entryId != null) this.setEntry(entryId, false)
+			// console.log('POPPING')
+			// const [, ,entryId, pageId] = document.location.pathname.split('/')
+			// console.log(entryId, pageId)
+			const { documentType, documentId } = analyzeWindowLocation()
+			console.log(documentType, documentId)
+			// if (entryId == null && this.state.entry.id != null) this.setEntry(null, false)
+			if (documentType === 'entries' && documentId != null) this.setEntry(documentId, false)
+			else if (documentType === 'pages' && documentId != null) this.setPage(documentId, false)
+			// else {
+
+			// }
+			// else if (entryId != null) this.setEntry(entryId, false)
 		})
 	}
 

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { ASIDE_HANDLE_WIDTH, MAINHEADER_HEIGHT, TOP_OFFSET, DEFAULT_SPACING, SearchTab } from '../constants'
+import { ASIDE_HANDLE_WIDTH, MAINHEADER_HEIGHT, TOP_OFFSET, DEFAULT_SPACING } from '../constants'
 import PagesMenu from './pages'
-import AppContext from '../app-context'
+import AppContext from '../app/context'
 
 const Wrapper = styled.header`
 	background: linear-gradient(to right, #988258, #c7aa71);
@@ -67,10 +67,15 @@ const H1 = styled('h1')`
 `
 
 
-type Props = Pick<AppState, 'setSearchTab' | 'setPage'>
+interface Props {
+	appDispatch: React.Dispatch<AppStateAction>
+}
 export default React.memo(function Header(props: Props) {
 	const appContext = React.useContext(AppContext)
-	const setSearchTab = React.useCallback(() => props.setSearchTab(SearchTab.Search), [])
+	const setSearchTab = React.useCallback(() =>
+		props.appDispatch({ type: 'SET_VIEWPORT', viewport: Viewport.EntrySelector }),
+	[])
+
 	return (
 		<Wrapper>
 			<TopMenu>
@@ -80,7 +85,7 @@ export default React.memo(function Header(props: Props) {
 					{appContext.config.title}
 				</H1>
 				<PagesMenu
-					setPage={props.setPage}
+					appDispatch={props.appDispatch}
 				/>
 			</TopMenu>
 		</Wrapper>

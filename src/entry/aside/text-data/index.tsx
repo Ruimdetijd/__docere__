@@ -1,13 +1,13 @@
 import * as React from 'react'
 import EntityList from "./list"
 import { useTextData, Wrapper } from '../list'
-import AppContext from '../../../app-context'
+import AppContext from '../../../app/context'
 
 type Props =
 	Pick<EntryState, 'activeEntity' | 'layers'> &
 	{
 		active: boolean
-		dispatch: React.Dispatch<EntryStateAction>
+		entryDispatch: React.Dispatch<EntryStateAction>
 		entities: Entity[]
 	}
 
@@ -28,7 +28,7 @@ function EntitiesAside(props: Props) {
 						activeEntity={props.activeEntity}
 						config={appContext.config.textData.find(td => td.id === type)}
 						containerHeight={wrapperRef.current.getBoundingClientRect().height}
-						dispatch={props.dispatch}
+						entryDispatch={props.entryDispatch}
 						entitiesByType={entitiesByType}
 						key={type}
 						setActiveType={setActiveType}

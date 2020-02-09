@@ -3,6 +3,8 @@ type SetActiveId = (id: string, listId: string, asideTab: AsideTab) => void
 type DocereComponents = Record<string, (props: Partial<DocereComponentProps>) => JSX.Element>
 // type GetComponents = (config: DocereConfig) => DocereComponents
 
+// TODO facsimile area is per entry, but it should be dependant on a facsimile
+// TODO an entry has facsimiles with accompanying areas?
 interface FacsimileArea {
 	h: number
 	id: string
@@ -19,15 +21,15 @@ interface FacsimileArea {
 	y: number
 }
 
-type DocereComponentAction = EntryStateAction | { type: 'SET_ENTRY', id: string }
 
 type DocereComponentProps =
-	Pick<EntryState, 'activeEntity' | 'activeFacsimileAreas' | 'activeFacsimilePath' | 'activeNote'> &
+	Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote'> &
 	{
+		appDispatch: React.Dispatch<AppStateAction>
 		attributes?: Record<string, string>
 		children?: React.ReactNode
 		config: DocereConfig
-		dispatch: React.Dispatch<DocereComponentAction>
+		entryDispatch: React.Dispatch<EntryStateAction>
 		facsimiles: Entry['facsimiles']
 		insideNote: boolean
 		textLayerId: string

@@ -22,7 +22,7 @@ interface Props {
 	activeEntity: EntryState['activeEntity']
 	config: TextDataConfig
 	containerHeight: number
-	dispatch: React.Dispatch<EntryStateAction>
+	entryDispatch: React.Dispatch<EntryStateAction>
 	entitiesByType: Map<string, Entity[]>
 	setActiveType: (type: string) => void
 	type: string
@@ -52,7 +52,7 @@ function EntityList(props: Props) {
 						<ItemInText
 							active={entity.id === props.activeEntity?.id}
 							entity={entity}
-							dispatch={props.dispatch}
+							dispatch={props.entryDispatch}
 							key={entity.id}
 						/>
 					)

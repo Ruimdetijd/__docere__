@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from '@emotion/styled'
 import DocereTextView from 'docere-text-view'
 import { TOP_OFFSET, DEFAULT_SPACING } from '../constants'
-import { useComponents } from '../app-context'
+import { useComponents } from '../app/context'
 
 const Wrapper = styled.div`
 	background: white;
@@ -41,11 +41,14 @@ const Close = styled.div`
 	top: ${DEFAULT_SPACING}px;
 `
 
-type Props = Pick<AppState, 'page' | 'setPage'>
+interface Props {
+	appDispatch: React.Dispatch<AppStateAction>
+	page: Page
+}
 export default React.memo(function PageView(props: Props) {
 	if (props.page == null) return null
 	const components = useComponents(DocereComponentContainer.Page)
-	const setPage = React.useCallback(() => props.setPage(), [])
+	const setPage = React.useCallback(() => props.appDispatch({ type: 'UNSET_PAGE' }), [])
 
 	return (
 		<Wrapper>

@@ -20,9 +20,13 @@ interface Note extends TextData {
 type ExtractedMetadata = Record<string, number | boolean | string | string[]>
 type ExtractedTextLayer = Pick<Layer, 'element'> & Pick<LayerConfig, 'id'> & Partial<LayerConfig>
 
+interface FacsimileVersion {
+	areas?: FacsimileArea[]
+	path: string
+}
 interface ExtractedFacsimile {
 	id: string
-	path: string[]
+	versions: FacsimileVersion[]
 }
 
 interface DocereConfig {
@@ -38,8 +42,7 @@ interface DocereConfig {
 }
 
 interface DocereConfigFunctions {
-	extractFacsimiles: (doc: XMLDocument) => ExtractedFacsimile[]
-	extractFacsimileAreas: (doc: XMLDocument, config: DocereConfig) => FacsimileArea[]
+	extractFacsimiles: (doc: XMLDocument, config: DocereConfig) => ExtractedFacsimile[]
 	extractMetadata: (doc: XMLDocument, config: DocereConfig, id: string) => ExtractedMetadata
 	extractNotes: (doc: XMLDocument) => Note[]
 	extractTextData: (doc: XMLDocument, config: DocereConfig) => Entity[]

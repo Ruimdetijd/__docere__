@@ -31,7 +31,7 @@ const Body = styled.div`
 `
 
 function isEmpty(obj: Object) {
-	return Object.keys(obj).length === 0
+	return obj == null || Object.keys(obj).length === 0
 }
 
 function Aside(props: EntryAsideProps) {
@@ -49,7 +49,7 @@ function Aside(props: EntryAsideProps) {
 	return (
 		<Wrapper>
 			<Tabs
-				onClick={(tab: AsideTab) => props.dispatch({ type: 'TOGGLE_ASIDE_TAB', asideTab: tab })}
+				onClick={(tab: AsideTab) => props.entryDispatch({ type: 'TOGGLE_ASIDE_TAB', asideTab: tab })}
 				tab={props.asideTab}
 				tabs={tabs}
 			/>
@@ -66,7 +66,7 @@ function Aside(props: EntryAsideProps) {
 					<TextDataAside
 						active={props.asideTab === AsideTab.TextData}
 						activeEntity={props.activeEntity}
-						dispatch={props.dispatch}
+						entryDispatch={props.entryDispatch}
 						layers={props.layers}
 						entities={props.entry.entities}
 					/>
@@ -76,10 +76,9 @@ function Aside(props: EntryAsideProps) {
 					<NotesAside
 						active={props.asideTab === AsideTab.Notes}
 						activeNote={props.activeNote}
-						dispatch={props.dispatch}
+						entryDispatch={props.entryDispatch}
 						layers={props.layers}
 						notes={props.entry.notes}
-						setEntry={props.setEntry}
 					/>
 				}
 			</Body>

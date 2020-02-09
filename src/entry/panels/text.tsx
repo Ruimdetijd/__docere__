@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import { TEXT_PANEL_WIDTH, DEFAULT_SPACING } from '../../constants'
 // @ts-ignore
 import debounce from 'lodash.debounce'
-import AppContext, { useComponents } from '../../app-context'
+import AppContext, { useComponents } from '../../app/context'
 
 const TopWrapper = styled.div`
 	position: relative;
@@ -117,11 +117,12 @@ function TextPanel(props: TextPanelProps) {
 
 	const customProps: DocereComponentProps = {
 		activeFacsimileAreas: props.activeFacsimileAreas,
-		activeFacsimilePath: props.activeFacsimilePath,
+		activeFacsimile: props.activeFacsimile,
 		activeEntity: props.activeEntity,
 		activeNote: props.activeNote,
+		appDispatch: props.appDispatch,
 		config: appContext.config,
-		dispatch: props.dispatch,
+		entryDispatch: props.entryDispatch,
 		facsimiles: props.entry.facsimiles,
 		insideNote: false,
 		textLayerId: props.textLayerConfig.id

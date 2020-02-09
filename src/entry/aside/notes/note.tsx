@@ -31,14 +31,13 @@ const ActiveIndicator = styled.div`
 interface Props {
 	active: boolean
 	components: DocereComponents
-	dispatch: React.Dispatch<EntryStateAction>
+	entryDispatch: React.Dispatch<EntryStateAction>
 	item: Note
 	listId: string
-	setEntry: AppState['setEntry']
 }
 export default function Note(props: Props) {
 	const handleClick = React.useCallback(() => {
-		props.dispatch({ type: 'SET_NOTE', id: props.item.id })
+		props.entryDispatch({ type: 'SET_NOTE', id: props.item.id })
 	}, [props.item, props.listId])
 
 	return (
@@ -52,7 +51,6 @@ export default function Note(props: Props) {
 					components={props.components}
 					customProps={{
 						insideNote: true,
-						setEntry: props.setEntry,
 					}}
 					node={props.item.el}
 				/>

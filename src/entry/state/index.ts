@@ -2,10 +2,10 @@ import * as React from 'react'
 import { AsideTab } from '../../constants'
 
 const initialEntryState: EntryState = {
-	activeFacsimilePath: null,
+	activeFacsimile: null,
 	activeEntity: null,
 	activeNote: null,
-	activeFacsimileAreas: [],
+	activeFacsimileAreas: null,
 	entry: null,
 	layers: [],
 	asideTab: null,
@@ -13,7 +13,8 @@ const initialEntryState: EntryState = {
 }
 
 function entryStateReducer(entryState: EntryState, action: EntryStateAction): EntryState {
-	console.log(action)
+	if ((window as any).DEBUG) console.log('[EntryState]', action)
+
 	const { type, ...payload } = action
 	switch (action.type) {
 		case 'ENTRY_CHANGED': {
@@ -24,8 +25,15 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 		}
 
 		case 'SET_ENTITY': {
-			let activeFacsimileAreas = entryState.entry.facsimileAreas
-				.filter(fa => fa.target?.id === action.id)
+			let activeFacsimileAreas = entryState.entry.facsimiles
+				.reduce((prev, curr) => {
+					curr.versions.forEach(version => {
+						version.areas.forEach(area => {
+							if (area.target?.id === action.id) prev.push(area)
+						})
+					})
+					return prev
+				}, [] as FacsimileArea[])
 
 			let activeEntity = entryState.entry.entities.find(e => e.id === action.id)
 
@@ -66,18 +74,29 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			}
 		}
 
-		case 'SET_ACTIVE_FACSIMILE_PATH': {
+		case 'SET_ACTIVE_FACSIMILE': {
+			const activeFacsimile = entryState.entry.facsimiles.find(f => f.id === action.id)
+			console.log(activeFacsimile.versions[0].areas.length)
+
 			return {
 				...entryState,
-				activeFacsimilePath: action.src,
+				activeFacsimile,
+				activeFacsimileAreas: []
 			}
 		}
 
-		case 'SET_FACSIMILE_AREAS': {
-			let activeFacsimileAreas = entryState.entry.facsimileAreas
-				.filter(fa => action.ids.indexOf(fa.id) > -1)
-
-			if (JSON.stringify(action.ids) === JSON.stringify(entryState.activeFacsimileAreas.map(afa => afa.id))) {
+		case 'SET_ACTIVE_FACSIMILE_AREAS': {
+			let activeFacsimileAreas = entryState.entry.facsimiles
+				.reduce((prev, curr) => {
+					curr.versions.forEach(version => {
+						version.areas.forEach(area => {
+							if (action.ids.indexOf(area.id) > -1) prev.push(area)
+						})
+					})
+					return prev
+				}, [] as FacsimileArea[])
+			
+			if (JSON.stringify(action.ids) === JSON.stringify(entryState.activeFacsimileAreas?.map(afa => afa.id))) {
 				activeFacsimileAreas = []
 			}
 
@@ -118,7 +137,7 @@ export default function useEntryState(entry: Entry) {
 
 		// x[1] = dispatch
 		x[1]({
-			activeFacsimilePath: entry.facsimiles.length ? entry.facsimiles[0].path[0] : null,
+			activeFacsimile: entry.facsimiles.length ? entry.facsimiles[0] : null,
 			entry,
 			layers: entry.textLayers,
 			type: 'ENTRY_CHANGED',

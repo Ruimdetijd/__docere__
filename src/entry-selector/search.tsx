@@ -4,7 +4,7 @@ import HucFacetedSearch  from 'huc-faceted-search'
 import { DEFAULT_SPACING, TOP_OFFSET, RESULT_ASIDE_WIDTH, SearchTab } from '../constants'
 import { defaultMetadata } from '../export/extend-config-data'
 import { fetchJson } from '../utils'
-import AppContext, { useUIComponent } from '../app-context'
+import AppContext, { useUIComponent } from '../app/context'
 
 const searchBaseUrl = '/search/'
 
@@ -127,7 +127,7 @@ function Search(props: FileExplorerProps) {
 			disableDefaultStyle={props.searchTab === SearchTab.Results}
 			fields={fields}
 			ResultBodyComponent={ResultBodyComponent}
-			onClickResult={result => props.setEntry(result.id)}
+			onClickResult={result => props.appDispatch({ type: 'SET_ENTRY_ID', id: result.id })}
 			resultBodyProps={{
 				activeId: props.entry == null ? null : props.entry.id,
 				searchTab: props.searchTab,

@@ -8,10 +8,9 @@ interface Props {
 	components: DocereComponents
 	config: NotesConfig
 	containerHeight: number
-	dispatch: React.Dispatch<EntryStateAction>
+	entryDispatch: React.Dispatch<EntryStateAction>
 	notesByType: Map<string, Note[]>
 	setActiveType: (type: string) => void
-	setEntry: AppState['setEntry']
 	type: string
 }
 function NotesList(props: Props) {
@@ -32,11 +31,10 @@ function NotesList(props: Props) {
 					<Note
 						active={note.id === props.activeNote?.id}
 						components={props.components}
-						dispatch={props.dispatch}
+						entryDispatch={props.entryDispatch}
 						item={note}
 						key={note.id}
 						listId={props.type}
-						setEntry={props.setEntry}
 					/>
 				)
 			}

@@ -28,10 +28,23 @@ const defaultConfig: DocereConfig = {
 	]
 }
 
-export const defaultFacsimileArea: Pick<FacsimileArea, 'showOnHover' | 'target' | 'unit'> = {
+const defaultFacsimileArea: Pick<FacsimileArea, 'showOnHover' | 'target' | 'unit'> = {
 	showOnHover: true,
 	target: null,
 	unit: 'px'
+}
+
+export function extendFacsimile(facsimile: ExtractedFacsimile) {
+	facsimile.versions = facsimile.versions.map(version => {
+		version.areas = version.areas
+			.map(area => ({
+				...defaultFacsimileArea,
+				...area
+			}))	
+		return version
+	})
+
+	return facsimile
 }
 
 export const defaultMetadata: MetadataConfig = {
@@ -56,7 +69,7 @@ export function extendTextLayer(extractedTextLayer: ExtractedTextLayer, textLaye
 const defaultDocereFunctions: DocereConfigFunctions = {
 	prepareDocument: function prepareDocument(doc) { return doc },
 	extractFacsimiles: function extractFacsimiles(_doc) { return [] },
-	extractFacsimileAreas: function extractFacsimileAreas(_doc, _config) { return [] },
+	// extractFacsimileAreas: function extractFacsimileAreas(_doc, _config) { return [] },
 	extractMetadata: function extractMetadata(_doc) { return {} },
 	extractNotes: function extractNotes(_doc) { return [] },
 	extractTextData: function extractTextData(_doc) { return [] },

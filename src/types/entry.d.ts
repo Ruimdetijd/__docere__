@@ -1,7 +1,7 @@
 interface Entry {
 	doc: XMLDocument
 	facsimiles: ExtractedFacsimile[]
-	facsimileAreas: FacsimileArea[]
+	// facsimileAreas: FacsimileArea[]
 	id: string
 	metadata: ExtractedMetadata
 	notes: Note[]
@@ -11,7 +11,7 @@ interface Entry {
 
 interface EntryState {
 	activeFacsimileAreas: FacsimileArea[]
-	activeFacsimilePath: string
+	activeFacsimile: ExtractedFacsimile
 	activeEntity: Entity,
 	activeNote: Note,
 	asideTab: AsideTab
@@ -20,12 +20,12 @@ interface EntryState {
 	layers: LayerConfig[]
 }
 
-type EntryProps = Pick<AppState, 'entry' | 'searchTab' | 'setEntry'>
+type EntryProps = Pick<AppState, 'entry' | 'searchTab'> & { appDispatch: React.Dispatch<AppStateAction> }
 
 type EntryAsideProps =
-	Pick<EntryProps, 'entry' | 'setEntry'> &
+	Pick<EntryProps, 'appDispatch' | 'entry'> &
 	Pick<EntryState, 'activeEntity' | 'activeNote' | 'asideTab' | 'layers'> &
 	{
-		dispatch: React.Dispatch<EntryStateAction>
+		entryDispatch: React.Dispatch<EntryStateAction>
 	}
 						

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { DEFAULT_SPACING } from '../constants'
-import AppContext from '../app-context'
+import AppContext from '../app/context'
 
 const Wrapper = styled.ul`
 	text-align: right;
@@ -61,9 +61,9 @@ const Link = styled.button`
 	}
 `
 
-type PageMenuItemProps = { pageConfig: PageConfig } & Pick<AppState, 'setPage'>
+type PageMenuItemProps = { pageConfig: PageConfig } & Props
 function PageMenuItem(props: PageMenuItemProps) {
-	const setPage = React.useCallback(() => props.setPage(props.pageConfig.id), [props.pageConfig.id])
+	const setPage = React.useCallback(() => props.appDispatch({ type: "SET_PAGE_ID", id: props.pageConfig.id }), [props.pageConfig.id])
 	return (
 		<li>
 			<Link
@@ -75,7 +75,9 @@ function PageMenuItem(props: PageMenuItemProps) {
 	)
 }
 
-type Props = Pick<AppState, 'setPage'>
+interface Props {
+	appDispatch: React.Dispatch<AppStateAction>
+}
 export default React.memo(function PagesMenu(props: Props) {
 	const appContext = React.useContext(AppContext)
 	return (
@@ -88,13 +90,21 @@ export default React.memo(function PagesMenu(props: Props) {
 							<ul>
 								{
 									page.children.map(child =>
-										<PageMenuItem key={child.id} pageConfig={child} setPage={props.setPage} />
+										<PageMenuItem
+											appDispatch={props.appDispatch}
+											key={child.id}
+											pageConfig={child}
+										/>
 									)
 								}
 							</ul>
 							
 						</li> :
-						<PageMenuItem key={page.id} pageConfig={page} setPage={props.setPage} />
+						<PageMenuItem
+							appDispatch={props.appDispatch}
+							key={page.id}
+							pageConfig={page}
+						/>
 				)
 			}
 		</Wrapper>

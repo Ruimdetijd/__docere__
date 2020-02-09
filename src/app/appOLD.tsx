@@ -43,6 +43,7 @@ export default abstract class App extends React.PureComponent<AppProps, AppState
 		}
 		else if (this.props.entryId != null) {
 			nextState.entry = await this.getEntry(this.props.entryId)
+			nextState.searchTab = null
 			document.title = `${title} - ${nextState.entry.id}`
 		}
 

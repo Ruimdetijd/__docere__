@@ -8,11 +8,6 @@ import XmlPanel from './xml'
 function Panels(props: PanelsProps) {
 	const activeLayers = props.layers.filter(ap => ap.active)
 
-	const dispatch = React.useCallback((action: DocereComponentAction) => {
-		if (action.type === 'SET_ENTRY') props.setEntry(action.id)
-		else props.dispatch(action)
-	}, [])
-
 	return (
 		<PanelsWrapper
 			activeLayers={activeLayers}
@@ -22,10 +17,10 @@ function Panels(props: PanelsProps) {
 					if (ap.type === LayerType.Facsimile) {
 						return (
 							<FacsimilePanel
-								activeFacsimilePath={props.activeFacsimilePath}
+								activeFacsimile={props.activeFacsimile}
 								activeFacsimileAreas={props.activeFacsimileAreas}
-								dispatch={dispatch}
-								facsimileAreas={props.entry.facsimileAreas}
+								entryDispatch={props.entryDispatch}
+								// facsimileAreas={props.entry.facsimileAreas}
 								key={ap.id}
 							/>
 						)
@@ -35,10 +30,11 @@ function Panels(props: PanelsProps) {
 						return (
 							<TextPanel
 								activeFacsimileAreas={props.activeFacsimileAreas}
-								activeFacsimilePath={props.activeFacsimilePath}
+								activeFacsimile={props.activeFacsimile}
 								activeEntity={props.activeEntity}
 								activeNote={props.activeNote}
-								dispatch={dispatch}
+								appDispatch={props.appDispatch}
+								entryDispatch={props.entryDispatch}
 								entry={props.entry}
 								key={ap.id}
 								textLayerConfig={ap}

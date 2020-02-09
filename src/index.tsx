@@ -2,18 +2,14 @@
 
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import BrowserApp from './browser-app'
+import BrowserApp from './app/index'
 import EntrySelector from './entry-selector'
 import configDatas from 'docere-projects'
 import { analyzeWindowLocation } from './utils'
-import AppContext from './app-context'
+import AppContext from './app/context'
 
 document.addEventListener('DOMContentLoaded', async function() {
-	const { documentId, documentType, projectId } = analyzeWindowLocation()
-
-	let entryId, pageId
-	if (documentType === 'entries') entryId = documentId
-	else if (documentType === 'pages') pageId = documentId
+	const { projectId } = analyzeWindowLocation()
 
 	// TODO redirect to 404 if projectSlug does not exist
 	const { default: configData } = await configDatas[projectId]()
@@ -28,8 +24,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 		<AppContext.Provider value={contextValue}>
 			<BrowserApp
 				configData={configData}
-				entryId={entryId}
-				pageId={pageId}
 				EntrySelector={EntrySelector}
 			/>
 		</AppContext.Provider>

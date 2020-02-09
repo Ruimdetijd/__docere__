@@ -32,11 +32,11 @@ const Body = styled.div`
 interface Props {
 	footerTab: EntryState['footerTab']
 	layers: EntryState['layers']
-	dispatch: React.Dispatch<EntryStateAction>
+	entryDispatch: React.Dispatch<EntryStateAction>
 }
 function Footer(props: Props) {
 	const handleTabClick = React.useCallback(footerTab => {
-		props.dispatch({ type: 'TOGGLE_FOOTER_TAB', footerTab })			
+		props.entryDispatch({ type: 'TOGGLE_FOOTER_TAB', footerTab })			
 	}, [])
 
 	return (
@@ -50,7 +50,7 @@ function Footer(props: Props) {
 			/>
 			<Body>
 				<Layers
-					dispatch={props.dispatch}
+					dispatch={props.entryDispatch}
 					layers={props.layers}
 				/>
 			</Body>

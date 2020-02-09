@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { DEFAULT_SPACING, TOP_OFFSET } from '../../constants'
 import { MetadataItem } from '../index.components'
 import { defaultMetadata } from '../../export/extend-config-data'
-import AppContext from '../../app-context'
+import AppContext from '../../app/context'
 
 interface WProps { active: boolean }
 const Wrapper = styled.ul`
