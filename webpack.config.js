@@ -35,13 +35,12 @@ module.exports = {
 	mode: 'development',
 	module: {
 		rules: [
-				// All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
 				{
 					test: /\.tsx?$/,
 					loader: "ts-loader",
-					// options: {
-					// 	transpileOnly: true
-					// }
+					options: {
+						configFile: 'tsconfig.dev.json'
+					}
 				}
 		]
 	},
@@ -51,10 +50,6 @@ module.exports = {
 		}
 	},
 	resolve: {
-		// Add '.ts' and '.tsx' as resolvable extensions.
 		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"],
-		// alias: {
-		// 	docere: path.resolve('.')
-		// }
 	}
 };
