@@ -2,7 +2,7 @@ const webpackConfig = require('./webpack.config')
 
 module.exports = () => {
 	webpackConfig.devServer = {}
-	webpackConfig.mode = "production"
+	// webpackConfig.mode = "production"
 	webpackConfig.output.path = __dirname + '/dist'
 	webpackConfig.output.publicPath = '/dist/'
 	webpackConfig.module.rules[0].options = { configFile: 'tsconfig.dist.json' }

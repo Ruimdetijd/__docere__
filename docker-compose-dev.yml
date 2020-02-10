@@ -1,6 +1,17 @@
 version: "3.6"
 
 services:
+  nginx:
+    command: ["nginx", "-c", "/nginx_conf/nginx.conf", "-g", "daemon off;"]
+    image: nginx:1.17.8-alpine
+    ports:
+      - "80:80"
+    restart: always
+    volumes:
+      - ./nginx.conf:/nginx_conf/nginx.conf
+      # - ./.htpasswd:/etc/nginx/htpasswd
+      - ./:/var/www/html
+
   es:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.3.2
     environment:
@@ -23,6 +34,18 @@ services:
     volumes:
       - ./node_modules/docere-projects/src/achterdeschermen/facsimiles:/opt/loris/tests/img/achterdeschermen
       - ./node_modules/docere-projects/src/gheys/facsimiles:/opt/loris/tests/img/gheys
+
+  docere_api:
+    build:
+      context: ./node_modules/docere-api
+    command: ["node", "build"]
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app/node_modules/docere
+      - ./node_modules/docere-api:/app
+      - ./node_modules/docere-projects:/app/node_modules/docere-projects
+    working_dir: /app
 
 volumes:
   docere_es2:
