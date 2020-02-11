@@ -10,6 +10,7 @@ services:
     volumes:
       - ./nginx.conf:/nginx_conf/nginx.conf
       # - ./.htpasswd:/etc/nginx/htpasswd
+      - ./secrets:/var/www
       - ./:/var/www/html
       - ./node_modules/docere-projects:/var/www/html/node_modules/docere-projects
 
