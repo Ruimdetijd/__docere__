@@ -8,6 +8,7 @@ type DocereComponents = Record<string, (props: Partial<DocereComponentProps>) =>
 interface FacsimileArea {
 	h: number
 	id: string
+	note?: Record<string, string>
 	showOnHover?: boolean
 	target?: {
 		asideTab: AsideTab

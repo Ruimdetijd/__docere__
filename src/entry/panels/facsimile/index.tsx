@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import AppContext from '../../app/context'
-import { Colors } from '../../constants'
+import AppContext from '../../../app/context'
+import useAreaRenderer, { AreaRenderer } from './use-area-renderer'
 
 // TODO change facsimile when user scroll past a <pb />
 
@@ -20,18 +20,41 @@ const Wrapper = styled.div`
 		pointer-events: none;
 		transition: opacity 600ms;
 
+
+		& > .facsimile-area-note {
+			border-width: 3px;
+			border-style: solid;
+			box-sizing: border-box;
+			color: white;
+			left: -3px;
+			min-width: calc(100% + 6px);
+			opacity: 1;
+			padding: .5rem;
+			position: absolute;
+			text-align: center;
+			text-shadow: 1px 1px 1px #585858;
+			top: 100%;
+			transition: all 300ms;
+		}						
+
 		&.active {
 			opacity: 1;
+			z-index: 1;
 		}
 
 		&.show {
 			pointer-events: all;
 
-			&:hover {
+			&:not(.active):hover {
 				opacity: .3;
+
+				& > .facsimile-area-note {
+					opacity: 0;
+				}
 			}
 
 		}
+
 	}
 `
 
@@ -69,83 +92,21 @@ function useOpenSeadragon(): [any, any] {
 	return OpenSeadragon
 }
 
-function renderFacsimileAreas(osd: any, facsimileAreas: FacsimileArea[], OpenSeadragon: any, dispatch: React.Dispatch<EntryStateAction>) {
-	const { width: imgWidthRatio, height: imgHeightRatio } = osd.world.getHomeBounds()
-	const aspectRatio = imgHeightRatio / imgWidthRatio
-
-	const { x: imgWidth, y: imgHeight } = osd.world._contentSize
-
-	facsimileAreas?.forEach(area => {
-		let { x, y, w, h, unit } = area
-		if (unit === 'px') {
-			x = x / imgWidth
-			y = y / imgHeight
-			w = w / imgWidth
-			h = h / imgHeight
-		} 
-
-		var element = document.createElement("div")
-		element.classList.add('facsimile-area')
-		element.dataset.id = area.id
-		element.style.borderColor = area.target?.color != null ? area.target.color : Colors.Red
-		if (area.showOnHover) {
-			element.classList.add('show')
-			element.addEventListener('click', () => {
-				area.target != null ?
-					dispatch({ type: 'SET_ENTITY', id: area.target.id }) :
-					dispatch({ type: 'SET_ACTIVE_FACSIMILE_AREAS', ids: [area.id] })
-			})
-		}
-
-		y = y * aspectRatio
-		h = h * aspectRatio
-
-		osd.addOverlay({
-			element,
-			location: new OpenSeadragon.Rect(x, y, w, h),
-		})
-	})
-}
-
-function getAreaCenter(area: FacsimileArea, osd: any, OpenSeadragon: any) {
-	let { x, y, w, h, unit } = area
-	if (unit === 'px') {
-		const { x: imgWidth, y: imgHeight } = osd.world._contentSize
-		x = x / imgWidth
-		y = y / imgHeight
-		w = w / imgWidth
-		h = h / imgHeight
-	}
-	return new OpenSeadragon.Point(x + w/2, y + h/2)
-}
-
-function useActiveFacsimileAreas(osd: any, activeFacsimileAreas: FacsimileArea[], OpenSeadragon: any) {
+function useActiveFacsimileAreas(activeFacsimileAreas: FacsimileArea[], areaRenderer: AreaRenderer) {
 	React.useEffect(() => {
-		if (osd == null || activeFacsimileAreas == null) return
-
-		for (const areaEl of osd.container.querySelectorAll('.facsimile-area.active')) {
-			areaEl.classList.remove('active')
-		}
-
-		activeFacsimileAreas.forEach(area => {
-			const element = osd.container.querySelector(`[data-id="${area.id}"]`)
-			if (element != null) {
-				element.classList.add('active')
-				osd.viewport.panTo(getAreaCenter(area, osd, OpenSeadragon))
-			}
-		})
-	}, [osd, activeFacsimileAreas])
+		if (areaRenderer == null || activeFacsimileAreas == null) return
+		areaRenderer.activate(activeFacsimileAreas)
+	}, [activeFacsimileAreas, areaRenderer])
 }
 
 function useActiveFacsimile(
-	osd: any,
 	activeFacsimile: Props['activeFacsimile'],
 	projectId: DocereConfig['slug'],
-	OpenSeadragon: any,
-	entryDispatch: Props['entryDispatch']
+	areaRenderer: AreaRenderer,
+	osd: any
 ) {
 	React.useEffect(() => {
-		if (osd == null || activeFacsimile == null) return
+		if (areaRenderer == null || activeFacsimile == null) return
 		// const facsimile = this.props.facsimiles.find(f => f.id === this.props.activeFacsimilePath)
 		// TODO acativeFacsimilePath should be activeFacsimileID
 		// TODO find the paths in this.props.facsimiles with activeFacsimileID
@@ -157,14 +118,15 @@ function useActiveFacsimile(
 		}
 
 		function openHandler() {
-			renderFacsimileAreas(osd, activeFacsimile.versions[0].areas, OpenSeadragon, entryDispatch)
+			// renderFacsimileAreas(osd, , OpenSeadragon, entryDispatch)
+			areaRenderer.render(activeFacsimile.versions[0].areas)
 			osd.removeHandler('open', openHandler)
 		}
 
 		osd.addHandler('open', openHandler)
 		
 		osd.open(path)
-	}, [osd, activeFacsimile])
+	}, [areaRenderer, activeFacsimile])
 
 }
 
@@ -176,8 +138,10 @@ type Props =
 function FacsimilePanel(props: Props) {
 	const appContext = React.useContext(AppContext)
 	const [osd, OpenSeadragon] = useOpenSeadragon()
-	useActiveFacsimile(osd, props.activeFacsimile, appContext.config.slug, OpenSeadragon, props.entryDispatch)
-	useActiveFacsimileAreas(osd, props.activeFacsimileAreas, OpenSeadragon)
+	const areaRenderer = useAreaRenderer(osd, OpenSeadragon, props.entryDispatch)
+
+	useActiveFacsimile(props.activeFacsimile, appContext.config.slug, areaRenderer, osd)
+	useActiveFacsimileAreas(props.activeFacsimileAreas, areaRenderer)
 
 	return (
 		<Wrapper>

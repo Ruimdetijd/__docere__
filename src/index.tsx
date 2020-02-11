@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 	const { projectId } = analyzeWindowLocation()
 
 	// TODO redirect to 404 if projectSlug does not exist
-	console.log(configDatas)
 	const { default: configData } = await configDatas[projectId]()
 
 	const contextValue: AppContext = {
