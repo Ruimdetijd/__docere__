@@ -16,11 +16,11 @@
   "author": "",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@emotion/core": "^10.0.20",
-    "@emotion/styled": "^10.0.17",
+    "@emotion/core": "^10.0.27",
+    "@emotion/styled": "^10.0.27",
     "docere-text-view": "^2.0.2",
-    "emotion": "^10.0.17",
-    "huc-faceted-search": "^2.1.1",
+    "emotion": "^10.0.27",
+    "huc-faceted-search": "^2.2.0",
     "lodash.debounce": "^4.0.8",
     "openseadragon": "^2.4.1",
     "react": "^16.12.0",
@@ -29,13 +29,13 @@
   },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.6",
-    "@types/react": "^16.9.13",
-    "@types/react-dom": "^16.9.4",
+    "@types/react": "^16.9.19",
+    "@types/react-dom": "^16.9.5",
     "ts-loader": "^6.2.1",
     "tslib": "^1.10.0",
-    "typescript": "^3.7.2",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.9.0"
+    "typescript": "^3.7.5",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
   }
 }

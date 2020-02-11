@@ -114,6 +114,8 @@ function useAutoSuggest(projectId: string) {
 	}
 }
 
+const excludeResultFields = ['text', 'text_suggest']
+
 function Search(props: FileExplorerProps) {
 	const appContext = React.useContext(AppContext)
 	const autoSuggest = useAutoSuggest(appContext.config.slug)
@@ -125,6 +127,7 @@ function Search(props: FileExplorerProps) {
 		<FS
 			autoSuggest={autoSuggest}
 			disableDefaultStyle={props.searchTab === SearchTab.Results}
+			excludeResultFields={excludeResultFields}
 			fields={fields}
 			ResultBodyComponent={ResultBodyComponent}
 			onClickResult={result => props.appDispatch({ type: 'SET_ENTRY_ID', id: result.id })}
