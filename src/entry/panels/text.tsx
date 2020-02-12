@@ -57,7 +57,7 @@ const MiniMap = React.memo(
 		</div>
 	),
 	(prevProps, nextProps) => {
-		return prevProps.components === nextProps.components
+		return prevProps.components === nextProps.components && prevProps.entry === nextProps.entry
 	}
 )
 
@@ -151,6 +151,7 @@ function TextPanel(props: TextPanelProps) {
 			<MiniMap
 				activeAreaRef={activeAreaRef}
 				components={components}
+				entry={props.entry}
 				text={text}
 			/>
 		</TopWrapper>
