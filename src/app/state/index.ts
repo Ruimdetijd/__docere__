@@ -155,7 +155,7 @@ export default function useAppState(configData: DocereConfigData) {
 			history.pushState({}, title, `/${configData.config.slug}/pages/${x[0].pageId}`)
 			document.title = title
 		}
-	}, [x[0].viewport])
+	}, [x[0].viewport, x[0].entryId, x[0].pageId])
 
 	return x
 }
