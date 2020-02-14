@@ -40,7 +40,7 @@ export default function MetadataAside(props: Props) {
 						return (
 							<MetadataItem key={index}>
 								<span>{data.title || data.id}</span>
-								<span>{data.value}</span>
+								<span>{Array.isArray(data.value) ? data.value.join(', ') : data.value}</span>
 							</MetadataItem>
 						)
 					})

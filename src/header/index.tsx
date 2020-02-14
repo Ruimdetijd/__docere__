@@ -12,6 +12,14 @@ const Wrapper = styled.header`
 	position: sticky;
 	top: 0;
 	z-index: 9999;
+
+    z-index: 9999;
+    background-image: url(/static/images/bg.jpg);
+    background-position: bottom;
+    background-color: #a1aebb;
+    background-blend-mode: color-burn;
+    border-bottom: 6px solid #082d3f;
+    background-size: 100% auto;
 `
 
 const TopMenu = styled.div`
@@ -51,14 +59,15 @@ const TopMenu = styled.div`
 
 const H1 = styled('h1')`
 	cursor: pointer;
-	font-size: 1.1em;
+	font-size: 2em;
 	margin: 0;
 	text-transform: uppercase;
 	align-self: center;
     font-style: italic;
-    color: #c7aa71;
+    color: white;
     text-shadow: 1px 1px 5px #404040;
-    letter-spacing: .05em; uppercase;
+	letter-spacing: .075em;
+	line-height: 96px;
 
 	a:hover, a:link, a:active, a:visited {
 		color: inherit;

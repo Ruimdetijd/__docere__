@@ -84,9 +84,11 @@ function appStateReducer(appState: AppState, action: AppStateAction): AppState {
 				Viewport.EntrySelector :
 				Viewport.Entry
 
+			const searchTab = appState.searchTab === action.tab ? null : action.tab
+
 			return {
 				...appState,
-				searchTab: action.tab,
+				searchTab,
 				viewport
 			}
 		}
@@ -118,6 +120,13 @@ export default function useAppState(configData: DocereConfigData) {
 
 	React.useEffect(() => {
 		const { documentId, documentType } = analyzeWindowLocation()
+
+		window.addEventListener('popstate', () => {
+			const { documentId, documentType } = analyzeWindowLocation()
+			if (documentType == null) x[1]({ type: 'SET_VIEWPORT', viewport: Viewport.EntrySelector })
+			if (documentId == 'entries') x[1]({ type: 'SET_ENTRY_ID', id: documentId })
+			if (documentId == 'pages') x[1]({ type: 'SET_PAGE_ID', id: documentId })
+		})
 
 		// x[1] = dispatch
 		x[1]({
