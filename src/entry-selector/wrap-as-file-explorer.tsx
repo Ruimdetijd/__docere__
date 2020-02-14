@@ -7,6 +7,7 @@ const Wrapper = styled.div`
 	bottom: 0;
 	display: grid;
 	grid-template-columns: 100vw ${ASIDE_HANDLE_WIDTH}px;
+	pointer-events: none;
 	position: fixed;
 	top: ${TOP_OFFSET}px;
 	transform: translateX(${(props: Pick<FileExplorerProps, 'searchTab' | 'viewport'>) => {
@@ -20,6 +21,10 @@ const Wrapper = styled.div`
 	transition: transform 300ms;
 	width: calc(100vw + ${ASIDE_HANDLE_WIDTH}px);
 	z-index: 6000;
+
+	& > div, & > ul {
+		pointer-events: all;
+	}
 `
 
 export default function wrapAsFileExplorer(FileExplorer: React.FC<FileExplorerProps>) {

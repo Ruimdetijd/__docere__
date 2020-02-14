@@ -31,11 +31,11 @@ export enum Colors {
 export enum AsideTab {
 	Metadata = 'Metadata',
 	Notes = 'Notes',
-	TextData = 'TextData',
+	TextData = 'Entities',
 }
 
 export enum FooterTab {
-	PanelSelector = 'PanelSelector'
+	PanelSelector = 'Layers'
 }
 
 export enum SearchTab {
