@@ -9,15 +9,15 @@ services:
     restart: always
     volumes:
       - ./nginx.conf:/nginx_conf/nginx.conf
-      # - ./.htpasswd:/etc/nginx/htpasswd
       - ./secrets:/var/www
       - ./:/var/www/html
       - ./node_modules/docere-projects:/var/www/html/node_modules/docere-projects
+      - /data/xml:/var/www/html/node_modules/docere-projects/src/gheys/xml
 
   es:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.3.2
     environment:
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - ES_JAVA_OPTS=-Xms8g -Xmx8g
       - discovery.type=single-node
     ulimits:
       memlock:
