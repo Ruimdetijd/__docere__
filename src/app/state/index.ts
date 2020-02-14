@@ -84,9 +84,11 @@ function appStateReducer(appState: AppState, action: AppStateAction): AppState {
 				Viewport.EntrySelector :
 				Viewport.Entry
 
+			const searchTab = appState.searchTab === action.tab ? null : action.tab
+
 			return {
 				...appState,
-				searchTab: action.tab,
+				searchTab,
 				viewport
 			}
 		}
