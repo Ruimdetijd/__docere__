@@ -13,26 +13,15 @@ services:
       - ./:/var/www/html
       - ./node_modules/docere-projects:/var/www/html/node_modules/docere-projects
       - /data/xml:/var/www/html/node_modules/docere-projects/src/gheys/xml
-
-  es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.2
-    environment:
-      - ES_JAVA_OPTS=-Xms8g -Xmx8g
-      - discovery.type=single-node
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    volumes:
-      - docere_es2:/usr/share/elasticsearch/data
+    networks:
+      - elastic
 
   iiif:
     image: lorisimageserver/loris
     ports:
       - 5004:5004
+    networks:
+      - elastic
     # volumes:
       # - ./node_modules/docere-projects/src/achterdeschermen/facsimiles:/opt/loris/tests/img/achterdeschermen
       # - ./node_modules/docere-projects/src/gheys/facsimiles:/opt/loris/tests/img/gheys
@@ -48,6 +37,98 @@ services:
       - ./node_modules/docere-api:/app
       - ./node_modules/docere-projects:/app/node_modules/docere-projects
     working_dir: /app
+    networks:
+      - elastic
+
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
+    container_name: es01
+    environment:
+      - node.name=es01
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es02,es03,es04
+      - cluster.initial_master_nodes=es01,es02,es03,es04
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+
+  es02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
+    container_name: es02
+    environment:
+      - node.name=es02
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01,es03,es04
+      - cluster.initial_master_nodes=es01,es02,es03,es04
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data02:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+
+  es03:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
+    container_name: es03
+    environment:
+      - node.name=es03
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01,es02,es04
+      - cluster.initial_master_nodes=es01,es02,es03,es04
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data03:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+
+  es04:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
+    container_name: es04
+    environment:
+      - node.name=es04
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01,es02,es03
+      - cluster.initial_master_nodes=es01,es02,es03,es04
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data04:/usr/share/elasticsearch/data
+    networks:
+      - elastic
 
 volumes:
-  docere_es2:
+  data01:
+      driver: local
+  data02:
+      driver: local
+  data03:
+      driver: local
+  data04:
+      driver: local
+
+networks:
+  elastic:
+    driver: bridge
+
