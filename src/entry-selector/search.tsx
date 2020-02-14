@@ -27,27 +27,34 @@ const FS = styled(HucFacetedSearch)`
 					overflow: hidden;
 				}
 
-				section#huc-fs-search-results {
+				#huc-fs-active-filters {
+					display: none;
+				}
+
+				#huc-fs-header {
+					grid-template-columns: 0 1fr;
+					grid-template-rows: 0 48px;
+					padding-top: 0;
+					top: 0;
+
+					.right {
+						display: none;
+					}
+
+					.pagination {
+						margin-left: 32px;
+						width: 80px;
+
+						.pagenumbers {
+							& > div:not(.active) {
+								display: none;
+							}
+						}
+					}
+				}
+
+				#huc-fs-search-results {
 					padding: 0 ${DEFAULT_SPACING}px ${DEFAULT_SPACING * 2}px ${DEFAULT_SPACING}px;
-
-					& > header {
-						& > div:first-of-type,
-						& > div:nth-of-type(2) {
-							display: none;
-						}
-					}
-
-
-					.pagenumbers {
-						& > div:not(.active) {
-							display: none;
-						}
-
-						& > .active {
-							background: none;
-							color: #888;
-						}
-					}
 				}
 			`
 		}
