@@ -20,7 +20,7 @@
     "@emotion/styled": "^10.0.27",
     "docere-text-view": "^2.0.2",
     "emotion": "^10.0.27",
-    "huc-faceted-search": "^2.2.0",
+    "huc-faceted-search": "^2.3.0",
     "lodash.debounce": "^4.0.8",
     "openseadragon": "^2.4.1",
     "react": "^16.12.0",
