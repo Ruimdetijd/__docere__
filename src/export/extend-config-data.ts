@@ -48,11 +48,12 @@ export function extendFacsimile(facsimile: ExtractedFacsimile) {
 }
 
 export const defaultMetadata: MetadataConfig = {
-	aside: true,
 	datatype: EsDataType.Keyword,
 	id: null,
 	// TODO fixate the order number, which means: if there is no order than increment the order number: 999, 1000, 1001, 1002 (import for example the sort setting in the FS)
 	order: 9999,
+	showAsFacet: true,
+	showInAside: true,
 }
 
 const defaultTextLayer: LayerConfig = {

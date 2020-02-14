@@ -35,7 +35,7 @@ export default function MetadataAside(props: Props) {
 						else return { ...defaultMetadata, ...data, value }
 
 					})
-					.filter(data => data.aside)
+					.filter(data => data.showInAside)
 					.map((data, index) => {
 						return (
 							<MetadataItem key={index}>

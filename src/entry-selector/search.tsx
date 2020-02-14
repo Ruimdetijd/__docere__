@@ -74,7 +74,7 @@ function useFields(config: DocereConfig) {
 						}
 						return mdConfig
 					})
-					.filter(field => field.datatype !== EsDataType.Null && field.datatype !== EsDataType.Text )
+					.filter(field => field.showAsFacet && field.datatype !== EsDataType.Null && field.datatype !== EsDataType.Text )
 					.sort((f1, f2) => f1.order - f2.order)
 				setFields(tmpFields)
 			})

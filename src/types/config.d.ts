@@ -63,7 +63,9 @@ interface DocereConfigData extends DocereConfigFunctions {
 }
 
 type MetadataConfig = FacetConfig & {
-	aside?: boolean
+	showInAside?: boolean /* Show data in the aside of the detail view? */
+	showAsFacet?: boolean /* Show data as a facet? */
+
 }
 
 interface TextDataAttributeIdentifier {
@@ -85,9 +87,9 @@ type TextDataIdentifier = TextDataAttributeIdentifier | TextDataMilestoneIdentif
 
 type TextDataConfig = MetadataConfig & {
 	color?: string
-	identifier: TextDataIdentifier
+	identifier?: TextDataIdentifier
 	textLayers?: string[]
-	type: RsType
+	type?: RsType
 }
 
 interface EntityConfig {
