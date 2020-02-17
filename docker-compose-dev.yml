@@ -26,7 +26,7 @@ services:
       # - ./node_modules/docere-projects/src/achterdeschermen/facsimiles:/opt/loris/tests/img/achterdeschermen
       # - ./node_modules/docere-projects/src/gheys/facsimiles:/opt/loris/tests/img/gheys
 
-  docere_api:
+  api:
     build:
       context: ./node_modules/docere-api
     command: ["node", "build"]
@@ -42,14 +42,13 @@ services:
 
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
-    container_name: es01
     environment:
       - node.name=es01
       - cluster.name=es-docker-cluster
       - discovery.seed_hosts=es02,es03,es04
       - cluster.initial_master_nodes=es01,es02,es03,es04
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
         soft: -1
@@ -63,14 +62,13 @@ services:
 
   es02:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
-    container_name: es02
     environment:
       - node.name=es02
       - cluster.name=es-docker-cluster
       - discovery.seed_hosts=es01,es03,es04
       - cluster.initial_master_nodes=es01,es02,es03,es04
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
         soft: -1
@@ -82,14 +80,13 @@ services:
 
   es03:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
-    container_name: es03
     environment:
       - node.name=es03
       - cluster.name=es-docker-cluster
       - discovery.seed_hosts=es01,es02,es04
       - cluster.initial_master_nodes=es01,es02,es03,es04
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
         soft: -1
@@ -101,14 +98,13 @@ services:
 
   es04:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
-    container_name: es04
     environment:
       - node.name=es04
       - cluster.name=es-docker-cluster
       - discovery.seed_hosts=es01,es02,es03
       - cluster.initial_master_nodes=es01,es02,es03,es04
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
         soft: -1
