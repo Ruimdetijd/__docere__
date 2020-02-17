@@ -128,6 +128,8 @@ function TextPanel(props: TextPanelProps) {
 		textLayerId: props.textLayerConfig.id
 	}
 
+	if (components == null) return null
+
 	const text = (
 		<Text 
 			hasFacs={props.entry.facsimiles.length > 0}
