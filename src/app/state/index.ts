@@ -3,6 +3,7 @@ import getEntry from './get-entry'
 import getPage from './get-page'
 import { analyzeWindowLocation } from '../../utils'
 import { SearchTab } from '../../constants'
+import HistoryNavigator from './history-navigator'
 
 const initialAppState: AppState = {
 	entryId: null,
@@ -115,18 +116,13 @@ function appStateReducer(appState: AppState, action: AppStateAction): AppState {
 }
 
 
+let historyNavigator: HistoryNavigator
 export default function useAppState(configData: DocereConfigData) {
 	const x = React.useReducer(appStateReducer, initialAppState)
 
 	React.useEffect(() => {
 		const { documentId, documentType } = analyzeWindowLocation()
-
-		window.addEventListener('popstate', () => {
-			const { documentId, documentType } = analyzeWindowLocation()
-			if (documentType == null) x[1]({ type: 'SET_VIEWPORT', viewport: Viewport.EntrySelector })
-			if (documentId == 'entries') x[1]({ type: 'SET_ENTRY_ID', id: documentId })
-			if (documentId == 'pages') x[1]({ type: 'SET_PAGE_ID', id: documentId })
-		})
+		historyNavigator = new HistoryNavigator(x[1])
 
 		// x[1] = dispatch
 		x[1]({
@@ -148,21 +144,27 @@ export default function useAppState(configData: DocereConfigData) {
 
 	React.useEffect(() => {
 		if (x[0].viewport === Viewport.EntrySelector) {
-			const title = `${configData.config.title} - Search`
-			history.pushState({}, title, `/${configData.config.slug}`)
-			document.title = title
+			historyNavigator.push(
+				`/${configData.config.slug}`,
+				`${configData.config.title} - Search`,
+				{ viewport: x[0].viewport.toString() }
+			)
 		}
 
-		if (x[0].viewport === Viewport.Entry) {
-			const title = `${configData.config.title} - ${x[0].entryId}`
-			history.pushState({}, title, `/${configData.config.slug}/entries/${x[0].entryId}`)
-			document.title = title
+		else if (x[0].viewport === Viewport.Entry) {
+			historyNavigator.push(
+				`/${configData.config.slug}/entries/${x[0].entryId}`,
+				`${configData.config.title} - ${x[0].entryId}`,
+				{ viewport: x[0].viewport.toString(), id: x[0].entryId }
+			)
 		}
 
-		if (x[0].viewport === Viewport.Page) {
-			const title = `${configData.config.title} - ${x[0].page.title}`
-			history.pushState({}, title, `/${configData.config.slug}/pages/${x[0].pageId}`)
-			document.title = title
+		else if (x[0].viewport === Viewport.Page) {
+			historyNavigator.push(
+				`/${configData.config.slug}/pages/${x[0].pageId}`,
+				`${configData.config.title} - ${x[0].page.title}`,
+				{ viewport: x[0].viewport.toString(), id: x[0].pageId }
+			)
 		}
 	}, [x[0].viewport, x[0].entryId, x[0].pageId])
 
