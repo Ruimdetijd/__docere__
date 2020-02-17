@@ -6,6 +6,7 @@ import AppContext from '../app/context'
 
 const Wrapper = styled.header`
 	background: linear-gradient(to right, #988258, #c7aa71);
+	box-sizing: border-box;
 	display: grid;
 	grid-template-rows: ${ASIDE_HANDLE_WIDTH}px ${MAINHEADER_HEIGHT}px;
 	height: ${TOP_OFFSET}px;
