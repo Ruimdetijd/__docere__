@@ -22,9 +22,11 @@ export const BROWN_LIGHT = '#c7aa71'
 export const BROWN_DARK = '#988258'
 
 export enum Colors {
-	Green = '#5fb53f',
-	Orange = '#ffa500',
 	Blue = '#8080ff',
+	Green = '#5fb53f',
+	LightBlue = '#add8e6',
+	Orange = '#ffa500',
+	Pink = '#fd7a7a',
 	Red = '#DB4437'
 }
 

@@ -13,20 +13,21 @@ export default async function getEntry(id: string, configData: DocereConfigData)
 	const otherLayers = configData.config.textLayers.filter(tl => textLayers.find(tl2 => tl.id === tl2.id) == null)
 
 	// The "other" layers don't have an element, so they will use the whole XMLDocument
-	textLayers = await Promise.all(otherLayers.map((ol: Layer) => { ol.element = doc; return ol }).concat(textLayers)
-		.map(async (tl) => {
-			const etl = extendTextLayer(tl, configData.config.textLayers)
-			if (etl.hasOwnProperty('xmlPath')) {
-				const doc = await fetchEntryXml(configData.config.slug, etl.xmlPath(id))
-				if (doc != null) {
-					etl.element = configData.prepareDocument(doc, configData.config, id, etl)
+	textLayers = await Promise.all(
+		otherLayers
+			.map((ol: Layer) => { ol.element = doc; return ol })
+			.concat(textLayers)
+			.map(async (tl) => {
+				const etl = extendTextLayer(tl, configData.config.textLayers)
+				if (etl.hasOwnProperty('xmlPath')) {
+					const doc = await fetchEntryXml(configData.config.slug, etl.xmlPath(id))
+					if (doc != null) {
+						etl.element = configData.prepareDocument(doc, configData.config, id, etl)
+					}
 				}
-			}
-			return etl
-		}))
-
-	// const facsimileAreas = configData.extractFacsimileAreas(doc, configData.config)
-	// 	.map(fa => ({ ...defaultFacsimileArea, ...fa }))
+				return etl
+			})
+	)
 
 	const facsimiles = configData.extractFacsimiles(doc, configData.config).map(extendFacsimile)
 	const notes = configData.extractNotes(doc)

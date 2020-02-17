@@ -6,26 +6,7 @@ const defaultConfig: DocereConfig = {
 	slug: 'unknown-project',
 	title: 'Unknown project',
 	textData: [],
-	textLayers: [
-		// {
-		// 	active: true,
-		// 	id: 'facsimile',
-		// 	title: 'Facsimile',
-		// 	type: TextLayerType.Facsimile
-		// },
-		// {
-		// 	active: true,
-		// 	id: 'transcription',
-		// 	title: 'Transcription',
-		// 	type: TextLayerType.TextLayer
-		// },
-		// {
-		// 	active: false,
-		// 	id: 'tei',
-		// 	title: 'TEI',
-		// 	type: TextLayerType.XML
-		// }
-	]
+	textLayers: []
 }
 
 const defaultFacsimileArea: Pick<FacsimileArea, 'showOnHover' | 'target' | 'unit'> = {
@@ -36,11 +17,13 @@ const defaultFacsimileArea: Pick<FacsimileArea, 'showOnHover' | 'target' | 'unit
 
 export function extendFacsimile(facsimile: ExtractedFacsimile) {
 	facsimile.versions = facsimile.versions.map(version => {
-		version.areas = version.areas
-			.map(area => ({
-				...defaultFacsimileArea,
-				...area
-			}))	
+		if (!Array.isArray(version.areas)) {
+			version.areas = []
+			return version
+		}
+
+		version.areas = version.areas.map(area => ({ ...defaultFacsimileArea, ...area }))	
+
 		return version
 	})
 
@@ -70,7 +53,6 @@ export function extendTextLayer(extractedTextLayer: ExtractedTextLayer, textLaye
 const defaultDocereFunctions: DocereConfigFunctions = {
 	prepareDocument: function prepareDocument(doc) { return doc },
 	extractFacsimiles: function extractFacsimiles(_doc) { return [] },
-	// extractFacsimileAreas: function extractFacsimileAreas(_doc, _config) { return [] },
 	extractMetadata: function extractMetadata(_doc) { return {} },
 	extractNotes: function extractNotes(_doc) { return [] },
 	extractTextData: function extractTextData(_doc) { return [] },
