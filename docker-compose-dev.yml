@@ -11,7 +11,7 @@ services:
       - ./nginx.conf:/nginx_conf/nginx.conf
       - ./secrets:/var/www
       - ./:/var/www/html
-      - ./node_modules/docere-projects:/var/www/html/node_modules/docere-projects
+      - ../docere-projects:/var/www/html/node_modules/docere-projects
       - /data/xml:/var/www/html/node_modules/docere-projects/src/gheys/xml
     networks:
       - elastic
@@ -28,14 +28,14 @@ services:
 
   api:
     build:
-      context: ./node_modules/docere-api
+      context: ../docere-api
     command: ["node", "build"]
     ports:
       - "3000:3000"
     volumes:
       - .:/app/node_modules/docere
-      - ./node_modules/docere-api:/app
-      - ./node_modules/docere-projects:/app/node_modules/docere-projects
+      - ../docere-api:/app
+      - ../docere-projects:/app/node_modules/docere-projects
     working_dir: /app
     networks:
       - elastic
