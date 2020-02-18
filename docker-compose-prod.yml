@@ -26,7 +26,7 @@ services:
       # - ./node_modules/docere-projects/src/achterdeschermen/facsimiles:/opt/loris/tests/img/achterdeschermen
       # - ./node_modules/docere-projects/src/gheys/facsimiles:/opt/loris/tests/img/gheys
 
-  docere_api:
+  api:
     build:
       context: ./node_modules/docere-api
     command: ["node", "build"]
