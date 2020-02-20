@@ -46,18 +46,43 @@ const Wrapper = styled.div`
 	}
 `
 
+
+const activeAreaRGB = '200, 200, 200'
+
+const ActiveArea = styled.div`
+	background: rgba(${activeAreaRGB}, 0);
+	position: absolute;
+	width: 100%;
+	transition: background 600ms;
+`
 const MiniMap = React.memo(
-	(props: any) => (
-		<div
-			className="minimap"
-			onWheel={() => false}
-		>
-			<ActiveArea ref={props.activeAreaRef} />
-			{props.text}
-		</div>
-	),
-	(prevProps, nextProps) => {
-		return prevProps.components === nextProps.components && prevProps.entry === nextProps.entry
+	(props: any) => {
+		const miniMapRef = React.useRef<HTMLDivElement>()
+
+		React.useEffect(() => {
+			const observer = new MutationObserver((_ml, _ob) => {
+				const current = miniMapRef.current.querySelector('div:nth-of-type(2)')
+				if (current) current.parentNode.removeChild(current)
+				miniMapRef.current.appendChild(props.textWrapperRef.current.firstChild.cloneNode(true))
+			})
+
+			observer.observe(props.textWrapperRef.current, {
+				attributes: false, childList: true, subtree: true, characterData: false 
+			})
+
+			return () => observer.disconnect()
+		}, [])
+
+		return (
+			<div
+				className="minimap"
+				onWheel={() => false}
+				ref={miniMapRef}
+			>
+				<ActiveArea ref={props.activeAreaRef} />
+				{/* {props.text} */}
+			</div>
+		)
 	}
 )
 
@@ -74,15 +99,6 @@ export const Text = styled.div`
 	padding-left: ${(props: TextProps) => props.hasFacs ? DEFAULT_SPACING * 2.5 : 0}px;
 	padding-bottom: 200px;
 	position: relative;
-`
-
-const activeAreaRGB = '200, 200, 200'
-
-const ActiveArea = styled.div`
-	background: rgba(${activeAreaRGB}, 0);
-	position: absolute;
-	width: 100%;
-	transition: background 600ms;
 `
 
 function TextPanel(props: TextPanelProps) {
@@ -152,9 +168,10 @@ function TextPanel(props: TextPanelProps) {
 			</Wrapper>
 			<MiniMap
 				activeAreaRef={activeAreaRef}
+				textWrapperRef={textWrapperRef}
+				// child={textWrapperRef.current?.firstChild}
 				components={components}
 				entry={props.entry}
-				text={text}
 			/>
 		</TopWrapper>
 	)
