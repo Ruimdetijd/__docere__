@@ -4,6 +4,7 @@ module.exports = {
 	devServer: {
 		contentBase: path.resolve(__dirname),
 		disableHostCheck: true,
+		headers: { "Access-Control-Allow-Origin": "*" },
 		historyApiFallback: true,
 		port: 4000,
 		proxy: {
