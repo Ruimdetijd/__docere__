@@ -89,7 +89,7 @@ function TextPanel(props: TextPanelProps) {
 	const appContext = React.useContext(AppContext)
 	const textWrapperRef = React.useRef<HTMLDivElement>()
 	const activeAreaRef = React.useRef<HTMLDivElement>()
-	const textLayer = props.entry.textLayers.find(tl => tl.id === props.textLayerConfig.id)
+	const textLayer = props.entry.layers.find(tl => tl.id === props.textLayerConfig.id)
 	const components = useComponents(DocereComponentContainer.Layer, textLayer.id)
 
 	const resetActiveArea = debounce(() => {

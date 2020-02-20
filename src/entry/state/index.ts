@@ -139,7 +139,7 @@ export default function useEntryState(entry: Entry) {
 		x[1]({
 			activeFacsimile: entry.facsimiles.length ? entry.facsimiles[0] : null,
 			entry,
-			layers: entry.textLayers,
+			layers: entry.layers,
 			type: 'ENTRY_CHANGED',
 		})
 	}, [entry])

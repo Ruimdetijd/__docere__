@@ -1,12 +1,11 @@
 interface Entry {
 	doc: XMLDocument
 	facsimiles: ExtractedFacsimile[]
-	// facsimileAreas: FacsimileArea[]
 	id: string
 	metadata: ExtractedMetadata
 	notes: Note[]
 	entities: Entity[]
-	textLayers: Layer[]
+	layers: Layer[]
 }
 
 interface EntryState {

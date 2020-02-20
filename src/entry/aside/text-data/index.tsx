@@ -26,7 +26,7 @@ function EntitiesAside(props: Props) {
 					<EntityList
 						active={activeType === type}
 						activeEntity={props.activeEntity}
-						config={appContext.config.textData.find(td => td.id === type)}
+						config={appContext.config.entities.find(td => td.id === type)}
 						containerHeight={wrapperRef.current.getBoundingClientRect().height}
 						entryDispatch={props.entryDispatch}
 						entitiesByType={entitiesByType}

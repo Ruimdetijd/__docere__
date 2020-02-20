@@ -73,7 +73,7 @@ function useFields(config: DocereConfig) {
 					.filter(key => ignoreKeys.indexOf(key) === -1)
 					.map(key => {
 						let mdConfig = config.metadata.find(md => md.id === key)
-						if (mdConfig == null) mdConfig = config.textData.find(td => td.id === key)
+						if (mdConfig == null) mdConfig = config.entities.find(td => td.id === key)
 						if (mdConfig == null) mdConfig = {
 							...defaultMetadata,
 							id: key,
@@ -90,7 +90,6 @@ function useFields(config: DocereConfig) {
 	
 	return fields
 }
-
 
 function useAutoSuggest(projectId: string) {
 	const url = `${searchBaseUrl}${projectId}/_search`

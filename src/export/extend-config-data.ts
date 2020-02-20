@@ -5,8 +5,8 @@ const defaultConfig: DocereConfig = {
 	searchResultCount: 20,
 	slug: 'unknown-project',
 	title: 'Unknown project',
-	textData: [],
-	textLayers: []
+	entities: [],
+	layers: []
 }
 
 const defaultFacsimileArea: Pick<FacsimileArea, 'showOnHover' | 'target' | 'unit'> = {
@@ -44,7 +44,7 @@ const defaultTextLayer: LayerConfig = {
 	id: null,
 	type: LayerType.Text
 }
-export function extendTextLayer(extractedTextLayer: ExtractedTextLayer, textLayersConfig: DocereConfig['textLayers']): Layer {
+export function extendLayer(extractedTextLayer: ExtractedLayer, textLayersConfig: DocereConfig['layers']): Layer {
 	const textLayerConfig = textLayersConfig.find(tlc => tlc.id === extractedTextLayer.id)
 	if (textLayerConfig == null) return { title: extractedTextLayer.id, ...defaultTextLayer, ...extractedTextLayer }
 	return { title: extractedTextLayer.id, ...textLayerConfig, ...extractedTextLayer }
@@ -52,11 +52,12 @@ export function extendTextLayer(extractedTextLayer: ExtractedTextLayer, textLaye
 
 const defaultDocereFunctions: DocereConfigFunctions = {
 	prepareDocument: function prepareDocument(doc) { return doc },
+	extractEntities: function extractEntities(_doc) { return [] },
 	extractFacsimiles: function extractFacsimiles(_doc) { return [] },
 	extractMetadata: function extractMetadata(_doc) { return {} },
 	extractNotes: function extractNotes(_doc) { return [] },
-	extractTextData: function extractTextData(_doc) { return [] },
-	extractTextLayers: function extractTextLayers(_doc) { return [] }
+	extractText: function extractText(doc) { return doc.documentElement.textContent },
+	extractLayers: function extractTextLayers(_doc) { return [] }
 }
 
 function setTitle<T extends FacetConfig>(entityConfig: T): T {
@@ -73,17 +74,17 @@ function setPath(page: PageConfig) {
 
 export default function extendConfigData(configDataRaw: DocereConfigDataRaw): DocereConfigData {
 	const config = {...defaultConfig, ...configDataRaw.config}
-	config.textLayers = config.textLayers.map(setTitle)
+	config.layers = config.layers.map(setTitle)
 
 	config.metadata = config.metadata.map(md => {
 		const metadataConfig = {...defaultMetadata, ...md} as MetadataConfig
 		return setTitle(metadataConfig)
 	})
 
-	config.textData = config.textData.map(td => {
+	config.entities = config.entities.map(td => {
 		const textDataConfig = {...defaultMetadata, ...td } as TextDataConfig
 		if (!Array.isArray(td.textLayers)) {
-			textDataConfig.textLayers = config.textLayers.map(tl => tl.id)
+			textDataConfig.textLayers = config.layers.map(tl => tl.id)
 		}
 		return setTitle(textDataConfig)
 	})
