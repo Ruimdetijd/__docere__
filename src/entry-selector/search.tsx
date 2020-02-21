@@ -155,6 +155,7 @@ function Search(props: FileExplorerProps) {
 				searchTab: props.searchTab,
 			}}
 			resultsPerPage={appContext.config.searchResultCount}
+			track_total_hits={210000}
 			url={`${searchBaseUrl}${appContext.config.slug}/_search`}
 		/>
 	)
