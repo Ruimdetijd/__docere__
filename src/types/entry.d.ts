@@ -19,7 +19,7 @@ interface EntryState {
 	layers: LayerConfig[]
 }
 
-type EntryProps = Pick<AppState, 'entry' | 'searchTab'> & { appDispatch: React.Dispatch<AppStateAction> }
+type EntryProps = Pick<AppState, 'entry' | 'searchQuery' | 'searchTab'> & { appDispatch: React.Dispatch<AppStateAction> }
 
 type EntryAsideProps =
 	Pick<EntryProps, 'appDispatch' | 'entry'> &

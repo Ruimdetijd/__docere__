@@ -27,6 +27,7 @@ function Entry(props: EntryProps) {
 				entry={props.entry}
 				footerTab={entryState.footerTab}
 				layers={entryState.layers}
+				searchQuery={props.searchQuery}
 				searchTab={props.searchTab}
 			/>
 			<Aside

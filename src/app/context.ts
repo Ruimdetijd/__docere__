@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 export function useComponents(container: DocereComponentContainer, id?: string) {
-	const [components, setComponents] = React.useState(null)
+	const [components, setComponents] = React.useState<DocereComponents>(null)
 	const appContext = React.useContext(AppContext)
 
 	React.useEffect(() => {

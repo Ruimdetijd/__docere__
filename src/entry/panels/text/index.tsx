@@ -1,38 +1,15 @@
 import * as React from 'react'
 import DocereTextView from 'docere-text-view'
 import styled from '@emotion/styled'
-import { TEXT_PANEL_WIDTH, DEFAULT_SPACING } from '../../constants'
+import { TEXT_PANEL_WIDTH, DEFAULT_SPACING } from '../../../constants'
 // @ts-ignore
 import debounce from 'lodash.debounce'
-import AppContext, { useComponents } from '../../app/context'
+import AppContext, { useComponents } from '../../../app/context'
+import Minimap from './minimap'
 
 const TopWrapper = styled.div`
 	position: relative;
 	display: grid;
-
-	& > div.minimap {
-		bottom: 0;
-		box-sizing: border-box;
-		left: calc(100% - ((100% - 480px) / 2) + 32px);
-		overflow: auto;
-		padding-top: 32px;
-		position: absolute;
-		top: 0;
-		width: 48px;
-		scrollbar-width: none;
-		pointer-events: none;
-
-		&::-webkit-scrollbar {
-			display: none;
-		}
-
-		& > div:nth-of-type(2) {
-			box-sizing: border-box;
-			transform: scaleX(.1) scaleY(.1);
-			transform-origin: top left;
-			width: 480px;
-		}
-	}
 `
 const Wrapper = styled.div`
 	display: grid;
@@ -45,46 +22,6 @@ const Wrapper = styled.div`
 		grid-column: 2;
 	}
 `
-
-
-const activeAreaRGB = '200, 200, 200'
-
-const ActiveArea = styled.div`
-	background: rgba(${activeAreaRGB}, 0);
-	position: absolute;
-	width: 100%;
-	transition: background 600ms;
-`
-const MiniMap = React.memo(
-	(props: any) => {
-		const miniMapRef = React.useRef<HTMLDivElement>()
-
-		React.useEffect(() => {
-			const observer = new MutationObserver((_ml, _ob) => {
-				const current = miniMapRef.current.querySelector('div:nth-of-type(2)')
-				if (current) current.parentNode.removeChild(current)
-				miniMapRef.current.appendChild(props.textWrapperRef.current.firstChild.cloneNode(true))
-			})
-
-			observer.observe(props.textWrapperRef.current, {
-				attributes: false, childList: true, subtree: true, characterData: false 
-			})
-
-			return () => observer.disconnect()
-		}, [])
-
-		return (
-			<div
-				className="minimap"
-				onWheel={() => false}
-				ref={miniMapRef}
-			>
-				<ActiveArea ref={props.activeAreaRef} />
-				{/* {props.text} */}
-			</div>
-		)
-	}
-)
 
 interface TextProps {
 	hasFacs: boolean
@@ -105,14 +42,15 @@ function TextPanel(props: TextPanelProps) {
 	const appContext = React.useContext(AppContext)
 	const textWrapperRef = React.useRef<HTMLDivElement>()
 	const activeAreaRef = React.useRef<HTMLDivElement>()
+	const [highlightAreas, setHighlightAreas] = React.useState<number[]>([])
 	const textLayer = props.entry.layers.find(tl => tl.id === props.textLayerConfig.id)
 	const components = useComponents(DocereComponentContainer.Layer, textLayer.id)
 
-	const resetActiveArea = debounce(() => {
-		activeAreaRef.current.style.background = `rgba(${activeAreaRGB}, 0)`
-	}, 1000)
-
 	const handleScroll = React.useCallback(() => {
+		const resetActiveArea = debounce(() => {
+			activeAreaRef.current.classList.remove('active')
+		}, 1000)
+
 		const { scrollTop, scrollHeight, clientHeight } = textWrapperRef.current
 
 		if (scrollHeight / 10 > clientHeight) {
@@ -122,10 +60,7 @@ function TextPanel(props: TextPanelProps) {
 			activeAreaRef.current.parentElement.scrollTop = maxScrollTopActiveArea * perc
 		}
 
-		if (activeAreaRef.current.style.height === '') {
-			activeAreaRef.current.style.height = textWrapperRef.current.clientHeight / 10 + 'px'
-		}
-		activeAreaRef.current.style.background = `rgba(${activeAreaRGB}, 0.5)`
+		activeAreaRef.current.classList.add('active')
 		activeAreaRef.current.style.transform = `translateY(${(scrollTop / 10)}px)`
 
 		resetActiveArea()
@@ -146,32 +81,29 @@ function TextPanel(props: TextPanelProps) {
 
 	if (components == null) return null
 
-	const text = (
-		<Text 
-			hasFacs={props.entry.facsimiles.length > 0}
-		>
-			<DocereTextView
-				customProps={customProps}
-				components={components}
-				node={textLayer.element}
-			/>
-		</Text>
-	)
-
 	return (
 		<TopWrapper>
 			<Wrapper
 				ref={textWrapperRef}
 				onScroll={handleScroll}
 			>
-				{text}
+				<Text 
+					hasFacs={props.entry.facsimiles.length > 0}
+				>
+					<DocereTextView
+						customProps={customProps}
+						components={components}
+						highlight={props.searchQuery}
+						node={textLayer.element}
+						setHighlightAreas={setHighlightAreas}
+					/>
+				</Text>
 			</Wrapper>
-			<MiniMap
+			<Minimap
 				activeAreaRef={activeAreaRef}
-				textWrapperRef={textWrapperRef}
-				// child={textWrapperRef.current?.firstChild}
 				components={components}
-				entry={props.entry}
+				highlightAreas={highlightAreas}
+				textWrapperRef={textWrapperRef}
 			/>
 		</TopWrapper>
 	)

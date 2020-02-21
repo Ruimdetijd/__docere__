@@ -136,7 +136,20 @@ function Search(props: FileExplorerProps) {
 			excludeResultFields={excludeResultFields}
 			fields={fields}
 			ResultBodyComponent={ResultBodyComponent}
-			onClickResult={result => props.appDispatch({ type: 'SET_ENTRY_ID', id: result.id })}
+			onClickResult={(result: Hit) => {
+				if (result.snippets.length) {
+					const query = result.snippets.reduce((prev, curr) => {
+						const found = curr.split('<em>')
+							.filter((t: string) => t.indexOf('</em>') > -1)
+							.map((t: string) => t.slice(0, t.indexOf('</em>')))
+						return prev.concat(found)
+
+					}, [])
+
+					props.appDispatch({ type: 'SET_SEARCH_QUERY', query })
+				}
+				props.appDispatch({ type: 'SET_ENTRY_ID', id: result.id })
+			}}
 			resultBodyProps={{
 				activeId: props.entry == null ? null : props.entry.id,
 				searchTab: props.searchTab,

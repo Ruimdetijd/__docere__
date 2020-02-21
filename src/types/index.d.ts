@@ -16,7 +16,7 @@ interface AppState {
 	entryId: string
 	page: Page
 	pageId: string
-	searchQuery: string
+	searchQuery: string[]
 	searchTab: SearchTab
 	viewport: Viewport
 }

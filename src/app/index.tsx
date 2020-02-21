@@ -30,6 +30,7 @@ function App(props: AppProps): any {
 			<Entry 
 				appDispatch={appDispatch}
 				entry={appState.entry}
+				searchQuery={appState.searchQuery}
 				searchTab={appState.searchTab}
 			/>
 		</>

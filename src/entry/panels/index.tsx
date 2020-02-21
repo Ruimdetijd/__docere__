@@ -37,6 +37,7 @@ function Panels(props: PanelsProps) {
 								entryDispatch={props.entryDispatch}
 								entry={props.entry}
 								key={ap.id}
+								searchQuery={props.searchQuery}
 								textLayerConfig={ap}
 							/>
 						)

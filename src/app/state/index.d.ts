@@ -33,6 +33,11 @@ interface ASA_Set_Search_Tab {
 	tab: SearchTab
 }
 
+interface ASA_Set_Search_Query {
+	type: 'SET_SEARCH_QUERY'
+	query: string[]
+}
+
 interface ASA_Set_Viewport {
 	type: 'SET_VIEWPORT'
 	viewport: Viewport
@@ -46,4 +51,5 @@ type AppStateAction =
 	ASA_Set_Page |
 	ASA_Unset_Page |
 	ASA_Set_Search_Tab |
+	ASA_Set_Search_Query |
 	ASA_Set_Viewport

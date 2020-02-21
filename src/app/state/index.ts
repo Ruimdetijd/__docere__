@@ -94,6 +94,16 @@ function appStateReducer(appState: AppState, action: AppStateAction): AppState {
 			}
 		}
 
+		case 'SET_SEARCH_QUERY': {
+			// if searchTab is Search, viewport has to be EntrySelector
+			// and if searchTab is Results, viewport has to be Entry
+
+			return {
+				...appState,
+				searchQuery: action.query,
+			}
+		}
+
 		case 'SET_VIEWPORT': {
 			let searchTab = appState.searchTab
 			// if viewport is EntrySelector, searchTab has to be Search
