@@ -52,7 +52,6 @@ interface Props {
 	activeAreaRef: React.RefObject<HTMLDivElement>
 	highlightAreas: number[]
 	textWrapperRef: React.RefObject<HTMLDivElement>
-	components: DocereComponents
 }
 function Minimap(props: Props) {
 	const miniMapRef = React.useRef<HTMLDivElement>()
@@ -85,7 +84,6 @@ function Minimap(props: Props) {
 		return () => observer.disconnect()
 	}, [])
 
-	console.log(props.highlightAreas)
 	return (
 		<Wrapper
 			className="minimap"

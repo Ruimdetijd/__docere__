@@ -101,7 +101,6 @@ function TextPanel(props: TextPanelProps) {
 			</Wrapper>
 			<Minimap
 				activeAreaRef={activeAreaRef}
-				components={components}
 				highlightAreas={highlightAreas}
 				textWrapperRef={textWrapperRef}
 			/>

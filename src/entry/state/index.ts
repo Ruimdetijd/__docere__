@@ -29,17 +29,20 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 				.reduce((prev, curr) => {
 					curr.versions.forEach(version => {
 						version.areas.forEach(area => {
-							if (area.target?.id === action.id) prev.push(area)
+							if (area.target?.id === action.id) {
+								if (!Array.isArray(prev)) prev = []
+								prev.push(area)
+							}
 						})
 					})
 					return prev
-				}, [] as FacsimileArea[])
+				}, null as FacsimileArea[])
 
 			let activeEntity = entryState.entry.entities.find(e => e.id === action.id)
 
 			if (action.id === entryState.activeEntity?.id) {
 				activeEntity = null
-				activeFacsimileAreas = []
+				activeFacsimileAreas = null
 			}
 			
 			return {
@@ -76,12 +79,11 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 
 		case 'SET_ACTIVE_FACSIMILE': {
 			const activeFacsimile = entryState.entry.facsimiles.find(f => f.id === action.id)
-			console.log(activeFacsimile.versions[0].areas.length)
 
 			return {
 				...entryState,
 				activeFacsimile,
-				activeFacsimileAreas: []
+				activeFacsimileAreas: null
 			}
 		}
 
@@ -97,7 +99,7 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 				}, [] as FacsimileArea[])
 			
 			if (JSON.stringify(action.ids) === JSON.stringify(entryState.activeFacsimileAreas?.map(afa => afa.id))) {
-				activeFacsimileAreas = []
+				activeFacsimileAreas = null
 			}
 
 			return {

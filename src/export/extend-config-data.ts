@@ -110,7 +110,7 @@ export default function extendConfigData(configDataRaw: DocereConfigDataRaw): Do
 
 	// TODO getComponents is added to docereConfigData, but should not
 	return {
-		getComponents: () => async () => ({}),
+		getComponents: () => async () => null, /* default to null and an object because of React reference checking */
 		getUIComponent: () => async () => null,
 		...defaultDocereFunctions,
 		...configDataRaw,
