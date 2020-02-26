@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { GRAY_LIGHT, GRAY_DARK } from '../../constants'
+import { GRAY_LIGHT, GRAY_DARK, DEFAULT_SPACING } from '../../constants'
 import { small } from '../index.components'
 
 export const Wrapper = styled.div`
@@ -41,15 +41,18 @@ export function useTextData<T extends TextData>(textData: T[], activeTextData: T
 	return [textDataByType, types, activeType, setActiveType]
 }
 
+const H2Height = DEFAULT_SPACING * 1.25
+
 export const H2 = styled.h2`
 	background: ${GRAY_LIGHT};
+	border-top: 1px solid #333;
     box-shadow: 0px 4px 4px -4px #111;
 	color: #EEE;
 	cursor: pointer;
 	font-size: 1em;
 	font-weight: normal;
-	height: 48px;
-	line-height: 48px;
+	height: ${H2Height}px;
+	line-height: ${H2Height}px;
 	margin: 0;
 	padding-left: 1em;
 	position: relative;
@@ -63,7 +66,7 @@ export const H2 = styled.h2`
 		height: 0;
 		position: absolute;
 		right: 24px;
-		top: 48px;
+		top: ${H2Height}px;
 		width: 0;
 		z-index: 1;
 	}
@@ -82,7 +85,7 @@ interface UlProps {
 export const Ul = styled.ul`
 	background: ${GRAY_DARK};
 	box-sizing: border-box;
-	height: ${(props: UlProps) => props.active ? `calc(${props.height}px - ${props.listCount * 48}px)` : 0};
+	height: ${(props: UlProps) => props.active ? `calc(${props.height}px - ${props.listCount * H2Height}px)` : 0};
 	list-style: none;
 	margin: 0;
 	overflow: auto;
