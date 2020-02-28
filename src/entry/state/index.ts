@@ -49,15 +49,16 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 				...entryState,
 				activeEntity,
 				activeFacsimileAreas,
-				asideTab: AsideTab.TextData
+				// asideTab: AsideTab.TextData
 			}
 		}
 
 		case 'SET_NOTE': {
+			const activeNote = entryState.activeNote?.id !== action.id ? entryState.entry.notes.find(n => n.id === action.id) : null
+
 			return {
 				...entryState,
-				activeNote: entryState.entry.notes.find(n => n.id === action.id),
-				asideTab: AsideTab.Notes
+				activeNote,
 			}
 		}
 

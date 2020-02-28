@@ -24,14 +24,14 @@ interface FacsimileArea {
 
 
 type DocereComponentProps =
-	Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote'> &
+	Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote' | 'entry'> &
 	{
 		appDispatch: React.Dispatch<AppStateAction>
 		attributes?: Record<string, string>
 		children?: React.ReactNode
+		components: DocereComponents
 		config: DocereConfig
 		entryDispatch: React.Dispatch<EntryStateAction>
-		facsimiles: Entry['facsimiles']
 		insideNote: boolean
 		textLayerId: string
 	}
@@ -40,10 +40,12 @@ declare const enum RsType { Date, Location, None, Person }
 interface RsProps {
 	active?: boolean,
 	children: React.ReactNode
-	color?: string
+	// color?: string
+	config: TextDataConfig
+	customProps: DocereComponentProps
 	onClick?: (ev: any) => void
 	revealOnHover?: boolean
-	icon?: RsType
+	// icon?: RsType
 }
 
 

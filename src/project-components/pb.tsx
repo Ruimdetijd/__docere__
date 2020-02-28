@@ -22,7 +22,7 @@ const Img = styled.img`
 export default function getPb(extractPbId: (props: DocereComponentProps) => string): React.FC<DocereComponentProps> {
 	return function Pb(props: DocereComponentProps) {
 		const id = extractPbId(props)
-		const facsimile = props.facsimiles.find(f => f.id === id)
+		const facsimile = props.entry.facsimiles.find(f => f.id === id)
 		if (facsimile == null) return null
 		let src = facsimile.versions[0].path
 		const active = props.activeFacsimile.id === id

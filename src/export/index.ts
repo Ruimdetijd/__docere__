@@ -9,12 +9,14 @@ import getPb from '../project-components/pb'
 import Rs from '../project-components/rs'
 import { hi, lb } from '../project-components'
 import ResultBody from '../project-components/result-body'
+import Tooltip from '../project-components/tooltip'
 
 const components = {
 	getPb,
 	hi,
 	lb,
 	Rs,
+	Tooltip
 }
 
 export {

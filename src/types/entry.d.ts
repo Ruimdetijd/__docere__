@@ -23,7 +23,7 @@ type EntryProps = Pick<AppState, 'entry' | 'searchQuery' | 'searchTab'> & { appD
 
 type EntryAsideProps =
 	Pick<EntryProps, 'appDispatch' | 'entry'> &
-	Pick<EntryState, 'activeEntity' | 'activeNote' | 'asideTab' | 'layers'> &
+	Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote' | 'asideTab' | 'layers'> &
 	{
 		entryDispatch: React.Dispatch<EntryStateAction>
 	}

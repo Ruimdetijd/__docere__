@@ -2,12 +2,15 @@ import * as React from 'react'
 import AsideList from '../list'
 import Note from './note'
 
-interface Props {
+// interface Props {
+
+type Props = Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote'> & {
 	active: boolean
-	activeNote: EntryState['activeNote']
+	appDispatch: React.Dispatch<AppStateAction>
 	components: DocereComponents
 	config: NotesConfig
 	containerHeight: number
+	entry: Entry
 	entryDispatch: React.Dispatch<EntryStateAction>
 	notesByType: Map<string, Note[]>
 	setActiveType: (type: string) => void
@@ -30,7 +33,13 @@ function NotesList(props: Props) {
 				notes.map(note =>
 					<Note
 						active={note.id === props.activeNote?.id}
+						activeEntity={props.activeEntity}
+						activeFacsimile={props.activeFacsimile}
+						activeFacsimileAreas={props.activeFacsimileAreas}
+						activeNote={props.activeNote}
+						appDispatch={props.appDispatch}
 						components={props.components}
+						entry={props.entry}
 						entryDispatch={props.entryDispatch}
 						item={note}
 						key={note.id}

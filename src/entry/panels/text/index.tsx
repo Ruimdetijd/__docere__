@@ -9,7 +9,6 @@ import Minimap from './minimap'
 
 const TopWrapper = styled.div`
 	position: relative;
-	display: grid;
 `
 const Wrapper = styled.div`
 	display: grid;
@@ -42,6 +41,7 @@ function TextPanel(props: TextPanelProps) {
 	const appContext = React.useContext(AppContext)
 	const textWrapperRef = React.useRef<HTMLDivElement>()
 	const activeAreaRef = React.useRef<HTMLDivElement>()
+	const [docereTextViewReady, setDocereTextViewReady] = React.useState(false)
 	const [highlightAreas, setHighlightAreas] = React.useState<number[]>([])
 	const textLayer = props.entry.layers.find(tl => tl.id === props.textLayerConfig.id)
 	const components = useComponents(DocereComponentContainer.Layer, textLayer.id)
@@ -72,9 +72,10 @@ function TextPanel(props: TextPanelProps) {
 		activeEntity: props.activeEntity,
 		activeNote: props.activeNote,
 		appDispatch: props.appDispatch,
+		components,
 		config: appContext.config,
+		entry: props.entry,
 		entryDispatch: props.entryDispatch,
-		facsimiles: props.entry.facsimiles,
 		insideNote: false,
 		textLayerId: props.textLayerConfig.id
 	}
@@ -94,6 +95,7 @@ function TextPanel(props: TextPanelProps) {
 						customProps={customProps}
 						components={components}
 						highlight={props.searchQuery}
+						onLoad={setDocereTextViewReady}
 						node={textLayer.element}
 						setHighlightAreas={setHighlightAreas}
 					/>
@@ -102,6 +104,7 @@ function TextPanel(props: TextPanelProps) {
 			<Minimap
 				activeAreaRef={activeAreaRef}
 				highlightAreas={highlightAreas}
+				isReady={docereTextViewReady}
 				textWrapperRef={textWrapperRef}
 			/>
 		</TopWrapper>

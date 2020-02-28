@@ -3,19 +3,20 @@ import NoteList from "./list"
 import { useTextData, Wrapper } from '../list'
 import AppContext, { useComponents } from '../../../app/context'
 
-type Props =
-	Pick<EntryState,  'activeNote' | 'layers'> &
-	{
-		active: boolean
-		entryDispatch: React.Dispatch<EntryStateAction>
-		notes: Entry['notes']
+// type Props =
+// 	Pick<EntryState,  'activeNote' | 'layers'> &
 
-	}
+type Props = Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote'> & {
+	active: boolean
+	appDispatch: React.Dispatch<AppStateAction>
+	entry: Entry
+	entryDispatch: React.Dispatch<EntryStateAction>
+}
 
 function NotesAside(props: Props) {
 	const appContext = React.useContext(AppContext)
 	const wrapperRef: React.RefObject<HTMLDivElement> = React.useRef()
-	const [notesByType, noteTypes, activeNoteType, setActiveType] = useTextData(props.notes, props.activeNote)
+	const [notesByType, noteTypes, activeNoteType, setActiveType] = useTextData(props.entry.notes, props.activeNote)
 	const components = useComponents(DocereComponentContainer.Notes)
 
 	return (
@@ -27,10 +28,15 @@ function NotesAside(props: Props) {
 				noteTypes.map(noteType =>
 					<NoteList
 						active={activeNoteType === noteType}
+						activeEntity={props.activeEntity}
+						activeFacsimile={props.activeFacsimile}
+						activeFacsimileAreas={props.activeFacsimileAreas}
 						activeNote={props.activeNote}
+						appDispatch={props.appDispatch}
 						components={components}
 						config={appContext.config.notes.find(nc => nc.id === noteType)}
 						containerHeight={wrapperRef.current.getBoundingClientRect().height}
+						entry={props.entry}
 						entryDispatch={props.entryDispatch}
 						notesByType={notesByType}
 						key={noteType}

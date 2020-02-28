@@ -51,6 +51,7 @@ const Bar = styled.div`
 interface Props {
 	activeAreaRef: React.RefObject<HTMLDivElement>
 	highlightAreas: number[]
+	isReady: boolean
 	textWrapperRef: React.RefObject<HTMLDivElement>
 }
 function Minimap(props: Props) {
@@ -58,7 +59,7 @@ function Minimap(props: Props) {
 
 	React.useEffect(() => {
 		// Handle the mouse wheel: scroll the text wrapper
-		function handleWheel(ev: any) {
+		function handleWheel(ev: WheelEvent) {
 			ev.preventDefault()
 			props.textWrapperRef.current.scrollTo({
 				top: props.textWrapperRef.current.scrollTop += ev.deltaY,
@@ -69,20 +70,16 @@ function Minimap(props: Props) {
 
 		miniMapRef.current.querySelector('.blocker').addEventListener('wheel', handleWheel)
 		miniMapRef.current.querySelector('.active-area').addEventListener('wheel', handleWheel)
+	}, [])
 
-		const observer = new MutationObserver((_ml, _ob) => {
+	React.useEffect(() => {
+		if (props.isReady) {
 			props.textWrapperRef.current.scrollTop = 0
 			const current = miniMapRef.current.querySelector('.container')
 			if (current) current.innerHTML = ''
 			current.appendChild(props.textWrapperRef.current.firstChild.cloneNode(true))
-		})
-
-		observer.observe(props.textWrapperRef.current, {
-			attributes: false, childList: true, subtree: true, characterData: false 
-		})
-
-		return () => observer.disconnect()
-	}, [])
+		}
+	}, [props.isReady])
 
 	return (
 		<Wrapper

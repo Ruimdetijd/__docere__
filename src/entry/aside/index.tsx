@@ -75,10 +75,13 @@ function Aside(props: EntryAsideProps) {
 					hasNotes &&
 					<NotesAside
 						active={props.asideTab === AsideTab.Notes}
+						activeEntity={props.activeEntity}
+						activeFacsimile={props.activeFacsimile}
+						activeFacsimileAreas={props.activeFacsimileAreas}
 						activeNote={props.activeNote}
+						appDispatch={props.appDispatch}
+						entry={props.entry}
 						entryDispatch={props.entryDispatch}
-						layers={props.layers}
-						notes={props.entry.notes}
 					/>
 				}
 			</Body>

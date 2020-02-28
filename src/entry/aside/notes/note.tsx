@@ -1,7 +1,8 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import DocereTextView from 'docere-text-view';
-import { BROWN_LIGHT } from '../../../constants';
+import DocereTextView from 'docere-text-view'
+import { BROWN_LIGHT } from '../../../constants'
+import AppContext from '../../../app/context'
 
 const Li = styled.li`
 	color: ${(props: { active: boolean }) => props.active ? '#FFF' : '#BBB' };
@@ -28,17 +29,34 @@ const ActiveIndicator = styled.div`
 	width: 8px;
 `
 
-interface Props {
+type Props = Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote'> & {
 	active: boolean
+	appDispatch: React.Dispatch<AppStateAction>
 	components: DocereComponents
+	entry: Entry
 	entryDispatch: React.Dispatch<EntryStateAction>
 	item: Note
 	listId: string
 }
 export default function Note(props: Props) {
+	const appContext = React.useContext(AppContext)
 	const handleClick = React.useCallback(() => {
 		props.entryDispatch({ type: 'SET_NOTE', id: props.item.id })
 	}, [props.item, props.listId])
+
+	const customProps: DocereComponentProps = {
+		activeFacsimileAreas: props.activeFacsimileAreas,
+		activeFacsimile: props.activeFacsimile,
+		activeEntity: props.activeEntity,
+		activeNote: props.activeNote,
+		appDispatch: props.appDispatch,
+		components: props.components,
+		config: appContext.config,
+		entry: props.entry,
+		entryDispatch: props.entryDispatch,
+		insideNote: false,
+		textLayerId: null
+	}
 
 	return (
 		<Li
@@ -49,9 +67,7 @@ export default function Note(props: Props) {
 			<div>
 				<DocereTextView
 					components={props.components}
-					customProps={{
-						insideNote: true,
-					}}
+					customProps={customProps}
 					node={props.item.el}
 				/>
 			</div>

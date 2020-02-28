@@ -1,3 +1,5 @@
+import { Colors } from '../constants'
+
 const defaultConfig: DocereConfig = {
 	metadata: [],
 	notes: [],
@@ -37,6 +39,12 @@ export const defaultMetadata: MetadataConfig = {
 	order: 9999,
 	showAsFacet: true,
 	showInAside: true,
+}
+
+const defaultEntity: TextDataConfig = {
+	...defaultMetadata,
+	color: Colors.Blue,
+	type: RsType.None,
 }
 
 const defaultTextLayer: LayerConfig = {
@@ -82,7 +90,7 @@ export default function extendConfigData(configDataRaw: DocereConfigDataRaw): Do
 	})
 
 	config.entities = config.entities.map(td => {
-		const textDataConfig = {...defaultMetadata, ...td } as TextDataConfig
+		const textDataConfig = {...defaultEntity, ...td } as TextDataConfig
 		if (!Array.isArray(td.textLayers)) {
 			textDataConfig.textLayers = config.layers.map(tl => tl.id)
 		}

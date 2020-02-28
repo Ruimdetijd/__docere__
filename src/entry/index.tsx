@@ -33,6 +33,8 @@ function Entry(props: EntryProps) {
 			<Aside
 				activeEntity={entryState.activeEntity}
 				activeNote={entryState.activeNote}
+				activeFacsimile={entryState.activeFacsimile}
+				activeFacsimileAreas={entryState.activeFacsimileAreas}
 				appDispatch={props.appDispatch}
 				asideTab={entryState.asideTab}
 				entryDispatch={entryDispatch}

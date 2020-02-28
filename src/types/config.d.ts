@@ -15,8 +15,6 @@ interface Note extends TextData {
 	targetId: string | number
 }
 
-// type NotesByType = Record<string, Note[]>
-
 type ExtractedMetadata = Record<string, number | boolean | string | string[]>
 type ExtractedLayer = Pick<Layer, 'element'> & Pick<LayerConfig, 'id'> & Partial<LayerConfig>
 

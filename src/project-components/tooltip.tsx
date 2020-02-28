@@ -23,8 +23,8 @@ function tipBorderByOrientation(strokeColor: string) {
 const Wrapper = styled.div`
 	position: absolute;
 	z-index: 999;
-	left: calc(100vw - 24px);
 `
+	// left: calc(100vw - 24px);
 
 function useSvgTopLeft(orientation: Orientation, wrapperEl: HTMLDivElement, svgEl: SVGElement) {
 	React.useEffect(() => {
@@ -143,4 +143,4 @@ Tooltip.defaultProps = {
 	some: 'bull,',
 } as Partial<Props>
 
-export default React.memo(Tooltip)
+export default Tooltip
