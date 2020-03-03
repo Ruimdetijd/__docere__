@@ -1,18 +1,21 @@
 import * as React from 'react'
 import DocereTextView from 'docere-text-view'
 import styled from '@emotion/styled'
-import { TEXT_PANEL_WIDTH, DEFAULT_SPACING } from '../../../constants'
+import { DEFAULT_SPACING, TEXT_VIEW_WIDTH } from '../../../constants'
 // @ts-ignore
 import debounce from 'lodash.debounce'
 import AppContext, { useComponents } from '../../../app/context'
 import Minimap from './minimap'
+import { isTextLayer, getTextPanelWidth } from '../../../utils'
 
 const TopWrapper = styled.div`
 	position: relative;
 `
+
+interface WProps { layer: TextLayer }
 const Wrapper = styled.div`
 	display: grid;
-	grid-template-columns: auto ${TEXT_PANEL_WIDTH}px auto;
+	grid-template-columns: ${DEFAULT_SPACING}px ${(props: WProps) => getTextPanelWidth(props.layer)}px ${DEFAULT_SPACING}px;
 	height: 100%;
 	overflow-y: auto;
 	will-change: transform;
@@ -24,12 +27,15 @@ const Wrapper = styled.div`
 
 interface TextProps {
 	hasFacs: boolean
+	layer: TextLayer
 }
 export const Text = styled.div`
 	color: #222;
 	counter-reset: linenumber notenumber;
 	font-family: serif;
 	font-size: 1.25rem;
+	display: grid;
+	grid-template-columns: ${TEXT_VIEW_WIDTH}px ${props => props.layer.asideActive ? TEXT_VIEW_WIDTH / 2 : 0}px;
 	line-height: 2rem;
 	padding-top: ${DEFAULT_SPACING}px;
 	padding-left: ${(props: TextProps) => props.hasFacs ? DEFAULT_SPACING * 2.5 : 0}px;
@@ -43,8 +49,8 @@ function TextPanel(props: TextPanelProps) {
 	const activeAreaRef = React.useRef<HTMLDivElement>()
 	const [docereTextViewReady, setDocereTextViewReady] = React.useState(false)
 	const [highlightAreas, setHighlightAreas] = React.useState<number[]>([])
-	const textLayer = props.entry.layers.find(tl => tl.id === props.textLayerConfig.id)
-	const components = useComponents(DocereComponentContainer.Layer, textLayer.id)
+	const layer = props.entry.layers.filter(isTextLayer).find(tl => tl.id === props.layer.id)
+	const components = useComponents(DocereComponentContainer.Layer, layer.id)
 
 	const handleScroll = React.useCallback(() => {
 		const resetActiveArea = debounce(() => {
@@ -77,7 +83,7 @@ function TextPanel(props: TextPanelProps) {
 		entry: props.entry,
 		entryDispatch: props.entryDispatch,
 		insideNote: false,
-		textLayerId: props.textLayerConfig.id
+		layer: props.layer
 	}
 
 	if (components == null) return null
@@ -85,18 +91,20 @@ function TextPanel(props: TextPanelProps) {
 	return (
 		<TopWrapper>
 			<Wrapper
-				ref={textWrapperRef}
+				layer={props.layer}
 				onScroll={handleScroll}
+				ref={textWrapperRef}
 			>
 				<Text 
 					hasFacs={props.entry.facsimiles.length > 0}
+					layer={props.layer}
 				>
 					<DocereTextView
 						customProps={customProps}
 						components={components}
 						highlight={props.searchQuery}
 						onLoad={setDocereTextViewReady}
-						node={textLayer.element}
+						node={layer.element}
 						setHighlightAreas={setHighlightAreas}
 					/>
 				</Text>
@@ -112,61 +120,3 @@ function TextPanel(props: TextPanelProps) {
 }
 
 export default React.memo(TextPanel)
-
-// class TextPanel extends React.PureComponent<TextPanelProps> {
-	// async componentDidMount() {
-	// 	if (this.props.searchQuery != null) this.setHighlight()
-	// }
-
-	// componentDidUpdate(prevProps: TextPanelProps) {
-	// 	if (prevProps.highlight.length && !this.props.highlight.length) {
-	// 		for (const el of this.textRef.current.querySelectorAll('mark')) {
-	// 			el.replaceWith(...el.childNodes)
-	// 		} 
-	// 	}
-	// 	if (prevProps.searchQuery !== this.props.searchQuery) this.setHighlight()
-	// }
-
-	// private async setHighlight() {
-	// 	const response = await fetchPost(`/search/${this.props.configData.config.slug}/_search`, {
-	// 		_source: false,
-	// 		query: {
-	// 			bool: {
-	// 				must: [
-	// 					{
-	// 						query_string: {
-	// 							query: this.props.searchQuery
-	// 						}
-	// 					},
-	// 					{
-	// 						match: {
-	// 							id: this.props.entry.id
-	// 						}
-	// 					}
-	// 				]
-	// 			}
-	// 		},
-	// 		highlight: {
-	// 			fields: {
-	// 				text: {}
-	// 			},
-	// 			require_field_match: false,
-	// 			fragment_size: 0,
-	// 			number_of_fragments: 1000
-	// 		}
-	// 	})
-
-	// 	let hits = []
-	// 	if (!response.hasOwnProperty('error') && response.hits.hits.length) {
-	// 		hits = response.hits.hits[0].highlight.text.reduce((set: Set<string>, hit: string) => {
-	// 			hit = hit.slice(hit.indexOf('<em>') + 4, hit.indexOf('</em>'))
-	// 			set.add(hit)
-	// 			return set
-	// 		}, new Set())
-	// 	}
-
-	// 	this.setState({ highlight: [...hits] })
-	// }
-// }
-
-// export default TextPanel

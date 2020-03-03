@@ -17,7 +17,7 @@ const defaultFacsimileArea: Pick<FacsimileArea, 'showOnHover' | 'target' | 'unit
 	unit: 'px'
 }
 
-export function extendFacsimile(facsimile: ExtractedFacsimile) {
+export function extendFacsimile(facsimile: Facsimile) {
 	facsimile.versions = facsimile.versions.map(version => {
 		if (!Array.isArray(version.areas)) {
 			version.areas = []
@@ -41,21 +41,26 @@ export const defaultMetadata: MetadataConfig = {
 	showInAside: true,
 }
 
-const defaultEntity: TextDataConfig = {
+const defaultEntity: EntityConfig = {
 	...defaultMetadata,
 	color: Colors.Blue,
 	type: RsType.None,
 }
 
-const defaultTextLayer: LayerConfig = {
+const defaultLayerConfig: LayerConfig = {
 	active: false,
 	id: null,
+}
+
+const defaultTextLayerConfig: TextLayerConfig = {
+	...defaultLayerConfig,
+	asideActive: true,
 	type: LayerType.Text
 }
-export function extendLayer(extractedTextLayer: ExtractedLayer, textLayersConfig: DocereConfig['layers']): Layer {
-	const textLayerConfig = textLayersConfig.find(tlc => tlc.id === extractedTextLayer.id)
-	if (textLayerConfig == null) return { title: extractedTextLayer.id, ...defaultTextLayer, ...extractedTextLayer }
-	return { title: extractedTextLayer.id, ...textLayerConfig, ...extractedTextLayer }
+export function extendLayer(extractedLayer: Layer, layersConfig: LayerConfig[]): Layer {
+	let layerConfig: LayerConfig = layersConfig.find(tlc => tlc.id === extractedLayer.id) || { id: null }
+	const dlc = layerConfig.type === LayerType.Text || layerConfig.type == null ? defaultTextLayerConfig : defaultLayerConfig
+	return { title: extractedLayer.id, ...dlc, ...layerConfig, ...extractedLayer }
 }
 
 const defaultDocereFunctions: DocereConfigFunctions = {
@@ -90,7 +95,7 @@ export default function extendConfigData(configDataRaw: DocereConfigDataRaw): Do
 	})
 
 	config.entities = config.entities.map(td => {
-		const textDataConfig = {...defaultEntity, ...td } as TextDataConfig
+		const textDataConfig = {...defaultEntity, ...td } as EntityConfig
 		if (!Array.isArray(td.textLayers)) {
 			textDataConfig.textLayers = config.layers.map(tl => tl.id)
 		}
@@ -105,24 +110,11 @@ export default function extendConfigData(configDataRaw: DocereConfigDataRaw): Do
 		return setTitle(setPath(page))
 	})
 
-	// Separate getComponents from raw configData, because we don't want to include it in de final map
-	// getComponents is only used to generate a map of components
-	// const { getComponents, ...configData } = configDataRaw
-
-	// const getComponents: GetComponents = componentsGetter ? componentsGetter(config) : async () => ({})
-
-	// const components = Object.keys(componentMap).reduce((prev, curr) => {
-	// 	prev[curr] = React.memo(componentMap[curr])
-	// 	return prev
-	// }, {} as any)
-
-	// TODO getComponents is added to docereConfigData, but should not
 	return {
 		getComponents: () => async () => null, /* default to null and an object because of React reference checking */
 		getUIComponent: () => async () => null,
 		...defaultDocereFunctions,
 		...configDataRaw,
 		config,
-		// getComponents,
 	}
 }

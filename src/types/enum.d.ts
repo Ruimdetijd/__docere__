@@ -8,12 +8,12 @@ declare const enum Viewport {
 	EntrySelector
 }
 
-// declare const enum Orientation {
-// 	Horizontal,
-// 	Vertical,
-// }
-
-declare const enum LayerType { Facsimile, Text, WitnessAnimation, XML }
+declare const enum LayerType {
+	Facsimile = 'facsimile',
+	Text = 'text',
+	WitnessAnimation = 'witness-animation',
+	XML = 'xml'
+}
 
 declare const enum TextDataExtractionType {
 	Attribute = "attribute",

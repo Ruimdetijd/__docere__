@@ -7,6 +7,11 @@ interface ESA_Toggle_Layer {
 	id: string
 }
 
+interface ESA_Toggle_Text_Layer_Aside {
+	type: 'TOGGLE_TEXT_LAYER_ASIDE'
+	id: string
+}
+
 interface ESA_Toggle_Aside_Tab extends Pick<EntryState, 'asideTab'> {
 	type: 'TOGGLE_ASIDE_TAB'
 }
@@ -43,4 +48,5 @@ type EntryStateAction =
 	ESA_Set_Note_Id |
 	ESA_Toggle_Aside_Tab |
 	ESA_Toggle_Footer_Tab |
-	ESA_Toggle_Layer
+	ESA_Toggle_Layer |
+	ESA_Toggle_Text_Layer_Aside

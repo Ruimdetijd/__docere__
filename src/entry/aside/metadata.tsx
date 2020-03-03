@@ -20,7 +20,7 @@ const Wrapper = styled.ul`
 `
 
 interface Props extends WProps {
-	metadata: ExtractedMetadata
+	metadata: Metadata
 }
 export default function MetadataAside(props: Props) {
 	const appContext = React.useContext(AppContext)
@@ -46,6 +46,5 @@ export default function MetadataAside(props: Props) {
 					})
 			}	
 		</Wrapper>
-
 	)
 }

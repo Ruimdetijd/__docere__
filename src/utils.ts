@@ -1,6 +1,16 @@
-function getProjectDir(projectId: string) {
-	return `/node_modules/docere-projects/src/${projectId}`
-} 
+import { TEXT_VIEW_WIDTH } from './constants'
+
+export function isTextLayer(layer: Layer): layer is TextLayer {
+	return layer.type === LayerType.Text
+}
+
+export function isXmlLayer(layer: Layer): layer is XmlLayer {
+	return layer.type === LayerType.XML
+}
+
+export function getTextPanelWidth(layer: TextLayer) {
+	return (layer.asideActive ? (TEXT_VIEW_WIDTH * 1.5 + 64) : TEXT_VIEW_WIDTH * 1.25) + 80
+}
 
 export function analyzeWindowLocation() {
 	const [, projectId, documentType, ...documentId] = window.location.pathname.split('/')
@@ -12,18 +22,9 @@ export function analyzeWindowLocation() {
 	}
 }
 
-export async function fetchPost(url: string, body: any) {
-	const response = await fetch(url, {
-		body: JSON.stringify(body),
-		headers: { 'Content-Type': 'application/json' },
-		method: "POST",
-	})
-
-	if (response.headers.get("content-length") !== '0')	{
-		const data = await response.json()
-		return data
-	}
-}
+function getProjectDir(projectId: string) {
+	return `/node_modules/docere-projects/src/${projectId}`
+} 
 
 export function getEntryXmlPath(projectSlug: string, documentId: string) {
 	return `${getProjectDir(projectSlug)}/xml/${documentId}.xml`
@@ -67,6 +68,19 @@ export function fetchXml(url: string): Promise<XMLDocument> {
 export async function fetchJson(url: string) {
 	const result = await fetch(url)
 	return await result.json()
+}
+
+export async function fetchPost(url: string, body: any) {
+	const response = await fetch(url, {
+		body: JSON.stringify(body),
+		headers: { 'Content-Type': 'application/json' },
+		method: "POST",
+	})
+
+	if (response.headers.get("content-length") !== '0')	{
+		const data = await response.json()
+		return data
+	}
 }
 
 // Used for debugging and performance improvements

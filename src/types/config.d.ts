@@ -1,5 +1,4 @@
-/// <reference types="huc-faceted-search" />
-
+// Data extracted from the text: entities, notes, ...
 interface TextData {
 	count?: number
 	id: string
@@ -15,14 +14,14 @@ interface Note extends TextData {
 	targetId: string | number
 }
 
-type ExtractedMetadata = Record<string, number | boolean | string | string[]>
-type ExtractedLayer = Pick<Layer, 'element'> & Pick<LayerConfig, 'id'> & Partial<LayerConfig>
+type Metadata = Record<string, number | boolean | string | string[]>
+type ExtractedLayer = Pick<Layer, 'id'> & Partial<Layer>
 
 interface FacsimileVersion {
 	areas?: FacsimileArea[]
 	path: string
 }
-interface ExtractedFacsimile {
+interface Facsimile {
 	id: string
 	versions: FacsimileVersion[]
 }
@@ -34,14 +33,14 @@ interface DocereConfig {
 	pages?: PageConfig[]
 	searchResultCount?: number
 	slug: string
-	entities?: TextDataConfig[]
+	entities?: EntityConfig[]
 	layers?: LayerConfig[]
 	title: string
 }
 
 interface DocereConfigFunctions {
-	extractFacsimiles: (doc: XMLDocument, config: DocereConfig) => ExtractedFacsimile[]
-	extractMetadata: (doc: XMLDocument, config: DocereConfig, id: string) => ExtractedMetadata
+	extractFacsimiles: (doc: XMLDocument, config: DocereConfig) => Facsimile[]
+	extractMetadata: (doc: XMLDocument, config: DocereConfig, id: string) => Metadata
 	extractNotes: (doc: XMLDocument, config: DocereConfig) => Note[]
 	extractText: (doc: XMLDocument, config: DocereConfig) => string
 	extractEntities: (doc: XMLDocument, config: DocereConfig) => Entity[]
@@ -64,53 +63,67 @@ interface DocereConfigData extends DocereConfigFunctions {
 type MetadataConfig = FacetConfig & {
 	showInAside?: boolean /* Show data in the aside of the detail view? */
 	showAsFacet?: boolean /* Show data as a facet? */
-
 }
 
-interface TextDataAttributeIdentifier {
+interface EntityAttributeIdentifier {
 	type: TextDataExtractionType.Attribute
 	attribute: string
 }
 
-interface TextDataMilestoneIdentifier {
+interface EntityMilestoneIdentifier {
 	type: TextDataExtractionType.Milestone
 	idAttribute: string // <start id="some-id" />
 	refAttribute: string // <end ref="some-id" />
 }
 
-interface TextDataTextContentIdentifier {
+interface EntityContentIdentifier {
 	type: TextDataExtractionType.TextContent
 }
 
-type TextDataIdentifier = TextDataAttributeIdentifier | TextDataMilestoneIdentifier | TextDataTextContentIdentifier
+type EntityIdentifier = EntityAttributeIdentifier | EntityMilestoneIdentifier | EntityContentIdentifier
 
-type TextDataConfig = MetadataConfig & {
+type EntityConfig = MetadataConfig & {
 	color?: string
-	identifier?: TextDataIdentifier
+	identifier?: EntityIdentifier
 	textLayers?: string[]
 	type?: RsType
 }
 
-interface EntityConfig {
+interface BaseConfig {
 	id: string
 	title?: string
 }
 
-interface PageConfig extends EntityConfig {
+interface PageConfig extends BaseConfig {
 	path?: string
 	children?: PageConfig[]
 }
 
-interface LayerConfig extends EntityConfig {
-	active: boolean
-	type: LayerType
-	xmlPath?: (id: string) => string
+interface LayerConfig extends BaseConfig {
+	active?: boolean
+	type?: LayerType
 }
 
-interface Layer extends LayerConfig {
+interface TextLayerConfig extends LayerConfig {
+	asideActive?: boolean
+	type: LayerType.Text
+}
+
+interface TextLayer extends TextLayerConfig {
 	element: Element | XMLDocument
 }
 
-interface NotesConfig extends EntityConfig {
+interface XmlLayer extends LayerConfig {
+	element: Element | XMLDocument
+	type: LayerType.XML
+}
+
+type Layer = TextLayer | XmlLayer | LayerConfig
+
+// interface TextLayer extends Layer {
+// 	expand: boolean
+// }
+
+interface NotesConfig extends BaseConfig {
 
 }

@@ -35,7 +35,7 @@ interface PIWProps {
 }
 interface PIProps {
 	dispatch: React.Dispatch<EntryStateAction>
-	textLayer: LayerConfig
+	layer: Layer
 }
 function Li(props: PIProps) {
 	const togglePanel = React.useCallback(ev => {
@@ -44,19 +44,19 @@ function Li(props: PIProps) {
 
 	return (
 		<LiWrapper
-			data-id={props.textLayer.id}
-			active={props.textLayer.active}
+			data-id={props.layer.id}
+			active={props.layer.active}
 			onClick={togglePanel}
 		>
-			<div>{props.textLayer.title.slice(0, 1)}</div>
-			<div>{props.textLayer.title}</div>
+			<div>{props.layer.title.slice(0, 1)}</div>
+			<div>{props.layer.title}</div>
 		</LiWrapper>
 	)
 }
 
 interface Props {
 	dispatch: React.Dispatch<EntryStateAction>
-	layers: LayerConfig[]
+	layers: Layer[]
 }
 function Layers(props: Props) {
 	return (
@@ -66,7 +66,7 @@ function Layers(props: Props) {
 					<Li
 						dispatch={props.dispatch}
 						key={tl.id}
-						textLayer={tl}
+						layer={tl}
 					/>
 				)
 			}

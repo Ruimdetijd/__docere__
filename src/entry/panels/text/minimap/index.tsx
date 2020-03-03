@@ -9,9 +9,10 @@ const Wrapper = styled.div`
 	overflow: auto;
 	padding-top: 32px;
 	position: absolute;
+	scrollbar-width: none;
 	top: 0;
 	width: 48px;
-	scrollbar-width: none;
+	z-index: -1;
 
 	&::-webkit-scrollbar {
 		display: none;

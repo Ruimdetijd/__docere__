@@ -4,7 +4,7 @@ type PanelsProps = EntryProps & EntryState & {
 
 type TextPanelBaseProps = Pick<PanelsProps, 'activeEntity' | 'activeNote' | 'activeFacsimile' | 'activeFacsimileAreas' | 'appDispatch' | 'entryDispatch' | 'entry' | 'searchQuery'>
 interface TextPanelProps extends TextPanelBaseProps {
-	textLayerConfig: LayerConfig
+	layer: TextLayer
 }
 
 type WitnessAnimationPanelProps = TextPanelProps

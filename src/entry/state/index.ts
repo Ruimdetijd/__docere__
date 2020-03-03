@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { AsideTab } from '../../constants'
+import { isTextLayer } from '../../utils'
 
 const initialEntryState: EntryState = {
 	activeFacsimile: null,
@@ -116,8 +117,19 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			return {
 				...entryState,
 				layers: entryState.layers.map(l => {
-					if (l.id === action.id) {
-						l.active = !l.active
+					if (l.id === action.id) l.active = !l.active
+					return l
+				})
+			}
+		}
+
+		case 'TOGGLE_TEXT_LAYER_ASIDE': {
+			return {
+				...entryState,
+				layers: entryState.layers.map(l => {
+					if (isTextLayer(l) && l.id === action.id) {
+						l.asideActive = !l.asideActive
+						return { ...l }
 					}
 					return l
 				})

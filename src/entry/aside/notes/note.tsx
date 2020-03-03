@@ -55,7 +55,7 @@ export default function Note(props: Props) {
 		entry: props.entry,
 		entryDispatch: props.entryDispatch,
 		insideNote: false,
-		textLayerId: null
+		layer: null
 	}
 
 	return (

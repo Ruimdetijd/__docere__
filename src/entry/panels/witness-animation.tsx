@@ -41,9 +41,9 @@ const Marker = styled.li`
 
 interface State {
 	components: DocereComponents
-	textLayer: LayerConfig
-	prevTextLayer: LayerConfig
-	textLayers: LayerConfig[]
+	textLayer: Layer
+	prevTextLayer: Layer
+	textLayers: Layer[]
 }
 export default class WitnessAnimationPanel extends React.PureComponent<WitnessAnimationPanelProps, State> {
 	private textRef: React.RefObject<HTMLDivElement>

@@ -33,7 +33,7 @@ type DocereComponentProps =
 		config: DocereConfig
 		entryDispatch: React.Dispatch<EntryStateAction>
 		insideNote: boolean
-		textLayerId: string
+		layer: TextLayer
 	}
 
 declare const enum RsType { Date, Location, None, Person }
@@ -41,7 +41,7 @@ interface RsProps {
 	active?: boolean,
 	children: React.ReactNode
 	// color?: string
-	config: TextDataConfig
+	config: EntityConfig
 	customProps: DocereComponentProps
 	onClick?: (ev: any) => void
 	revealOnHover?: boolean

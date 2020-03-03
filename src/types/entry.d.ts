@@ -1,8 +1,8 @@
 interface Entry {
 	doc: XMLDocument
-	facsimiles: ExtractedFacsimile[]
+	facsimiles: Facsimile[]
 	id: string
-	metadata: ExtractedMetadata
+	metadata: Metadata
 	notes: Note[]
 	entities: Entity[]
 	layers: Layer[]
@@ -10,13 +10,13 @@ interface Entry {
 
 interface EntryState {
 	activeFacsimileAreas: FacsimileArea[]
-	activeFacsimile: ExtractedFacsimile
+	activeFacsimile: Facsimile
 	activeEntity: Entity,
 	activeNote: Note,
 	asideTab: AsideTab
 	entry: Entry
 	footerTab: FooterTab
-	layers: LayerConfig[]
+	layers: Layer[]
 }
 
 type EntryProps = Pick<AppState, 'entry' | 'searchQuery' | 'searchTab'> & { appDispatch: React.Dispatch<AppStateAction> }

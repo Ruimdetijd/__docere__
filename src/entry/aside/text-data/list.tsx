@@ -20,7 +20,7 @@ const ActiveIndicator = styled.li`
 interface Props {
 	active: boolean
 	activeEntity: EntryState['activeEntity']
-	config: TextDataConfig
+	config: EntityConfig
 	containerHeight: number
 	entryDispatch: React.Dispatch<EntryStateAction>
 	entitiesByType: Map<string, Entity[]>

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { css } from '@emotion/core'
-import { TOP_OFFSET, TEXT_PANEL_WIDTH, DEFAULT_SPACING, ASIDE_WIDTH, RESULT_ASIDE_WIDTH, FOOTER_HEIGHT, FooterTab, SearchTab } from '../constants'
+import { TOP_OFFSET, DEFAULT_SPACING, ASIDE_WIDTH, RESULT_ASIDE_WIDTH, FOOTER_HEIGHT, FooterTab, SearchTab } from '../constants'
 
 // interface MainProps { asideTab: AsideTab, footerTab: FooterTab, searchTab: SearchTab }
 type MainProps = Pick<EntryState, 'asideTab' | 'footerTab'> & Pick<AppState, 'searchTab'>
@@ -12,36 +12,6 @@ export const Main = styled.div`
 	right: ${props => props.asideTab != null ? `${ASIDE_WIDTH}px` : 0};
 	top: ${TOP_OFFSET}px;
 	transition: all 300ms;
-`
-
-interface PWProps {
-	activeLayers: LayerConfig[]
-}
-export const PanelsWrapper = styled.div`
-	display: grid;
-	height: 100%;
-	${(p: PWProps) => {
-		const textPanelSpace = TEXT_PANEL_WIDTH + (DEFAULT_SPACING * 6)
-		let columns = p.activeLayers
-			.map(ap =>
-				ap.type === LayerType.Facsimile ?
-					`minmax(${DEFAULT_SPACING * 10}px, auto)` :
-					`minmax(${textPanelSpace}px, 800px)`
-			)
-			.join(' ')
-
-		// If there is no facsimile active, the text panels should fill the available
-		// space (1fr)
-		if (!p.activeLayers.some(ap => ap.type === LayerType.Facsimile)) {
-			columns = p.activeLayers.map(() => `minmax(${textPanelSpace}px, 1fr)`).join(' ')
-		}
-		return `
-			grid-template-columns: ${columns};
-			grid-template-rows: 100% auto;
-		`
-	}}
-	overflow-x: auto; 
-	width: 100%;
 `
 
 export const Menu = styled.div`

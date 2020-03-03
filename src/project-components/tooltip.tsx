@@ -24,6 +24,17 @@ const Wrapper = styled.div`
 	position: absolute;
 	z-index: 999;
 `
+
+export const TooltipBody = styled.div`
+	box-sizing: border-box;
+	font-family: sans-serif;
+	font-weight: 300;
+	border-radius: 2px;
+	border-style: solid;
+	border-width: 1px;
+	color: #666;
+	height: 100%;
+`
 	// left: calc(100vw - 24px);
 
 function useSvgTopLeft(orientation: Orientation, wrapperEl: HTMLDivElement, svgEl: SVGElement) {
@@ -98,28 +109,22 @@ function Tooltip(props: Props) {
 		props.bodyStyle.backgroundColor :
 		'white'
 
+	const bodyStyle = React.useRef<React.CSSProperties>({
+		backgroundColor,
+		borderColor,
+		...props.bodyStyle,
+	})
+
 	return (
 		<Wrapper
 			ref={wrapperRef}
 			style={props.style}
 		>
-			<div
-				style={{
-					backgroundColor,
-					borderColor,
-					fontFamily: "'Roboto', sans-serif",
-					fontWeight: 300,
-					borderRadius: '2px',
-					borderStyle: 'solid',
-					borderWidth: '1px',
-					color: '#666',
-					height: '100%',
-					padding: '1em',
-					...props.bodyStyle,
-				}}
+			<TooltipBody
+				style={bodyStyle.current}
 			>
 				{props.children}
-			</div>
+			</TooltipBody>
 			<svg
 				fill={backgroundColor}
 				height="20px"
@@ -139,8 +144,7 @@ Tooltip.defaultProps = {
 	bodyStyle: {},
 	orientation: "bottom",
 	shift: .5,
-	style: {},
-	some: 'bull,',
+	style: null,
 } as Partial<Props>
 
 export default Tooltip

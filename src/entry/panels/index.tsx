@@ -1,32 +1,63 @@
 import * as React from 'react'
-import { PanelsWrapper } from '../index.components'
 import FacsimilePanel from './facsimile'
 import TextPanel from './text'
 // import WitnessAnimationPanel from './witness-animation'
 import XmlPanel from './xml'
+import { isTextLayer, isXmlLayer, getTextPanelWidth } from '../../utils'
+import styled from '@emotion/styled'
+import { TEXT_PANEL_WIDTH, DEFAULT_SPACING } from '../../constants'
+
+interface PWProps {
+	activeLayers: Layer[]
+}
+const Wrapper = styled.div`
+	display: grid;
+	height: 100%;
+	${(p: PWProps) => {
+		let columns = p.activeLayers
+			.map(layer => {
+				const tpw = getTextPanelWidth(layer as TextLayer)
+				return isTextLayer(layer) ?
+					`${tpw + DEFAULT_SPACING * 2}px` :
+					`minmax(${DEFAULT_SPACING * 10}px, auto)`
+			})
+			.join(' ')
+
+		// If there is no facsimile active, the text panels should fill the available
+		// space (1fr)
+		if (!p.activeLayers.some(ap => ap.type === LayerType.Facsimile)) {
+			columns = p.activeLayers.map(() => `minmax(${TEXT_PANEL_WIDTH}px, 1fr)`).join(' ')
+		}
+		return `
+			grid-template-columns: ${columns};
+			grid-template-rows: 100% auto;
+		`
+	}}
+	overflow-x: auto; 
+	width: 100%;
+`
 
 function Panels(props: PanelsProps) {
 	const activeLayers = props.layers.filter(ap => ap.active)
 
 	return (
-		<PanelsWrapper
+		<Wrapper
 			activeLayers={activeLayers}
 		>
 			{
-				activeLayers.map(ap => {
-					if (ap.type === LayerType.Facsimile) {
+				activeLayers.map(layer => {
+					if (layer.type === LayerType.Facsimile) {
 						return (
 							<FacsimilePanel
 								activeFacsimile={props.activeFacsimile}
 								activeFacsimileAreas={props.activeFacsimileAreas}
 								entryDispatch={props.entryDispatch}
-								// facsimileAreas={props.entry.facsimileAreas}
-								key={ap.id}
+								key={layer.id}
 							/>
 						)
 					}
 
-					if (ap.type === LayerType.Text) {
+					if (isTextLayer(layer)) {
 						return (
 							<TextPanel
 								activeFacsimileAreas={props.activeFacsimileAreas}
@@ -36,9 +67,18 @@ function Panels(props: PanelsProps) {
 								appDispatch={props.appDispatch}
 								entryDispatch={props.entryDispatch}
 								entry={props.entry}
-								key={ap.id}
+								key={layer.id}
 								searchQuery={props.searchQuery}
-								textLayerConfig={ap}
+								layer={layer}
+							/>
+						)
+					}
+
+					if (isXmlLayer(layer)) {
+						return (
+							<XmlPanel
+								key={layer.id}
+								doc={props.entry.doc}
 							/>
 						)
 					}
@@ -58,74 +98,10 @@ function Panels(props: PanelsProps) {
 					// 		/>
 					// 	)
 					// }
-
-					if (ap.type === LayerType.XML) {
-						return (
-							<XmlPanel
-								config={ap}
-								key={ap.id}
-								doc={props.entry.doc}
-							/>
-						)
-					}
 				})
 			}
-		</PanelsWrapper>
+		</Wrapper>
 	)
 }
 
 export default React.memo(Panels)
-
-
-// export default class Panels extends React.Component<PanelsProps, PanelsState> {
-	// private setFacsimileArea: DocereComponentProps['setFacsimileArea'] = (facsimileAreas: FacsimileArea[]) => {
-	// 	if (facsimileAreas.hasOwnProperty('x')) facsimileAreas = [facsimileAreas as any]
-	// 	this.setState({ facsimileAreas })
-	// }
-
-	// state: PanelsState = {
-		// customProps: {
-		// 	activeFacsimilePath: this.props.activeFacsimilePath,
-		// 	activeId: this.props.activeId,
-		// 	activeListId: this.props.activeListId,
-		// 	// attributes: {},
-		// 	config: this.props.configData.config,
-		// 	facsimiles: this.props.entry.facsimiles,
-		// 	insideNote: false,
-		// 	setActiveFacsimile: this.props.setActiveFacsimile,
-		// 	setActiveId: this.props.setActiveId,
-		// 	setEntry: this.props.setEntry,
-		// 	setFacsimileArea: this.setFacsimileArea,
-		// 	textLayer: null,
-		// 	viewport: this.props.viewport,
-		// },
-		// facsimileAreas: [],
-		// highlight: [],
-	// }
-
-	// shouldComponentUpdate(nextProps: PanelsProps) {
-	// 	// Only update when the viewport has not changed
-	// 	return this.props.viewport === nextProps.viewport ||
-	// 		this.props.asideTab === AsideTab.TextData ||
-	// 		nextProps.asideTab === AsideTab.TextData
-	// }
-
-	// componentDidUpdate() {
-	// 	if (
-	// 		this.state.customProps.activeFacsimilePath !== this.props.activeFacsimilePath ||
-	// 		this.state.customProps.activeId !== this.props.activeId ||
-	// 		this.state.customProps.activeListId !== this.props.activeListId ||
-	// 		// facsimiles: this.props.entry.facsimiles,
-	// 		this.state.customProps.viewport !== this.props.viewport
-	// 	) {
-	// 		this.setState({ customProps: {
-	// 			...this.state.customProps,
-	// 			activeFacsimilePath: this.props.activeFacsimilePath,
-	// 			activeId: this.props.activeId,
-	// 			activeListId: this.props.activeListId,
-	// 			viewport: this.props.viewport,
-	// 		}})
-	// 	}
-
-	// 	return this.state.customProps
-	// }
